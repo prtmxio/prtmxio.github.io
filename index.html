@@ -1,10 +1,484 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Welcome to My GitHub Page</title>
-  </head>
-  <body>
-    <h1>Hello, I'm Pritam!</h1>
-    <p>This is my personal site hosted using GitHub Pages.</p>
-  </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$ whoami - Pritam's Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #64ffda;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Matrix-like background effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(100, 255, 218, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(130, 170, 255, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .terminal-header {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #64ffda;
+            border-radius: 8px 8px 0 0;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .terminal-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .close { background: #ff6b6b; }
+        .minimize { background: #ffd93d; }
+        .maximize { background: #6bcf7f; }
+        
+        .terminal-title {
+            margin-left: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            color: #82aaff;
+        }
+        
+        .terminal-body {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #64ffda;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 2rem;
+            min-height: 80vh;
+            backdrop-filter: blur(10px);
+        }
+        
+        .prompt {
+            color: #ff6b6b;
+            font-weight: 500;
+        }
+        
+        .command {
+            color: #82aaff;
+            margin-left: 0.5rem;
+        }
+        
+        .output {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+        
+        .section {
+            margin: 2rem 0;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
+        }
+        
+        .section:last-child {
+            border-bottom: none;
+        }
+        
+        .ascii-art {
+            color: #64ffda;
+            font-size: 0.7rem;
+            line-height: 1.1;
+            margin: 1rem 0;
+            text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
+            overflow-x: auto;
+            white-space: pre;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .project-card {
+            background: rgba(100, 255, 218, 0.03);
+            border: 1px solid rgba(130, 170, 255, 0.3);
+            border-radius: 6px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .project-card:hover::before {
+            left: 100%;
+        }
+        
+        .project-card:hover {
+            border-color: #64ffda;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .project-title {
+            color: #ff6b6b;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-desc {
+            color: #cccccc;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tech-tag {
+            background: rgba(130, 170, 255, 0.2);
+            color: #82aaff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(130, 170, 255, 0.4);
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .project-link {
+            color: #64ffda;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #64ffda;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .project-link:hover {
+            background: #64ffda;
+            color: #000;
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-link {
+            color: #64ffda;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+        }
+        
+        .typing-animation {
+            overflow: hidden;
+            border-right: 2px solid #64ffda;
+            white-space: nowrap;
+            animation: typing 3s steps(40, end), blink-caret 1s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #64ffda }
+        }
+        
+        .glitch {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .glitch:hover::before,
+        .glitch:hover::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch:hover::before {
+            animation: glitch-1 0.3s infinite;
+            color: #ff00ff;
+            z-index: -1;
+        }
+        
+        .glitch:hover::after {
+            animation: glitch-2 0.3s infinite;
+            color: #00ffff;
+            z-index: -2;
+        }
+        
+        @keyframes glitch-1 {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translate(0); }
+            15%, 49% { transform: translate(-2px, -2px); }
+        }
+        
+        @keyframes glitch-2 {
+            0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translate(0); }
+            21%, 62% { transform: translate(2px, 2px); }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .terminal-body {
+                padding: 1rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ascii-art {
+                font-size: 0.5rem;
+                overflow-x: scroll;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="terminal-header">
+            <div class="terminal-controls">
+                <div class="control close"></div>
+                <div class="control minimize"></div>
+                <div class="control maximize"></div>
+            </div>
+            <div class="terminal-title">pritam@portfolio:~$</div>
+        </div>
+        
+        <div class="terminal-body">
+            <div class="section">
+                <div class="prompt">$</div>
+                <span class="command typing-animation">whoami</span>
+                <div class="output">
+                    <div class="ascii-art">
+██████╗ ██████╗ ██╗████████╗ █████╗ ███╗   ███╗
+██╔══██╗██╔══██╗██║╚══██╔══╝██╔══██╗████╗ ████║
+██████╔╝██████╔╝██║   ██║   ███████║██╔████╔██║
+██╔═══╝ ██╔══██╗██║   ██║   ██╔══██║██║╚██╔╝██║
+██║     ██║  ██║██║   ██║   ██║  ██║██║ ╚═╝ ██║
+╚═╝     ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝
+                    </div>
+                    <p>Hey there! I'm <span class="glitch" data-text="Pritam">Pritam</span>, a passionate Embedded Systems Engineer and Robotics enthusiast.</p>
+                    <p>Currently working as an Embedded Application Intern at PCB CUPID, designing and programming embedded solutions for production-ready PCBs.</p>
+                    <p>I love building robots, creating interactive games, and solving complex problems through innovative hardware-software integration.</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="prompt">$</div>
+                <span class="command">ls -la ./projects</span>
+                <div class="output">
+                    <div class="projects-grid">
+                        <div class="project-card">
+                            <div class="project-title">► Line Follower Robot</div>
+                            <div class="project-desc">
+                                Engineered a Line Follower bot utilizing Arduino Nano, an S-IR sensor array and L298N motor driver for 
+                                precise path detection. Implemented PID control algorithms for stable navigation and optimized performance.
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">Arduino Nano</span>
+                                <span class="tech-tag">S-IR Sensors</span>
+                                <span class="tech-tag">L298N Driver</span>
+                                <span class="tech-tag">PID Control</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/pritam/line-follower-robot" class="project-link">View Code</a>
+                                <a href="https://youtube.com/watch?v=demo-video" class="project-link">Demo Video</a>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="project-title">► 2D Snake Game</div>
+                            <div class="project-desc">
+                                Created a 2D Snake Game using Java Swing and AWT, marking my first experience with Java GUI development. 
+                                Features collision detection, dynamic gameplay scenarios, and smooth controls.
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">Java</span>
+                                <span class="tech-tag">Swing</span>
+                                <span class="tech-tag">AWT</span>
+                                <span class="tech-tag">GUI Design</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/pritam/snake-game-java" class="project-link">View Code</a>
+                                <a href="https://pritam.github.io/snake-game-java" class="project-link">Play Game</a>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="project-title">► Dobosaurus Game</div>
+                            <div class="project-desc">
+                                Developed a Chrome Dino game clone with smooth gameplay, responsive controls, and engaging UI elements. 
+                                Features dynamic background, varying obstacle sizes, and high-score tracking.
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">Java</span>
+                                <span class="tech-tag">Swing</span>
+                                <span class="tech-tag">AWT</span>
+                                <span class="tech-tag">Game Development</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/pritam/dobosaurus-game" class="project-link">View Code</a>
+                                <a href="https://pritam.github.io/dobosaurus-game" class="project-link">Play Game</a>
+                            </div>
+                        </div>
+                        
+                        <div class="project-card">
+                            <div class="project-title">► Embedded PCB Solutions</div>
+                            <div class="project-desc">
+                                Working on embedded systems using CuPID development boards (CC2, C6, H2, etc.). 
+                                Designing, prototyping, and programming solutions for production-ready PCBs with hardware-software integration.
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">Embedded C</span>
+                                <span class="tech-tag">CuPID Boards</span>
+                                <span class="tech-tag">PCB Design</span>
+                                <span class="tech-tag">IoT Integration</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://pcbcupid.com" class="project-link">Learn More</a>
+                                <a href="https://github.com/pritam/embedded-projects" class="project-link">Projects</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="prompt">$</div>
+                <span class="command">cat ./skills.txt</span>
+                <div class="output">
+                    <p><span style="color: #ff6b6b;">Languages:</span> Java, C/C++, Python, SQL</p>
+                    <p><span style="color: #ff6b6b;">Embedded Systems:</span> Arduino IDE, Embedded C, Microcontrollers</p>
+                    <p><span style="color: #ff6b6b;">Frameworks:</span> Swing, AWT, PCB Design Tools</p>
+                    <p><span style="color: #ff6b6b;">Machine Learning:</span> Linear/Logistic Regression, Random Forests</p>
+                    <p><span style="color: #ff6b6b;">Developer Tools:</span> Git, VS Code, IntelliJ, Vim, Arduino IDE</p>
+                    <p><span style="color: #ff6b6b;">Libraries:</span> Pandas, NumPy, Matplotlib</p>
+                    <p><span style="color: #ff6b6b;">Other Tools:</span> Linux, Excel, Git</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="prompt">$</div>
+                <span class="command">curl -s social.links</span>
+                <div class="output">
+                    <div class="social-links">
+                        <a href="https://github.com/pritam" class="social-link">[github]</a>
+                        <a href="https://linkedin.com/in/pritam" class="social-link">[linkedin]</a>
+                        <a href="https://twitter.com/pritam" class="social-link">[twitter]</a>
+                        <a href="mailto:pritam@example.com" class="social-link">[email]</a>
+                        <a href="https://pritam.dev/blog" class="social-link">[blog]</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="prompt">$</div>
+                <span class="command">echo "thanks for visiting!"</span>
+                <div class="output">
+                    <p>Thanks for checking out my work! Feel free to reach out if you'd like to collaborate 🚀</p>
+                    <p style="opacity: 0.7; font-size: 0.9rem; margin-top: 1rem;">
+                        © 2025 - Built with ❤️ and lots of ☕
+                    </p>
+                    <p style="opacity: 0.5; font-size: 0.8rem; margin-top: 0.5rem; color: #82aaff;">
+                        Design inspired by <a href="https://ysap.sh" style="color: #64ffda; text-decoration: none;">ysap.sh</a> - thanks for the awesome terminal aesthetic!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive terminal effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate typing effect for commands
+            const commands = document.querySelectorAll('.command');
+            commands.forEach((cmd, index) => {
+                if (index > 0) {
+                    cmd.style.animation = `typing 2s steps(40, end) ${index * 0.5}s both`;
+                }
+            });
+            
+            // Add cursor blink effect to project cards
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.borderColor = '#00ff41';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.borderColor = 'rgba(0, 255, 65, 0.3)';
+                });
+            });
+        });
+    </script>
+</body>
 </html>
