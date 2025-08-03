@@ -1,310 +1,473 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>$ whoami - Pritam's Portfolio</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'JetBrains Mono', monospace;
-            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
-            color: #64ffda;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Matrix-like background effect */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(100, 255, 218, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255, 107, 107, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(130, 170, 255, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
-        
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>$ whoami - Pritam's Portfolio</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&display=swap');
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'JetBrains Mono', monospace;
+        background: linear-gradient(135deg, #0f0f23 0%, #1e1e3f 50%, #2d2d5f 100%);
+        color: #a6e3a1;
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    /* Matrix-like background effect */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            radial-gradient(circle at 20% 80%, rgba(166, 227, 161, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(249, 226, 175, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(137, 180, 250, 0.05) 0%, transparent 50%),
+            radial-gradient(circle at 60% 60%, rgba(203, 166, 247, 0.05) 0%, transparent 50%);
+        pointer-events: none;
+        z-index: -1;
+        animation: backgroundShift 10s ease-in-out infinite alternate;
+    }
+    
+    @keyframes backgroundShift {
+        0% { opacity: 0.5; }
+        100% { opacity: 0.8; }
+    }
+    
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .terminal-header {
+        background: rgba(17, 17, 27, 0.9);
+        border: 2px solid #a6e3a1;
+        border-radius: 8px 8px 0 0;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .terminal-header:hover {
+        border-color: #f9e2af;
+        box-shadow: 0 0 15px rgba(166, 227, 161, 0.3);
+    }
+    
+    .terminal-controls {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .control {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+    }
+    
+    .control:hover {
+        transform: scale(1.2);
+    }
+    
+    .close { background: #f38ba8; }
+    .minimize { background: #f9e2af; }
+    .maximize { background: #a6e3a1; }
+    
+    .terminal-title {
+        font-size: 0.9rem;
+        opacity: 0.8;
+        color: #89b4fa;
+        transition: color 0.3s ease;
+    }
+    
+    .nav-menu {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .nav-item {
+        color: #a6e3a1;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    
+    .nav-item:hover {
+        background: rgba(166, 227, 161, 0.1);
+        color: #f9e2af;
+        text-shadow: 0 0 8px rgba(249, 226, 175, 0.6);
+    }
+    
+    .nav-item.active {
+        background: rgba(166, 227, 161, 0.2);
+        color: #11111b;
+        background-color: #a6e3a1;
+    }
+    
+    .terminal-body {
+        background: rgba(17, 17, 27, 0.95);
+        border: 2px solid #a6e3a1;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        padding: 2rem;
+        min-height: 80vh;
+        backdrop-filter: blur(15px);
+        transition: all 0.3s ease;
+    }
+    
+    .page {
+        display: none;
+    }
+    
+    .page.active {
+        display: block;
+    }
+    
+    .prompt {
+        color: #f38ba8;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .prompt:hover {
+        text-shadow: 0 0 8px rgba(243, 139, 168, 0.6);
+    }
+    
+    .command {
+        color: #89b4fa;
+        margin-left: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .output {
+        margin: 1rem 0;
+        line-height: 1.6;
+    }
+    
+    .section {
+        margin: 2rem 0;
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(166, 227, 161, 0.2);
+        transition: all 0.5s ease;
+    }
+    
+    .section:hover {
+        border-bottom-color: rgba(249, 226, 175, 0.4);
+        transform: translateX(5px);
+    }
+    
+    .section:last-child {
+        border-bottom: none;
+    }
+    
+    .ascii-art {
+        color: #a6e3a1;
+        font-size: 0.7rem;
+        line-height: 1.1;
+        margin: 1rem 0;
+        text-shadow: 0 0 10px rgba(166, 227, 161, 0.5);
+        overflow-x: auto;
+        white-space: pre;
+        transition: all 0.3s ease;
+    }
+    
+    .ascii-art:hover {
+        text-shadow: 0 0 15px rgba(166, 227, 161, 0.8);
+        transform: scale(1.02);
+    }
+    
+    .projects-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+    
+    .project-card {
+        background: rgba(166, 227, 161, 0.03);
+        border: 1px solid rgba(137, 180, 250, 0.3);
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        transform: translateY(0);
+    }
+    
+    .project-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(166, 227, 161, 0.1), transparent);
+        transition: left 0.6s ease;
+    }
+    
+    .project-card:hover::before {
+        left: 100%;
+    }
+    
+    .project-card:hover {
+        border-color: #a6e3a1;
+        box-shadow: 0 10px 30px rgba(166, 227, 161, 0.2);
+        transform: translateY(-8px) scale(1.02);
+        background: rgba(166, 227, 161, 0.05);
+    }
+    
+    .project-title {
+        color: #f38ba8;
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .project-title:hover {
+        color: #f9e2af;
+        text-shadow: 0 0 8px rgba(249, 226, 175, 0.6);
+    }
+    
+    .project-desc {
+        color: #cccccc;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .project-tech {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .tech-tag {
+        background: rgba(203, 166, 247, 0.2);
+        color: #cba6f7;
+        padding: 0.3rem 0.6rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        border: 1px solid rgba(203, 166, 247, 0.4);
+        transition: all 0.3s ease;
+        transform: scale(1);
+    }
+    
+    .tech-tag:hover {
+        background: rgba(203, 166, 247, 0.3);
+        transform: scale(1.05);
+        box-shadow: 0 0 8px rgba(203, 166, 247, 0.4);
+    }
+    
+    .project-links {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .project-link {
+        color: #a6e3a1;
+        text-decoration: none;
+        padding: 0.6rem 1.2rem;
+        border: 1px solid #a6e3a1;
+        border-radius: 6px;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        font-size: 0.9rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .project-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(166, 227, 161, 0.2), transparent);
+        transition: left 0.4s ease;
+    }
+    
+    .project-link:hover::before {
+        left: 100%;
+    }
+    
+    .project-link:hover {
+        background: #a6e3a1;
+        color: #11111b;
+        box-shadow: 0 0 20px rgba(166, 227, 161, 0.4);
+        transform: translateY(-2px);
+    }
+    
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+    }
+    
+    .social-link {
+        color: #a6e3a1;
+        text-decoration: none;
+        transition: all 0.4s ease;
+        position: relative;
+    }
+    
+    .social-link::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #f9e2af;
+        transition: width 0.3s ease;
+    }
+    
+    .social-link:hover::after {
+        width: 100%;
+    }
+    
+    .social-link:hover {
+        color: #f9e2af;
+        text-shadow: 0 0 10px rgba(249, 226, 175, 0.8);
+        transform: translateY(-2px);
+    }
+    
+    .typing-animation {
+        overflow: hidden;
+        border-right: 2px solid #a6e3a1;
+        white-space: nowrap;
+        animation: typing 3s steps(40, end), blink-caret 1s step-end infinite;
+    }
+    
+    @keyframes typing {
+        from { width: 0 }
+        to { width: 100% }
+    }
+    
+    @keyframes blink-caret {
+        from, to { border-color: transparent }
+        50% { border-color: #a6e3a1 }
+    }
+    
+    .glitch {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .glitch:hover::before,
+    .glitch:hover::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .glitch:hover::before {
+        animation: glitch-1 0.3s infinite;
+        color: #ff00ff;
+        z-index: -1;
+    }
+    
+    .glitch:hover::after {
+        animation: glitch-2 0.3s infinite;
+        color: #00ffff;
+        z-index: -2;
+    }
+    
+    @keyframes glitch-1 {
+        0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translate(0); }
+        15%, 49% { transform: translate(-2px, -2px); }
+    }
+    
+    @keyframes glitch-2 {
+        0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translate(0); }
+        21%, 62% { transform: translate(2px, 2px); }
+    }
+    
+    .footer {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(166, 227, 161, 0.2);
+        text-align: center;
+    }
+    
+    .footer-links {
+        margin-bottom: 1rem;
+    }
+    
+    .footer-links a {
+        color: #a6e3a1;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+        color: #f9e2af;
+    }
+    
+    @media (max-width: 768px) {
         .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .terminal-header {
-            background: rgba(0, 0, 0, 0.8);
-            border: 2px solid #64ffda;
-            border-radius: 8px 8px 0 0;
-            padding: 0.5rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .terminal-controls {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .control {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        
-        .close { background: #ff6b6b; }
-        .minimize { background: #ffd93d; }
-        .maximize { background: #6bcf7f; }
-        
-        .terminal-title {
-            margin-left: 1rem;
-            font-size: 0.9rem;
-            opacity: 0.8;
-            color: #82aaff;
+            padding: 1rem;
         }
         
         .terminal-body {
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #64ffda;
-            border-top: none;
-            border-radius: 0 0 8px 8px;
-            padding: 2rem;
-            min-height: 80vh;
-            backdrop-filter: blur(10px);
+            padding: 1rem;
         }
         
-        .prompt {
-            color: #ff6b6b;
-            font-weight: 500;
-        }
-        
-        .command {
-            color: #82aaff;
-            margin-left: 0.5rem;
-        }
-        
-        .output {
-            margin: 1rem 0;
-            line-height: 1.6;
-        }
-        
-        .section {
-            margin: 2rem 0;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(100, 255, 218, 0.2);
-        }
-        
-        .section:last-child {
-            border-bottom: none;
-        }
-        
-        .ascii-art {
-            color: #64ffda;
-            font-size: 0.7rem;
-            line-height: 1.1;
-            margin: 1rem 0;
-            text-shadow: 0 0 10px rgba(100, 255, 218, 0.5);
-            overflow-x: auto;
-            white-space: pre;
+        .nav-menu {
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         
         .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
+            grid-template-columns: 1fr;
         }
         
-        .project-card {
-            background: rgba(100, 255, 218, 0.03);
-            border: 1px solid rgba(130, 170, 255, 0.3);
-            border-radius: 6px;
-            padding: 1.5rem;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+        .ascii-art {
+            font-size: 0.5rem;
+            overflow-x: scroll;
         }
         
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-        
-        .project-card:hover::before {
-            left: 100%;
-        }
-        
-        .project-card:hover {
-            border-color: #64ffda;
-            box-shadow: 0 0 20px rgba(100, 255, 218, 0.3);
-            transform: translateY(-5px);
-        }
-        
-        .project-title {
-            color: #ff6b6b;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .project-desc {
-            color: #cccccc;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .tech-tag {
-            background: rgba(130, 170, 255, 0.2);
-            color: #82aaff;
-            padding: 0.2rem 0.5rem;
-            border-radius: 3px;
-            font-size: 0.8rem;
-            border: 1px solid rgba(130, 170, 255, 0.4);
-        }
-        
-        .project-links {
-            display: flex;
+        .terminal-header {
+            flex-direction: column;
             gap: 1rem;
-        }
-        
-        .project-link {
-            color: #64ffda;
-            text-decoration: none;
-            padding: 0.5rem 1rem;
-            border: 1px solid #64ffda;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-        
-        .project-link:hover {
-            background: #64ffda;
-            color: #000;
-            box-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
         }
         
         .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            justify-content: center;
         }
-        
-        .social-link {
-            color: #64ffda;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .social-link:hover {
-            color: #ff6b6b;
-            text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
-        }
-        
-        .typing-animation {
-            overflow: hidden;
-            border-right: 2px solid #64ffda;
-            white-space: nowrap;
-            animation: typing 3s steps(40, end), blink-caret 1s step-end infinite;
-        }
-        
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        
-        @keyframes blink-caret {
-            from, to { border-color: transparent }
-            50% { border-color: #64ffda }
-        }
-        
-        .glitch {
-            position: relative;
-            display: inline-block;
-        }
-        
-        .glitch:hover::before,
-        .glitch:hover::after {
-            content: attr(data-text);
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .glitch:hover::before {
-            animation: glitch-1 0.3s infinite;
-            color: #ff00ff;
-            z-index: -1;
-        }
-        
-        .glitch:hover::after {
-            animation: glitch-2 0.3s infinite;
-            color: #00ffff;
-            z-index: -2;
-        }
-        
-        @keyframes glitch-1 {
-            0%, 14%, 15%, 49%, 50%, 99%, 100% { transform: translate(0); }
-            15%, 49% { transform: translate(-2px, -2px); }
-        }
-        
-        @keyframes glitch-2 {
-            0%, 20%, 21%, 62%, 63%, 99%, 100% { transform: translate(0); }
-            21%, 62% { transform: translate(2px, 2px); }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
-            }
-            
-            .terminal-body {
-                padding: 1rem;
-            }
-            
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .ascii-art {
-                font-size: 0.5rem;
-                overflow-x: scroll;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="terminal-header">
+<div class="container">
+    <div class="terminal-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
             <div class="terminal-controls">
                 <div class="control close"></div>
                 <div class="control minimize"></div>
@@ -312,8 +475,16 @@
             </div>
             <div class="terminal-title">pritam@portfolio:~$</div>
         </div>
-        
-        <div class="terminal-body">
+        <nav class="nav-menu">
+            <div class="nav-item active" onclick="showPage('home')">home</div>
+            <div class="nav-item" onclick="showPage('projects')">projects</div>
+            <div class="nav-item" onclick="showPage('contact')">contact</div>
+        </nav>
+    </div>
+    
+    <div class="terminal-body">
+        <!-- Home Page -->
+        <div id="home" class="page active">
             <div class="section">
                 <div class="prompt">$</div>
                 <span class="command typing-animation">whoami</span>
@@ -326,17 +497,64 @@
 ██║     ██║  ██║██║   ██║   ██║  ██║██║ ╚═╝ ██║
 ╚═╝     ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝
                     </div>
-                    <p>Hey there! I'm <span class="glitch" data-text="Pritam">Pritam</span>, a passionate Embedded Systems Engineer and Robotics enthusiast.</p>
-                    <p>Currently working as an Embedded Application Intern at PCB CUPID, designing and programming embedded solutions for production-ready PCBs.</p>
-                    <p>I love building robots, creating interactive games, and solving complex problems through innovative hardware-software integration.</p>
+                    <div id="profile-container">
+                        <!-- Profile will be loaded from bio.json -->
+                        <p>Hey! I'm <span class="glitch" data-text="Pritam">Pritam</span> ⚡ Embedded Systems Engineer & ML Enthusiast.</p>
+                        <p>Building robots, crafting intelligent systems, and turning ideas into reality through code.</p>
+                    </div>
                 </div>
             </div>
             
             <div class="section">
                 <div class="prompt">$</div>
+                <span class="command">cat ./about.txt</span>
+                <div class="output">
+                    <div id="about-container">
+                        <!-- About content will be loaded from bio.json -->
+                        <p><span style="color: #f38ba8;">Current Role:</span> Embedded Systems Engineer @ PCB CUPID</p>
+                        <p><span style="color: #f38ba8;">Focus:</span> Designing next-gen embedded solutions and exploring the intersection of hardware and AI! 🤖</p>
+                        <br>
+                        <p><span style="color: #f38ba8;">Interests & Passions:</span></p>
+                        <p>• 🔧 Embedded Systems & Microcontroller Programming</p>
+                        <p>• 🤖 Robotics & Automation</p>
+                        <p>• 📊 Machine Learning & Data Science</p>
+                        <p>• 🎯 IoT Solutions & Smart Devices</p>
+                        <p>• ⚡ Real-time Systems & Performance Optimization</p>
+                        <br>
+                        <p><span style="color: #f38ba8;">Internship Experience:</span></p>
+                        <p>During my internship at PCB CUPID, I've been working on cutting-edge embedded solutions, 
+                           developing firmware for microcontrollers, and contributing to innovative PCB designs. 
+                           This experience has strengthened my understanding of hardware-software integration 
+                           and real-world application of embedded systems.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="prompt">$</div>
+                <span class="command">cat ./skills.txt</span>
+                <div class="output">
+                    <div id="skills-container">
+                        <!-- Skills will be loaded from bio.json -->
+                        <p><span style="color: #f38ba8;">Languages:</span> Java, C/C++, Python, SQL</p>
+                        <p><span style="color: #f38ba8;">Embedded Systems:</span> Arduino IDE, Embedded C, Microcontrollers</p>
+                        <p><span style="color: #f38ba8;">Frameworks:</span> Swing, AWT, PCB Design Tools</p>
+                        <p><span style="color: #f38ba8;">Machine Learning:</span> Linear/Logistic Regression, Random Forests</p>
+                        <p><span style="color: #f38ba8;">Developer Tools:</span> Git, VS Code, IntelliJ, Vim, Arduino IDE</p>
+                        <p><span style="color: #f38ba8;">Libraries:</span> Pandas, NumPy, Matplotlib</p>
+                        <p><span style="color: #f38ba8;">Other Tools:</span> Linux, Excel, Git</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Projects Page -->
+        <div id="projects" class="page">
+            <div class="section">
+                <div class="prompt">$</div>
                 <span class="command">ls -la ./projects</span>
                 <div class="output">
-                    <div class="projects-grid">
+                    <div class="projects-grid" id="projects-container">
                         <div class="project-card">
                             <div class="project-title">► Line Follower Robot</div>
                             <div class="project-desc">
@@ -350,8 +568,8 @@
                                 <span class="tech-tag">PID Control</span>
                             </div>
                             <div class="project-links">
-                                <a href="https://github.com/pritam/line-follower-robot" class="project-link">View Code</a>
-                                <a href="https://youtube.com/watch?v=demo-video" class="project-link">Demo Video</a>
+                                <a href="#" class="project-link">View Code</a>
+                                <a href="#" class="project-link">Demo Video</a>
                             </div>
                         </div>
                         
@@ -368,117 +586,320 @@
                                 <span class="tech-tag">GUI Design</span>
                             </div>
                             <div class="project-links">
-                                <a href="https://github.com/pritam/snake-game-java" class="project-link">View Code</a>
-                                <a href="https://pritam.github.io/snake-game-java" class="project-link">Play Game</a>
+                                <a href="#" class="project-link">View Code</a>
+                                <a href="#" class="project-link">Play Game</a>
                             </div>
                         </div>
                         
                         <div class="project-card">
-                            <div class="project-title">► Dobosaurus Game</div>
+                            <div class="project-title">► Smart Home Automation</div>
                             <div class="project-desc">
-                                Developed a Chrome Dino game clone with smooth gameplay, responsive controls, and engaging UI elements. 
-                                Features dynamic background, varying obstacle sizes, and high-score tracking.
+                                Developed an IoT-based home automation system using ESP32 and various sensors. 
+                                Features remote control via mobile app, voice commands, and energy monitoring capabilities.
                             </div>
                             <div class="project-tech">
-                                <span class="tech-tag">Java</span>
-                                <span class="tech-tag">Swing</span>
-                                <span class="tech-tag">AWT</span>
-                                <span class="tech-tag">Game Development</span>
+                                <span class="tech-tag">ESP32</span>
+                                <span class="tech-tag">IoT</span>
+                                <span class="tech-tag">Firebase</span>
+                                <span class="tech-tag">Mobile App</span>
                             </div>
                             <div class="project-links">
-                                <a href="https://github.com/pritam/dobosaurus-game" class="project-link">View Code</a>
-                                <a href="https://pritam.github.io/dobosaurus-game" class="project-link">Play Game</a>
+                                <a href="#" class="project-link">View Code</a>
+                                <a href="#" class="project-link">Live Demo</a>
                             </div>
                         </div>
                         
                         <div class="project-card">
-                            <div class="project-title">► Embedded PCB Solutions</div>
+                            <div class="project-title">► ML-Based Gesture Recognition</div>
                             <div class="project-desc">
-                                Working on embedded systems using CuPID development boards (CC2, C6, H2, etc.). 
-                                Designing, prototyping, and programming solutions for production-ready PCBs with hardware-software integration.
+                                Built a machine learning model for real-time hand gesture recognition using computer vision. 
+                                Implemented with Python, OpenCV, and TensorFlow for controlling robotic systems through gestures.
                             </div>
                             <div class="project-tech">
-                                <span class="tech-tag">Embedded C</span>
-                                <span class="tech-tag">CuPID Boards</span>
-                                <span class="tech-tag">PCB Design</span>
-                                <span class="tech-tag">IoT Integration</span>
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">OpenCV</span>
+                                <span class="tech-tag">TensorFlow</span>
+                                <span class="tech-tag">Computer Vision</span>
                             </div>
                             <div class="project-links">
-                                <a href="https://pcbcupid.com" class="project-link">Learn More</a>
-                                <a href="https://github.com/pritam/embedded-projects" class="project-link">Projects</a>
+                                <a href="#" class="project-link">View Code</a>
+                                <a href="#" class="project-link">Demo Video</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="section">
-                <div class="prompt">$</div>
-                <span class="command">cat ./skills.txt</span>
-                <div class="output">
-                    <p><span style="color: #ff6b6b;">Languages:</span> Java, C/C++, Python, SQL</p>
-                    <p><span style="color: #ff6b6b;">Embedded Systems:</span> Arduino IDE, Embedded C, Microcontrollers</p>
-                    <p><span style="color: #ff6b6b;">Frameworks:</span> Swing, AWT, PCB Design Tools</p>
-                    <p><span style="color: #ff6b6b;">Machine Learning:</span> Linear/Logistic Regression, Random Forests</p>
-                    <p><span style="color: #ff6b6b;">Developer Tools:</span> Git, VS Code, IntelliJ, Vim, Arduino IDE</p>
-                    <p><span style="color: #ff6b6b;">Libraries:</span> Pandas, NumPy, Matplotlib</p>
-                    <p><span style="color: #ff6b6b;">Other Tools:</span> Linux, Excel, Git</p>
-                </div>
-            </div>
-            
+        </div>
+        
+        <!-- Contact Page -->
+        <div id="contact" class="page">
             <div class="section">
                 <div class="prompt">$</div>
                 <span class="command">curl -s social.links</span>
                 <div class="output">
-                    <div class="social-links">
-                        <a href="https://github.com/pritam" class="social-link">[github]</a>
-                        <a href="https://linkedin.com/in/pritam" class="social-link">[linkedin]</a>
-                        <a href="https://twitter.com/pritam" class="social-link">[twitter]</a>
-                        <a href="mailto:pritam@example.com" class="social-link">[email]</a>
-                        <a href="https://pritam.dev/blog" class="social-link">[blog]</a>
+                    <div id="contact-container">
+                        <!-- Contact info will be loaded from bio.json -->
+                        <p>Let's connect and build something amazing together! 🚀</p>
+                        <br>
+                        <div class="social-links">
+                            <a href="https://github.com/pritam" class="social-link">[github]</a>
+                            <a href="https://linkedin.com/in/pritam" class="social-link">[linkedin]</a>
+                            <a href="https://twitter.com/pritam" class="social-link">[twitter]</a>
+                            <a href="mailto:pritam@example.com" class="social-link">[email]</a>
+                        </div>
                     </div>
                 </div>
             </div>
             
+            <div class="section">
+                <div class="prompt">$</div>
+                <span class="command">echo "get in touch"</span>
+                <div class="output">
+                    <div id="contact-details-container">
+                        <!-- Contact details will be loaded from bio.json -->
+                        <p><span style="color: #f38ba8;">Email:</span> pritam@example.com</p>
+                        <p><span style="color: #f38ba8;">Location:</span> India</p>
+                        <p><span style="color: #f38ba8;">Available for:</span> Freelance projects, collaborations, and full-time opportunities</p>
+                        <br>
+                        <p>Whether you want to discuss embedded systems, share ideas about robotics, 
+                           or just have a chat about technology - I'm always excited to connect with fellow enthusiasts!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
             <div class="section">
                 <div class="prompt">$</div>
                 <span class="command">echo "thanks for visiting!"</span>
                 <div class="output">
                     <p>Thanks for checking out my work! Feel free to reach out if you'd like to collaborate 🚀</p>
-                    <p style="opacity: 0.7; font-size: 0.9rem; margin-top: 1rem;">
-                        © 2025 - Built with ❤️ and lots of ☕
+                    <br>
+                    <div class="footer-links">
+                        <p>source: <a href="https://github.com/pritam/portfolio">github.com/pritam/portfolio</a></p>
+                        <p>© pritam - portfolio 2025</p>
+                    </div>
+                    <br>
+                    <p style="opacity: 0.7; font-size: 0.9rem;">
+                        Built with ❤️ and lots of ☕
                     </p>
-                    <p style="opacity: 0.5; font-size: 0.8rem; margin-top: 0.5rem; color: #82aaff;">
-                        Design inspired by <a href="https://ysap.sh" style="color: #64ffda; text-decoration: none;">ysap.sh</a> - thanks for the awesome terminal aesthetic!
+                    <p style="opacity: 0.5; font-size: 0.8rem; margin-top: 0.5rem; color: #89b4fa;">
+                        Design inspired by <a href="https://ysap.sh" style="color: #a6e3a1; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#f9e2af'" onmouseout="this.style.color='#a6e3a1'">ysap.sh</a> - thanks for the awesome terminal aesthetic!
                     </p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        // Add some interactive terminal effects
-        document.addEventListener('DOMContentLoaded', function() {
-            // Simulate typing effect for commands
-            const commands = document.querySelectorAll('.command');
-            commands.forEach((cmd, index) => {
-                if (index > 0) {
-                    cmd.style.animation = `typing 2s steps(40, end) ${index * 0.5}s both`;
+<script>
+    // Load profile data from bio.json
+    async function loadProfile() {
+        try {
+            const response = await fetch('./bio.json');
+            const data = await response.json();
+            
+            // Update profile section
+            const profileContainer = document.getElementById('profile-container');
+            if (profileContainer && data.profile) {
+                profileContainer.innerHTML = `
+                    ${data.profile.profileImage ? `<img src="${data.profile.profileImage}" alt="Profile" style="width: 175px; height: 175px; border-radius: 50%; margin-bottom: 1rem; border: 2px solid #a6e3a1;">` : ''}
+                    <p>Hey! I'm <span class="glitch" data-text="${data.profile.name}">${data.profile.name}</span> ${data.profile.tagline}</p>
+                    <p>${data.profile.shortBio}</p>
+                `;
+            }
+            
+            // Update about section
+            const aboutContainer = document.getElementById('about-container');
+            if (aboutContainer && data.about) {
+                let interestsHTML = '';
+                if (data.about.interests && data.about.interests.length > 0) {
+                    interestsHTML = data.about.interests.map(interest => `<p>• ${interest}</p>`).join('');
                 }
+                
+                aboutContainer.innerHTML = `
+                    <p><span style="color: #f38ba8;">Current Role:</span> ${data.about.currentRole}</p>
+                    <p><span style="color: #f38ba8;">Focus:</span> ${data.about.focus}</p>
+                    <br>
+                    <p><span style="color: #f38ba8;">Interests & Passions:</span></p>
+                    ${interestsHTML}
+                    <br>
+                    <p><span style="color: #f38ba8;">Experience:</span></p>
+                    <p>${data.about.experience}</p>
+                `;
+            }
+            
+            // Update skills section
+            const skillsContainer = document.getElementById('skills-container');
+            if (skillsContainer && data.skills) {
+                let skillsHTML = '';
+                Object.keys(data.skills).forEach(category => {
+                    skillsHTML += `<p><span style="color: #f38ba8;">${category}:</span> ${data.skills[category].join(', ')}</p>`;
+                });
+                skillsContainer.innerHTML = skillsHTML;
+            }
+            
+            // Update contact section
+            const contactContainer = document.getElementById('contact-container');
+            if (contactContainer && data.contact) {
+                let socialLinksHTML = '';
+                if (data.contact.social) {
+                    socialLinksHTML = Object.keys(data.contact.social).map(platform => 
+                        `<a href="${data.contact.social[platform]}" class="social-link">[${platform}]</a>`
+                    ).join('');
+                }
+                
+                contactContainer.innerHTML = `
+                    <p>Let's connect and build something amazing together! 🚀</p>
+                    <br>
+                    <div class="social-links">
+                        ${socialLinksHTML}
+                    </div>
+                `;
+            }
+            
+            // Update contact details
+            const contactDetailsContainer = document.getElementById('contact-details-container');
+            if (contactDetailsContainer && data.contact) {
+                contactDetailsContainer.innerHTML = `
+                    <p><span style="color: #f38ba8;">Email:</span> ${data.contact.email}</p>
+                    <p><span style="color: #f38ba8;">Location:</span> ${data.contact.location}</p>
+                    <p><span style="color: #f38ba8;">Available for:</span> ${data.contact.availability}</p>
+                    <br>
+                    <p>${data.contact.message}</p>
+                `;
+            }
+            
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            // Keep default content if bio.json fails to load
+        }
+    }
+
+    // Load projects from JSON file
+    async function loadProjects() {
+        try {
+            const response = await fetch('./projects.json');
+            const data = await response.json();
+            
+            // Sort projects by priority
+            const sortedProjects = data.projects.sort((a, b) => a.priority - b.priority);
+            
+            const container = document.getElementById('projects-container');
+            container.innerHTML = '';
+            
+            sortedProjects.forEach(project => {
+                const projectCard = document.createElement('div');
+                projectCard.className = 'project-card';
+                
+                // Create tech tags
+                const techTags = project.technologies.map(tech => 
+                    `<span class="tech-tag">${tech}</span>`
+                ).join('');
+                
+                // Create project links (only show if URL is not empty)
+                let projectLinks = '<div class="project-links">';
+                if (project.codeUrl && project.codeUrl.trim() !== '') {
+                    projectLinks += `<a href="${project.codeUrl}" class="project-link" target="_blank">View Code</a>`;
+                }
+                if (project.liveUrl && project.liveUrl.trim() !== '') {
+                    projectLinks += `<a href="${project.liveUrl}" class="project-link" target="_blank">Live Demo</a>`;
+                }
+                if (project.videoUrl && project.videoUrl.trim() !== '') {
+                    projectLinks += `<a href="${project.videoUrl}" class="project-link" target="_blank">Demo Video</a>`;
+                }
+                projectLinks += '</div>';
+                
+                projectCard.innerHTML = `
+                    <div class="project-title">► ${project.title}</div>
+                    <div class="project-desc">${project.description}</div>
+                    <div class="project-tech">${techTags}</div>
+                    ${projectLinks}
+                `;
+                
+                container.appendChild(projectCard);
             });
             
-            // Add cursor blink effect to project cards
-            const projectCards = document.querySelectorAll('.project-card');
-            projectCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.borderColor = '#00ff41';
-                });
-                
-                card.addEventListener('mouseleave', function() {
-                    this.style.borderColor = 'rgba(0, 255, 65, 0.3)';
-                });
+            // Add hover effects to newly created project cards
+            addProjectCardHoverEffects();
+            
+        } catch (error) {
+            console.error('Error loading projects:', error);
+            // Fallback to default projects if JSON fails to load
+            loadDefaultProjects();
+        }
+    }
+    
+    // Fallback function with default projects
+    function loadDefaultProjects() {
+        const container = document.getElementById('projects-container');
+        container.innerHTML = `
+            <div class="project-card">
+                <div class="project-title">► Line Follower Robot</div>
+                <div class="project-desc">
+                    Engineered a Line Follower bot utilizing Arduino Nano, an S-IR sensor array and L298N motor driver for 
+                    precise path detection. Implemented PID control algorithms for stable navigation and optimized performance.
+                </div>
+                <div class="project-tech">
+                    <span class="tech-tag">Arduino Nano</span>
+                    <span class="tech-tag">S-IR Sensors</span>
+                    <span class="tech-tag">L298N Driver</span>
+                    <span class="tech-tag">PID Control</span>
+                </div>
+                <div class="project-links">
+                    <a href="#" class="project-link">View Code</a>
+                    <a href="#" class="project-link">Demo Video</a>
+                </div>
+            </div>
+        `;
+        addProjectCardHoverEffects();
+    }
+
+    function showPage(pageId) {
+        // Hide all pages
+        const pages = document.querySelectorAll('.page');
+        pages.forEach(page => page.classList.remove('active'));
+        
+        // Remove active class from all nav items
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+        
+        // Show selected page
+        document.getElementById(pageId).classList.add('active');
+        
+        // Add active class to clicked nav item
+        event.target.classList.add('active');
+    }
+
+    // Add hover effects to project cards
+    function addProjectCardHoverEffects() {
+        const projectCards = document.querySelectorAll('.project-card');
+        projectCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.borderColor = '#a6e3a1';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.borderColor = 'rgba(137, 180, 250, 0.3)';
             });
         });
-    </script>
+    }
+
+    // Add some interactive terminal effects
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load profile and projects on page load
+        loadProfile();
+        loadProjects();
+        
+        // Simulate typing effect for commands
+        const commands = document.querySelectorAll('.command');
+        commands.forEach((cmd, index) => {
+            if (index === 0) {
+                cmd.style.animation = `typing 3s steps(40, end), blink-caret 1s step-end infinite`;
+            }
+        });
+    });
+</script>
 </body>
 </html>
