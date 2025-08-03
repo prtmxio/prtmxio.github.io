@@ -23,7 +23,6 @@
         transition: all 0.3s ease;
     }
     
-    /* Matrix-like background effect */
     body::before {
         content: '';
         position: fixed;
@@ -483,7 +482,6 @@
     </div>
     
     <div class="terminal-body">
-        <!-- Home Page -->
         <div id="home" class="page active">
             <div class="section">
                 <div class="prompt">$</div>
@@ -498,9 +496,7 @@
 ╚═╝     ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚═╝
                     </div>
                     <div id="profile-container">
-                        <!-- Profile will be loaded from bio.json -->
-                        <p>Hey! I'm <span class="glitch" data-text="Pritam">Pritam</span> ⚡ Embedded Systems Engineer & ML Enthusiast.</p>
-                        <p>Building robots, crafting intelligent systems, and turning ideas into reality through code.</p>
+                        <p>Loading profile...</p>
                     </div>
                 </div>
             </div>
@@ -509,24 +505,7 @@
                 <div class="prompt">$</div>
                 <span class="command">cat ./about.txt</span>
                 <div class="output">
-                    <div id="about-container">
-                        <!-- About content will be loaded from bio.json -->
-                        <p><span style="color: #f38ba8;">Current Role:</span> Embedded Systems Engineer @ PCB CUPID</p>
-                        <p><span style="color: #f38ba8;">Focus:</span> Designing next-gen embedded solutions and exploring the intersection of hardware and AI! 🤖</p>
-                        <br>
-                        <p><span style="color: #f38ba8;">Interests & Passions:</span></p>
-                        <p>• 🔧 Embedded Systems & Microcontroller Programming</p>
-                        <p>• 🤖 Robotics & Automation</p>
-                        <p>• 📊 Machine Learning & Data Science</p>
-                        <p>• 🎯 IoT Solutions & Smart Devices</p>
-                        <p>• ⚡ Real-time Systems & Performance Optimization</p>
-                        <br>
-                        <p><span style="color: #f38ba8;">Internship Experience:</span></p>
-                        <p>During my internship at PCB CUPID, I've been working on cutting-edge embedded solutions, 
-                           developing firmware for microcontrollers, and contributing to innovative PCB designs. 
-                           This experience has strengthened my understanding of hardware-software integration 
-                           and real-world application of embedded systems.</p>
-                    </div>
+                    <div id="about-container"></div>
                 </div>
             </div>
             
@@ -534,21 +513,11 @@
                 <div class="prompt">$</div>
                 <span class="command">cat ./skills.txt</span>
                 <div class="output">
-                    <div id="skills-container">
-                        <!-- Skills will be loaded from bio.json -->
-                        <p><span style="color: #f38ba8;">Languages:</span> Java, C/C++, Python, SQL</p>
-                        <p><span style="color: #f38ba8;">Embedded Systems:</span> Arduino IDE, Embedded C, Microcontrollers</p>
-                        <p><span style="color: #f38ba8;">Frameworks:</span> Swing, AWT, PCB Design Tools</p>
-                        <p><span style="color: #f38ba8;">Machine Learning:</span> Linear/Logistic Regression, Random Forests</p>
-                        <p><span style="color: #f38ba8;">Developer Tools:</span> Git, VS Code, IntelliJ, Vim, Arduino IDE</p>
-                        <p><span style="color: #f38ba8;">Libraries:</span> Pandas, NumPy, Matplotlib</p>
-                        <p><span style="color: #f38ba8;">Other Tools:</span> Linux, Excel, Git</p>
-                    </div>
+                    <div id="skills-container"></div>
                 </div>
             </div>
         </div>
         
-        <!-- Projects Page -->
         <div id="projects" class="page">
             <div class="section">
                 <div class="prompt">$</div>
@@ -556,98 +525,19 @@
                 <div class="output">
                     <div class="projects-grid" id="projects-container">
                         <div class="project-card">
-                            <div class="project-title">► Line Follower Robot</div>
-                            <div class="project-desc">
-                                Engineered a Line Follower bot utilizing Arduino Nano, an S-IR sensor array and L298N motor driver for 
-                                precise path detection. Implemented PID control algorithms for stable navigation and optimized performance.
-                            </div>
-                            <div class="project-tech">
-                                <span class="tech-tag">Arduino Nano</span>
-                                <span class="tech-tag">S-IR Sensors</span>
-                                <span class="tech-tag">L298N Driver</span>
-                                <span class="tech-tag">PID Control</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="#" class="project-link">View Code</a>
-                                <a href="#" class="project-link">Demo Video</a>
-                            </div>
-                        </div>
-                        
-                        <div class="project-card">
-                            <div class="project-title">► 2D Snake Game</div>
-                            <div class="project-desc">
-                                Created a 2D Snake Game using Java Swing and AWT, marking my first experience with Java GUI development. 
-                                Features collision detection, dynamic gameplay scenarios, and smooth controls.
-                            </div>
-                            <div class="project-tech">
-                                <span class="tech-tag">Java</span>
-                                <span class="tech-tag">Swing</span>
-                                <span class="tech-tag">AWT</span>
-                                <span class="tech-tag">GUI Design</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="#" class="project-link">View Code</a>
-                                <a href="#" class="project-link">Play Game</a>
-                            </div>
-                        </div>
-                        
-                        <div class="project-card">
-                            <div class="project-title">► Smart Home Automation</div>
-                            <div class="project-desc">
-                                Developed an IoT-based home automation system using ESP32 and various sensors. 
-                                Features remote control via mobile app, voice commands, and energy monitoring capabilities.
-                            </div>
-                            <div class="project-tech">
-                                <span class="tech-tag">ESP32</span>
-                                <span class="tech-tag">IoT</span>
-                                <span class="tech-tag">Firebase</span>
-                                <span class="tech-tag">Mobile App</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="#" class="project-link">View Code</a>
-                                <a href="#" class="project-link">Live Demo</a>
-                            </div>
-                        </div>
-                        
-                        <div class="project-card">
-                            <div class="project-title">► ML-Based Gesture Recognition</div>
-                            <div class="project-desc">
-                                Built a machine learning model for real-time hand gesture recognition using computer vision. 
-                                Implemented with Python, OpenCV, and TensorFlow for controlling robotic systems through gestures.
-                            </div>
-                            <div class="project-tech">
-                                <span class="tech-tag">Python</span>
-                                <span class="tech-tag">OpenCV</span>
-                                <span class="tech-tag">TensorFlow</span>
-                                <span class="tech-tag">Computer Vision</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="#" class="project-link">View Code</a>
-                                <a href="#" class="project-link">Demo Video</a>
-                            </div>
+                            <div class="project-title">► Loading Projects...</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Contact Page -->
         <div id="contact" class="page">
             <div class="section">
                 <div class="prompt">$</div>
                 <span class="command">curl -s social.links</span>
                 <div class="output">
-                    <div id="contact-container">
-                        <!-- Contact info will be loaded from bio.json -->
-                        <p>Let's connect and build something amazing together! 🚀</p>
-                        <br>
-                        <div class="social-links">
-                            <a href="https://github.com/pritam" class="social-link">[github]</a>
-                            <a href="https://linkedin.com/in/pritam" class="social-link">[linkedin]</a>
-                            <a href="https://twitter.com/pritam" class="social-link">[twitter]</a>
-                            <a href="mailto:pritam@example.com" class="social-link">[email]</a>
-                        </div>
-                    </div>
+                    <div id="contact-container"></div>
                 </div>
             </div>
             
@@ -655,20 +545,11 @@
                 <div class="prompt">$</div>
                 <span class="command">echo "get in touch"</span>
                 <div class="output">
-                    <div id="contact-details-container">
-                        <!-- Contact details will be loaded from bio.json -->
-                        <p><span style="color: #f38ba8;">Email:</span> pritam@example.com</p>
-                        <p><span style="color: #f38ba8;">Location:</span> India</p>
-                        <p><span style="color: #f38ba8;">Available for:</span> Freelance projects, collaborations, and full-time opportunities</p>
-                        <br>
-                        <p>Whether you want to discuss embedded systems, share ideas about robotics, 
-                           or just have a chat about technology - I'm always excited to connect with fellow enthusiasts!</p>
-                    </div>
+                    <div id="contact-details-container"></div>
                 </div>
             </div>
         </div>
         
-        <!-- Footer -->
         <div class="footer">
             <div class="section">
                 <div class="prompt">$</div>
@@ -677,7 +558,7 @@
                     <p>Thanks for checking out my work! Feel free to reach out if you'd like to collaborate 🚀</p>
                     <br>
                     <div class="footer-links">
-                        <p>source: <a href="https://github.com/pritam/portfolio">github.com/pritam/portfolio</a></p>
+                        <p id="footer-source-link"></p>
                         <p>© pritam - portfolio 2025</p>
                     </div>
                     <br>
@@ -694,119 +575,137 @@
 </div>
 
 <script>
-    // Load profile data from bio.json
-    async function loadProfile() {
+    // Load all data from bio.json
+    async function loadData() {
         try {
             const response = await fetch('res/bio.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
             
-            // Update profile section
-            const profileContainer = document.getElementById('profile-container');
-            if (profileContainer && data.profile) {
-                profileContainer.innerHTML = `
-                    ${data.profile.profileImage ? `<img src="${data.profile.profileImage}" alt="Profile" style="width: 175px; height: 175px; border-radius: 50%; margin-bottom: 1rem; border: 2px solid #a6e3a1;">` : ''}
-                    <p>Hey! I'm <span class="glitch" data-text="${data.profile.name}">${data.profile.name}</span> ${data.profile.tagline}</p>
-                    <p>${data.profile.shortBio}</p>
-                `;
-            }
-            
-            // Update about section
-            const aboutContainer = document.getElementById('about-container');
-            if (aboutContainer && data.about) {
-                let interestsHTML = '';
-                if (data.about.interests && data.about.interests.length > 0) {
-                    interestsHTML = data.about.interests.map(interest => `<p>• ${interest}</p>`).join('');
-                }
-                
-                aboutContainer.innerHTML = `
-                    <p><span style="color: #f38ba8;">Current Role:</span> ${data.about.currentRole}</p>
-                    <p><span style="color: #f38ba8;">Focus:</span> ${data.about.focus}</p>
-                    <br>
-                    <p><span style="color: #f38ba8;">Interests & Passions:</span></p>
-                    ${interestsHTML}
-                    <br>
-                    <p><span style="color: #f38ba8;">Experience:</span></p>
-                    <p>${data.about.experience}</p>
-                `;
-            }
-            
-            // Update skills section
-            const skillsContainer = document.getElementById('skills-container');
-            if (skillsContainer && data.skills) {
-                let skillsHTML = '';
-                Object.keys(data.skills).forEach(category => {
-                    skillsHTML += `<p><span style="color: #f38ba8;">${category}:</span> ${data.skills[category].join(', ')}</p>`;
-                });
-                skillsContainer.innerHTML = skillsHTML;
-            }
-            
-            // Update contact section
-            const contactContainer = document.getElementById('contact-container');
-            if (contactContainer && data.contact) {
-                let socialLinksHTML = '';
-                if (data.contact.social) {
-                    socialLinksHTML = Object.keys(data.contact.social).map(platform => 
-                        `<a href="${data.contact.social[platform]}" class="social-link">[${platform}]</a>`
-                    ).join('');
-                }
-                
-                contactContainer.innerHTML = `
-                    <p>Let's connect and build something amazing together! 🚀</p>
-                    <br>
-                    <div class="social-links">
-                        ${socialLinksHTML}
-                    </div>
-                `;
-            }
-            
-            // Update contact details
-            const contactDetailsContainer = document.getElementById('contact-details-container');
-            if (contactDetailsContainer && data.contact) {
-                contactDetailsContainer.innerHTML = `
-                    <p><span style="color: #f38ba8;">Email:</span> ${data.contact.email}</p>
-                    <p><span style="color: #f38ba8;">Location:</span> ${data.contact.location}</p>
-                    <p><span style="color: #f38ba8;">Available for:</span> ${data.contact.availability}</p>
-                    <br>
-                    <p>${data.contact.message}</p>
-                `;
-            }
+            // Populate all sections
+            loadProfile(data);
+            loadAbout(data);
+            loadSkills(data);
+            loadContact(data);
             
         } catch (error) {
-            console.error('Error loading profile:', error);
-            // Keep default content if bio.json fails to load
+            console.error('Fatal Error: Could not load data from bio.json:', error);
+            // Handle error gracefully, maybe show a message to the user
+            document.getElementById('profile-container').innerHTML = `<p style="color: #f38ba8;">Error: Could not load profile data.</p>`;
         }
     }
 
-    // Load projects from JSON file
+    function loadProfile(data) {
+        const profileContainer = document.getElementById('profile-container');
+        if (profileContainer && data.profile) {
+            profileContainer.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">
+                    <div>
+                        <p style="margin: 0; padding-bottom: 0.5em;">Hey! I'm <span class="glitch" data-text="${data.profile.name}">${data.profile.name}</span> ${data.profile.tagline}</p>
+                        <p style="margin: 0;">${data.profile.shortBio}</p>
+                    </div>
+                    ${data.profile.profileImage ? `<img src="${data.profile.profileImage}" alt="Profile" style="width: 90px; height: 90px; border-radius: 50%; border: 2px solid #a6e3a1; flex-shrink: 0;">` : ''}
+                </div>
+            `;
+        }
+    }
+
+    function loadAbout(data) {
+        const aboutContainer = document.getElementById('about-container');
+        if (aboutContainer && data.about) {
+            const interestsHTML = (data.about.interests || []).map(interest => `<p>• ${interest}</p>`).join('');
+            aboutContainer.innerHTML = `
+                <p><span style="color: #f38ba8;">Current Role:</span> ${data.about.currentRole}</p>
+                <p><span style="color: #f38ba8;">Focus:</span> ${data.about.focus}</p>
+                <br>
+                <p><span style="color: #f38ba8;">Interests & Passions:</span></p>
+                ${interestsHTML}
+                <br>
+                <p><span style="color: #f38ba8;">Experience:</span></p>
+                <p>${data.about.experience}</p>
+            `;
+        }
+    }
+
+    function loadSkills(data) {
+        const skillsContainer = document.getElementById('skills-container');
+        if (skillsContainer && data.skills) {
+            let skillsHTML = '';
+            for (const category in data.skills) {
+                skillsHTML += `<p><span style="color: #f38ba8;">${category}:</span> ${data.skills[category].join(', ')}</p>`;
+            }
+            skillsContainer.innerHTML = skillsHTML;
+        }
+    }
+
+    function loadContact(data) {
+        const contactContainer = document.getElementById('contact-container');
+        if (contactContainer && data.contact && data.contact.social) {
+            const socialLinksHTML = Object.keys(data.contact.social).map(platform => 
+                `<a href="${data.contact.social[platform]}" class="social-link" target="_blank">[${platform}]</a>`
+            ).join('');
+            
+            contactContainer.innerHTML = `
+                <p>Let's connect and build something amazing together! 🚀</p>
+                <br>
+                <div class="social-links">
+                    ${socialLinksHTML}
+                </div>
+            `;
+        }
+        
+        const contactDetailsContainer = document.getElementById('contact-details-container');
+        if (contactDetailsContainer && data.contact) {
+            contactDetailsContainer.innerHTML = `
+                <p><span style="color: #f38ba8;">Email:</span> <a href="mailto:${data.contact.email}" class="social-link">${data.contact.email}</a></p>
+                <p><span style="color: #f38ba8;">Location:</span> ${data.contact.location}</p>
+                <p><span style="color: #f38ba8;">Available for:</span> ${data.contact.availability}</p>
+                <br>
+                <p>${data.contact.message}</p>
+            `;
+        }
+
+        const footerSourceLink = document.getElementById('footer-source-link');
+        if (footerSourceLink && data.contact && data.contact.social && data.contact.social.github) {
+            const githubUrl = data.contact.social.github;
+            const repoPath = `${githubUrl.split('.com/')[1]}/portfolio`;
+            footerSourceLink.innerHTML = `source: <a href="https://github.com/${repoPath}">${repoPath}</a>`;
+        }
+    }
+
+    // Load projects from projects.json
     async function loadProjects() {
         try {
             const response = await fetch('res/projects.json');
+             if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
-            
-            // Sort projects by priority
-            const sortedProjects = data.projects.sort((a, b) => a.priority - b.priority);
             
             const container = document.getElementById('projects-container');
             container.innerHTML = '';
             
+            // Sort projects if needed, assuming priority field exists
+            const sortedProjects = data.projects.sort((a, b) => (a.priority || 99) - (b.priority || 99));
+
             sortedProjects.forEach(project => {
                 const projectCard = document.createElement('div');
                 projectCard.className = 'project-card';
                 
-                // Create tech tags
-                const techTags = project.technologies.map(tech => 
+                const techTags = (project.technologies || []).map(tech => 
                     `<span class="tech-tag">${tech}</span>`
                 ).join('');
                 
-                // Create project links (only show if URL is not empty)
                 let projectLinks = '<div class="project-links">';
-                if (project.codeUrl && project.codeUrl.trim() !== '') {
+                if (project.codeUrl) {
                     projectLinks += `<a href="${project.codeUrl}" class="project-link" target="_blank">View Code</a>`;
                 }
-                if (project.liveUrl && project.liveUrl.trim() !== '') {
+                if (project.liveUrl) {
                     projectLinks += `<a href="${project.liveUrl}" class="project-link" target="_blank">Live Demo</a>`;
                 }
-                if (project.videoUrl && project.videoUrl.trim() !== '') {
+                if (project.videoUrl) {
                     projectLinks += `<a href="${project.videoUrl}" class="project-link" target="_blank">Demo Video</a>`;
                 }
                 projectLinks += '</div>';
@@ -821,84 +720,33 @@
                 container.appendChild(projectCard);
             });
             
-            // Add hover effects to newly created project cards
-            addProjectCardHoverEffects();
-            
         } catch (error) {
             console.error('Error loading projects:', error);
-            // Fallback to default projects if JSON fails to load
-            loadDefaultProjects();
+            document.getElementById('projects-container').innerHTML = `<p style="color: #f38ba8;">Error: Could not load projects data.</p>`;
         }
-    }
-    
-    // Fallback function with default projects
-    function loadDefaultProjects() {
-        const container = document.getElementById('projects-container');
-        container.innerHTML = `
-            <div class="project-card">
-                <div class="project-title">► Line Follower Robot</div>
-                <div class="project-desc">
-                    Engineered a Line Follower bot utilizing Arduino Nano, an S-IR sensor array and L298N motor driver for 
-                    precise path detection. Implemented PID control algorithms for stable navigation and optimized performance.
-                </div>
-                <div class="project-tech">
-                    <span class="tech-tag">Arduino Nano</span>
-                    <span class="tech-tag">S-IR Sensors</span>
-                    <span class="tech-tag">L298N Driver</span>
-                    <span class="tech-tag">PID Control</span>
-                </div>
-                <div class="project-links">
-                    <a href="#" class="project-link">View Code</a>
-                    <a href="#" class="project-link">Demo Video</a>
-                </div>
-            </div>
-        `;
-        addProjectCardHoverEffects();
     }
 
     function showPage(pageId) {
-        // Hide all pages
         const pages = document.querySelectorAll('.page');
         pages.forEach(page => page.classList.remove('active'));
         
-        // Remove active class from all nav items
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => item.classList.remove('active'));
         
-        // Show selected page
         document.getElementById(pageId).classList.add('active');
-        
-        // Add active class to clicked nav item
         event.target.classList.add('active');
     }
 
-    // Add hover effects to project cards
-    function addProjectCardHoverEffects() {
-        const projectCards = document.querySelectorAll('.project-card');
-        projectCards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.borderColor = '#a6e3a1';
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                this.style.borderColor = 'rgba(137, 180, 250, 0.3)';
-            });
-        });
-    }
-
-    // Add some interactive terminal effects
+    // Main execution on page load
     document.addEventListener('DOMContentLoaded', function() {
-        // Load profile and projects on page load
-        loadProfile();
+        loadData();
         loadProjects();
         
-        // Simulate typing effect for commands
-        const commands = document.querySelectorAll('.command');
-        commands.forEach((cmd, index) => {
-            if (index === 0) {
-                cmd.style.animation = `typing 3s steps(40, end), blink-caret 1s step-end infinite`;
-            }
-        });
+        // Initial animation for the first command
+        const firstCommand = document.querySelector('.command.typing-animation');
+        if (firstCommand) {
+            firstCommand.style.animation = `typing 3s steps(40, end), blink-caret 1s step-end infinite`;
+        }
     });
 </script>
 </body>
