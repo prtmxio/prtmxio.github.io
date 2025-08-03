@@ -670,7 +670,7 @@
         const footerSourceLink = document.getElementById('footer-source-link');
         if (footerSourceLink && data.contact && data.contact.social && data.contact.social.github) {
             const githubUrl = data.contact.social.github;
-            const repoPath = `${githubUrl.split('.com/')[1]}/portfolio`;
+            const repoPath = `${githubUrl.split('.com/')[1]}/prtmxio.github.io`;
             footerSourceLink.innerHTML = `source: <a href="https://github.com/${repoPath}">${repoPath}</a>`;
         }
     }
