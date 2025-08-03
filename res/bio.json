@@ -3,7 +3,7 @@
       "name": "Pritam",
       "tagline": "⚡ Embedded Systems Engineer & ML Enthusiast",
       "shortBio": "Building robots, crafting intelligent systems, and turning ideas into reality through code.",
-      "profileImage": "./profile.jpeg" 
+      "profileImage": "res/profile.jpeg" 
     },
     "about": {
       "currentRole": "Embedded Application Engineer @ PCB CUPID",
