@@ -592,7 +592,6 @@
             
         } catch (error) {
             console.error('Fatal Error: Could not load data from bio.json:', error);
-            // Handle error gracefully, maybe show a message to the user
             document.getElementById('profile-container').innerHTML = `<p style="color: #f38ba8;">Error: Could not load profile data.</p>`;
         }
     }
@@ -600,14 +599,13 @@
     function loadProfile(data) {
         const profileContainer = document.getElementById('profile-container');
         if (profileContainer && data.profile) {
+            // Add centering style for this layout
+            profileContainer.style.textAlign = 'left';
+
             profileContainer.innerHTML = `
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;">
-                    <div>
-                        <p style="margin: 0; padding-bottom: 0.5em;">Hey! I'm <span class="glitch" data-text="${data.profile.name}">${data.profile.name}</span> ${data.profile.tagline}</p>
-                        <p style="margin: 0;">${data.profile.shortBio}</p>
-                    </div>
-                    ${data.profile.profileImage ? `<img src="${data.profile.profileImage}" alt="Profile" style="width: 90px; height: 90px; border-radius: 50%; border: 2px solid #a6e3a1; flex-shrink: 0;">` : ''}
-                </div>
+                ${data.profile.profileImage ? `<img src="${data.profile.profileImage}" alt="Profile" style="width: 175px; height: 175px; border-radius: 50%; margin-bottom: 1rem; border: 2px solid #a6e3a1;">` : ''}
+                <p>Hey! I'm <span class="glitch" data-text="${data.profile.name}">${data.profile.name}</span> ${data.profile.tagline}</p>
+                <p>${data.profile.shortBio}</p>
             `;
         }
     }
@@ -643,9 +641,11 @@
     function loadContact(data) {
         const contactContainer = document.getElementById('contact-container');
         if (contactContainer && data.contact && data.contact.social) {
-            const socialLinksHTML = Object.keys(data.contact.social).map(platform => 
-                `<a href="${data.contact.social[platform]}" class="social-link" target="_blank">[${platform}]</a>`
-            ).join('');
+            const socialLinksHTML = Object.keys(data.contact.social).map(platform => {
+                // Exclude the 'source' link from this main social links section
+                if (platform === 'source') return '';
+                return `<a href="${data.contact.social[platform]}" class="social-link" target="_blank">[${platform}]</a>`;
+            }).join('');
             
             contactContainer.innerHTML = `
                 <p>Let's connect and build something amazing together! 🚀</p>
@@ -687,8 +687,7 @@
             const container = document.getElementById('projects-container');
             container.innerHTML = '';
             
-            // Sort projects if needed, assuming priority field exists
-            const sortedProjects = data.projects.sort((a, b) => (a.priority || 99) - (b.priority || 99));
+            const sortedProjects = (data.projects || []).sort((a, b) => (a.priority || 99) - (b.priority || 99));
 
             sortedProjects.forEach(project => {
                 const projectCard = document.createElement('div');
@@ -742,7 +741,6 @@
         loadData();
         loadProjects();
         
-        // Initial animation for the first command
         const firstCommand = document.querySelector('.command.typing-animation');
         if (firstCommand) {
             firstCommand.style.animation = `typing 3s steps(40, end), blink-caret 1s step-end infinite`;
