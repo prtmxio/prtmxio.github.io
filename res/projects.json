@@ -1,0 +1,49 @@
+{
+    "projects": [
+      {
+        "priority": 1,
+        "title": "Line Follower Robot",
+        "description": "Engineered a Line Follower bot utilizing Arduino Nano, an 8-IR sensor array and L298N motor driver for precise path detection. Implemented PID control algorithms for stable navigation and optimized performance under diverse operating conditions.",
+        "technologies": ["Arduino Nano", "8-IR Sensors", "L298N Driver", "PID Control"],
+        "codeUrl": "",
+        "liveUrl": "",
+        "videoUrl": ""
+      },
+      {
+        "priority": 2,
+        "title": "2D Snake Game",
+        "description": "Created a 2D Snake Game using Java Swing and AWT, marking my first experience with Java GUI development. Features collision detection system, dynamic gameplay scenarios, and smooth responsive controls.",
+        "technologies": ["Java", "Swing", "AWT", "GUI Design"],
+        "codeUrl": "https://github.com/pritam/snake-game-java",
+        "liveUrl": "https://pritam.github.io/snake-game-java",
+        "videoUrl": ""
+      },
+      {
+        "priority": 3,
+        "title": "Dobosaurus Game",
+        "description": "Developed a Chrome Dino game clone with smooth gameplay, responsive controls, and engaging UI elements. Features dynamic background, varying obstacle sizes for visual depth, and high-score tracking system.",
+        "technologies": ["Java", "Swing", "AWT", "Game Development"],
+        "codeUrl": "https://github.com/pritam/dobosaurus-game",
+        "liveUrl": "https://pritam.github.io/dobosaurus-game",
+        "videoUrl": ""
+      },
+      {
+        "priority": 4,
+        "title": "Embedded PCB Solutions",
+        "description": "Working on embedded systems using CuPID development boards (C2, C6, H2, etc.). Designing, prototyping, and programming solutions for production-ready PCBs with precision control and scalable applications in real-world environments.",
+        "technologies": ["Embedded C", "Glyph Boards", "PCB Design", "IoT Integration"],
+        "codeUrl": "https://github.com/pritam/embedded-projects",
+        "liveUrl": "",
+        "videoUrl": ""
+      },
+      {
+        "priority": 5,
+        "title": "Kicad_SVG_Converter",
+        "description": "Built a CLI tool that makes cool and efficient PCB vector images.",
+        "technologies": ["Python", "click", "argparse"],
+        "codeUrl": "https://github.com/prtmxio/",
+        "liveUrl": "",
+        "videoUrl": ""
+      }
+    ]
+  }

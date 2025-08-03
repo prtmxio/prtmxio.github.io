@@ -697,7 +697,7 @@
     // Load profile data from bio.json
     async function loadProfile() {
         try {
-            const response = await fetch('./bio.json');
+            const response = await fetch('./res/bio.json');
             const data = await response.json();
             
             // Update profile section
@@ -780,7 +780,7 @@
     // Load projects from JSON file
     async function loadProjects() {
         try {
-            const response = await fetch('./projects.json');
+            const response = await fetch('./res/projects.json');
             const data = await response.json();
             
             // Sort projects by priority

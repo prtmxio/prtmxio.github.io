@@ -1,0 +1,41 @@
+{
+    "profile": {
+      "name": "Pritam",
+      "tagline": "⚡ Embedded Systems Engineer & ML Enthusiast",
+      "shortBio": "Building robots, crafting intelligent systems, and turning ideas into reality through code.",
+      "profileImage": "./profile.jpeg" 
+    },
+    "about": {
+      "currentRole": "Embedded Application Engineer @ PCB CUPID",
+      "focus": "Designing next-gen embedded solutions and exploring the intersection of hardware and AI! 🤖",
+      "interests": [
+        "🔧 Embedded Systems & Microcontroller Programming",
+        "🤖 Robotics & Automation", 
+        "📊 Machine Learning & Data Science",
+        "🎯 IoT Solutions & Smart Devices",
+        "⚡ Real-time Systems & Performance Optimization"
+      ],
+      "experience": "During my internship at PCB CUPID, I've been working on cutting-edge embedded solutions, developing firmware for microcontrollers, and contributing to innovative PCB designs. This experience has strengthened my understanding of hardware-software integration and real-world application of embedded systems."
+    },
+    "skills": {
+      "Languages": ["Java", "C/C++", "Python", "SQL"],
+      "Embedded Systems": ["Arduino IDE", "Embedded C", "Microcontrollers"],
+      "Frameworks": ["Swing", "AWT", "PCB Design Tools"],
+      "Machine Learning": ["Linear/Logistic Regression", "Random Forests"],
+      "Developer Tools": ["Git", "VS Code", "IntelliJ", "Vim", "Arduino IDE"],
+      "Libraries": ["Pandas", "NumPy", "Matplotlib"],
+      "Other Tools": ["Linux", "Excel", "Git"]
+    },
+    "contact": {
+      "email": "pritam@example.com",
+      "location": "India",
+      "availability": "Freelance projects, collaborations, and full-time opportunities",
+      "message": "Whether you want to discuss embedded systems, share ideas about robotics, or just have a chat about technology - I'm always excited to connect with fellow enthusiasts!",
+      "social": {
+        "github": "https://github.com/pritam",
+        "linkedin": "https://linkedin.com/in/pritam",
+        "twitter": "https://twitter.com/pritam",
+        "email": "mailto:pritam@example.com"
+      }
+    }
+  }
