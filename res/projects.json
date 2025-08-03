@@ -14,8 +14,8 @@
         "title": "2D Snake Game",
         "description": "Created a 2D Snake Game using Java Swing and AWT, marking my first experience with Java GUI development. Features collision detection system, dynamic gameplay scenarios, and smooth responsive controls.",
         "technologies": ["Java", "Swing", "AWT", "GUI Design"],
-        "codeUrl": "https://github.com/pritam/snake-game-java",
-        "liveUrl": "https://pritam.github.io/snake-game-java",
+        "codeUrl": "https://github.com/prtmxio/Snake_2D.git",
+        "liveUrl": "",
         "videoUrl": ""
       },
       {
@@ -23,8 +23,8 @@
         "title": "Dobosaurus Game",
         "description": "Developed a Chrome Dino game clone with smooth gameplay, responsive controls, and engaging UI elements. Features dynamic background, varying obstacle sizes for visual depth, and high-score tracking system.",
         "technologies": ["Java", "Swing", "AWT", "Game Development"],
-        "codeUrl": "https://github.com/pritam/dobosaurus-game",
-        "liveUrl": "https://pritam.github.io/dobosaurus-game",
+        "codeUrl": "https://github.com/prtmxio/Dobosaurus",
+        "liveUrl": "",
         "videoUrl": ""
       },
       {
@@ -32,7 +32,7 @@
         "title": "Embedded PCB Solutions",
         "description": "Working on embedded systems using CuPID development boards (C2, C6, H2, etc.). Designing, prototyping, and programming solutions for production-ready PCBs with precision control and scalable applications in real-world environments.",
         "technologies": ["Embedded C", "Glyph Boards", "PCB Design", "IoT Integration"],
-        "codeUrl": "https://github.com/pritam/embedded-projects",
+        "codeUrl": "https://github.com/prtmxio",
         "liveUrl": "",
         "videoUrl": ""
       },
