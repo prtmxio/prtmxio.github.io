@@ -10,15 +10,6 @@
         "videoUrl": ""
       },
       {
-        "priority": 2,
-        "title": "2D Snake Game",
-        "description": "Created a 2D Snake Game using Java Swing and AWT, marking my first experience with Java GUI development. Features collision detection system, dynamic gameplay scenarios, and smooth responsive controls.",
-        "technologies": ["Java", "Swing", "AWT", "GUI Design"],
-        "codeUrl": "https://github.com/prtmxio/Snake_2D.git",
-        "liveUrl": "",
-        "videoUrl": ""
-      },
-      {
         "priority": 3,
         "title": "Dobosaurus Game",
         "description": "Developed a Chrome Dino game clone with smooth gameplay, responsive controls, and engaging UI elements. Features dynamic background, varying obstacle sizes for visual depth, and high-score tracking system.",
@@ -28,20 +19,11 @@
         "videoUrl": ""
       },
       {
-        "priority": 4,
-        "title": "Embedded PCB Solutions",
-        "description": "Working on embedded systems using CuPID development boards (C2, C6, H2, etc.). Designing, prototyping, and programming solutions for production-ready PCBs with precision control and scalable applications in real-world environments.",
-        "technologies": ["Embedded C", "Glyph Boards", "PCB Design", "IoT Integration"],
-        "codeUrl": "https://github.com/prtmxio",
-        "liveUrl": "",
-        "videoUrl": ""
-      },
-      {
         "priority": 5,
-        "title": "Kicad_SVG_Converter",
+        "title": "Forge_CLI",
         "description": "Built a CLI tool that makes cool and efficient PCB vector images.",
         "technologies": ["Python", "click", "argparse"],
-        "codeUrl": "https://github.com/prtmxio/",
+        "codeUrl": "https://github.com/prtmxio/Forge_cli",
         "liveUrl": "",
         "videoUrl": ""
       }

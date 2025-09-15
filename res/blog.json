@@ -1,0 +1,10 @@
+{
+    "posts": [
+      {
+          "title": "A Look at PID Control for Line Follower Robots",
+          "date": "July 30, 2025",
+          "content": "Building a line follower is a classic robotics project, but making it smooth and fast requires a good control algorithm. This article breaks down the components of a Proportional-Integral-Derivative (PID) controller and how to implement and tune it on an Arduino-based robot for optimal performance.",
+          "tags": ["Robotics", "PID Control", "Arduino"]
+      }
+    ]
+  }

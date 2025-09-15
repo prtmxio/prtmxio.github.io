@@ -1,41 +1,29 @@
 {
-    "profile": {
-      "name": "Pritam",
-      "tagline": "⚡ Embedded Systems Engineer & ML Enthusiast",
-      "shortBio": "Building robots, crafting intelligent systems, and turning ideas into reality through code.",
-      "profileImage": "res/profile.jpeg" 
-    },
-    "about": {
-      "currentRole": "Embedded Application Engineer @ PCB CUPID",
-      "focus": "Designing next-gen embedded solutions and exploring the intersection of hardware and AI! 🤖",
-      "interests": [
-        "🔧 Embedded Systems & Microcontroller Programming",
-        "🤖 Robotics & Automation", 
-        "📊 Machine Learning & Data Science",
-        "🎯 IoT Solutions & Smart Devices",
-        "⚡ Real-time Systems & Performance Optimization"
-      ],
-      "experience": "During my internship at PCB CUPID, I've been working on cutting-edge embedded solutions, developing firmware for microcontrollers, and contributing to innovative PCB designs. This experience has strengthened my understanding of hardware-software integration and real-world application of embedded systems."
-    },
-    "skills": {
-      "Languages": ["Java", "C/C++", "Python", "SQL"],
-      "Embedded Systems": ["Arduino IDE", "Embedded C", "Microcontrollers"],
-      "Frameworks": ["Swing", "AWT", "PCB Design Tools"],
-      "Machine Learning": ["Linear/Logistic Regression", "Random Forests"],
-      "Developer Tools": ["Git", "VS Code", "IntelliJ", "Vim", "Arduino IDE"],
-      "Libraries": ["Pandas", "NumPy", "Matplotlib"],
-      "Other Tools": ["Linux", "Excel", "Git"]
-    },
-    "contact": {
-      "email": "dhimanpritam1579@gmail.com",
-      "location": "India",
-      "availability": "Freelance projects, collaborations, and full-time opportunities",
-      "message": "Whether you want to discuss embedded systems, share ideas about robotics, or just have a chat about technology - I'm always excited to connect with fellow enthusiasts!",
-      "social": {
-        "github": "https://github.com/prtmxio",
-        "linkedin": "https://www.linkedin.com/in/pritam-dhiman-993435296/",
-        "twitter": "https://x.com/pritam_1579",
-        "email": "mailto:dhimanpritam1579@gmail.com"
-      }
+  "profile": {
+    "name": "Pritam",
+    "tagline": "Embedded Systems Engineer | Crafting AI-Powered Hardware",
+    "shortBio": "I build the hardware that thinks. My work lives at the intersection of embedded engineering and machine learning, where I design PCBs, write firmware, and deploy algorithms to create intelligent, real-world systems from the ground up."
+  },
+  "about": {
+    "fullBio": "My fascination is with bringing code to life in the physical world. I'm an embedded engineer who thrives on the entire product lifecycle, from designing the silicon-level architecture to deploying the machine learning models that give it intelligence. I'm hands-on across the full stack, whether that's deep in a C++ datasheet, prototyping a new PCB, or optimizing a Python algorithm. My goal is always the same: to build tangible, efficient, and forward-thinking solutions to real-world problems. When I'm not in the lab, I'm constantly exploring the bleeding edge of automation and the future of IoT."
+  },
+  "experience": [
+    {
+      "date": "2023 - Present",
+      "title": "Embedded Application Engineer",
+      "company": "PCB CUPID",
+      "description": [
+        "Developing and debugging firmware for various microcontrollers using Embedded C for production-ready PCBs.",
+        "Designing and prototyping embedded solutions with CuPID development boards for scalable real-world applications.",
+        "Integrating hardware and software to create robust systems for IoT and automation.",
+        "Collaborating on PCB design and layout, ensuring functionality and performance optimization."
+      ]
     }
+  ],
+  "social": {
+    "github": "https://github.com/prtmxio",
+    "linkedin": "#",
+    "twitter": "#",
+    "email": "your-email@example.com"
   }
+}
