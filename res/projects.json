@@ -2,6 +2,14 @@
   "projects": [
     {
       "priority": 1,
+      "title": "XTorr - Multi-Threaded BitTorrent P2P Client",
+      "description":"xTorr is a BitTorrent client in Java from scratch. It juggles raw TCP sockets, concurrent peer connections, and SHA-1 integrity checks to pull files piece by piece, directly implementing the BitTorrent protocol. ",
+      "technologies": ["Java", "Networking", "Concurrency"],
+      "codeUrl": "https://github.com/prtmxio/xTorr",
+      "videoUrl": ""
+    },
+    {
+      "priority": 1,
       "title": "Traco: Java Ray Tracing Engine",
       "description": "A photorealistic rendering engine built from scratch in pure Java. It uses a recursive ray tracing algorithm to simulate complex light transport, producing high-fidelity images with realistic shadows, multi-bounce reflections, and supersampling anti-aliasing.",
       "technologies": ["Java", "Ray Tracing", "Computer Graphics", "Phong Shading"],
