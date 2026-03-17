@@ -2,10 +2,53 @@
   "posts": [
     {
       "date": "2024-10-20",
-      "title": "My First Blog Post",
-      "content": "This is a short description of my first blog post, written right here on my site.",
+      "title": "MNIST from Scratch",
+      "content": "Created a Model that predicts numbers, trained on MNIST dataset ",
       "tags": ["embedded", "C++", "tutorial"],
       "read_me": "./blogs/pointer.md"
+    },
+
+    {
+      "date": "2026-02-11",
+      "title": "CLIP — Contrastive Language-Image Pre-Training",
+      "content": "A technical deep-dive into how CLIP learns a shared embedding space for images and text using contrastive learning. Covers the ViT-B/32 image encoder, GPT-style text encoder, InfoNCE loss with full derivation, and why cosine similarity on a 512-dim unit sphere is the right geometry for semantic retrieval.",
+      "tags": [
+        "deep-learning",
+        "vision",
+        "transformers",
+        "contrastive-learning",
+        "embeddings"
+      ],
+      "read_me": "./blogs/clip.md"
+    },
+
+    {
+      "date": "2026-02-17",
+      "title": "Diffusion Models — DDPM, DDIM, and Score Matching",
+      "content": "A unified treatment of the three ideas behind modern image generation. Derives the DDPM forward/reverse process and simplified training objective from the ELBO, explains how DDIM reframes the same model as a deterministic probability flow ODE enabling step-skipping, and shows how score matching is the underlying theory connecting both — with the exact equation linking noise prediction to the score function.",
+      "tags": [
+        "deep-learning",
+        "diffusion-models",
+        "generative-ai",
+        "math",
+        "score-matching"
+      ],
+      "read_me": "./blogs/diffusion.md"
+    },
+
+    {
+      "date": "2026-03-17",
+      "title": "Synapse — Building a Local Multimodal Pipeline on a 4 GB GPU",
+      "content": "A builder's account of wiring a VLM, a contrastive retrieval model, and a single-step diffusion generator into one offline pipeline under a hard 4 GB VRAM budget. Covers staged model loading, the latent-space temperature implementation, the HF_HUB_OFFLINE import ordering footgun, HNSW retrieval design, and a full latency breakdown of every stage on an RTX 2050.",
+      "tags": [
+        "project",
+        "multimodal",
+        "systems",
+        "vram-optimization",
+        "generative-ai",
+        "retrieval"
+      ],
+      "read_me": "./blogs/synapse.md"
     }
   ]
 }
