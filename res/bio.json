@@ -1,22 +1,22 @@
 {
   "profile": {
     "name": "Pritam",
-    "tagline": "Embedded Systems Engineer | Building Intelligence at the Edge",
-    "shortBio": "I architect systems where robotics meets intelligence. My work spans embedded hardware, ROS-based autonomous systems, and deploying deep learning models on edge devices—bridging the gap between algorithms and the physical world through efficient, real-time engineering."
+    "tagline": "embedded systems / robotics / edge AI",
+    "shortBio": "I build systems from bare metal to inference. Firmware, ROS stacks, edge ML -- the full hardware-software stack."
   },
   "about": {
-    "fullBio": "I'm driven by making machines perceive, think, and act autonomously. As an embedded engineer with a focus on robotics and deep learning, I work across the entire development pipeline—from low-level firmware and PCB design to implementing ROS navigation stacks and optimizing neural networks for edge deployment. Whether I'm tuning a control loop in C++, building sensor fusion pipelines, or compressing a vision model to run on constrained hardware, I'm obsessed with creating intelligent systems that operate in the real world. My current explorations live at the intersection of robotic perception, embedded AI acceleration, and autonomous navigation. When I'm not debugging hardware or training models, I'm grinding competitive programming to sharpen my algorithmic thinking—because building smart systems requires both hardware intuition and computational mastery."
+    "fullBio": "I work at the intersection of embedded systems and machine learning. Writing firmware in Embedded C, building ROS navigation stacks, deploying neural nets on constrained hardware -- I take systems from schematic to real-world inference.\n\nCurrent focus: robotic perception and embedded AI acceleration. I also grind competitive programming to keep algorithmic thinking sharp, because building smart hardware requires both intuition and rigor."
   },
   "experience": [
     {
-      "date": "July 2025 - December 2025",
+      "date": "Jul 2025 - Dec 2025",
       "title": "Embedded Application Engineer",
       "company": "PCB CUPID",
       "description": [
-        "Developing and debugging firmware for various microcontrollers using Embedded C for production-ready PCBs.",
-        "Designing and prototyping embedded solutions with CuPID development boards for scalable real-world applications.",
-        "Integrating hardware and software to create robust systems for IoT and automation.",
-        "Collaborating on PCB design and layout, ensuring functionality and performance optimization."
+        "Firmware development in Embedded C for production MCUs and PCBs.",
+        "Hardware prototyping with CuPID development boards for IoT and automation.",
+        "PCB design and layout review focused on signal integrity and performance.",
+        "Cross-layer embedded system integration -- hardware to application firmware."
       ]
     }
   ],

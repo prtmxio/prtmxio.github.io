@@ -2,62 +2,49 @@
   "projects": [
     {
       "priority": 1,
-      "title": "Synapse - Local Multimodal Perceive-Retrieve-Generate Pipeline",
-      "description": "Synapse is an offline multimodal pipeline chaining a Vision-Language Model (SmolVLM-500M), CLIP/HNSW semantic retrieval, and single-step diffusion synthesis — engineered to run within a 4 GB VRAM budget via staged fp16 model loading and explicit GPU memory handoff.",
-      "technologies": [
-        "Python",
-        "PyTorch",
-        "Transformers",
-        "Diffusers",
-        "CLIP",
-        "HNSW",
-        "Stable Diffusion"
-      ],
+      "title": "Synapse",
+      "description": "Offline multimodal pipeline: VLM (SmolVLM-500M) + CLIP/HNSW semantic retrieval + SD-Turbo generation. Runs within 4GB VRAM via staged fp16 model loading and explicit GPU memory handoff.",
+      "technologies": ["Python", "PyTorch", "Transformers", "Diffusers", "CLIP", "HNSW"],
       "codeUrl": "https://github.com/prtmxio/synapse",
       "videoUrl": ""
     },
     {
       "priority": 2,
-      "title": "XTorr - Multi-Threaded BitTorrent P2P Client",
-      "description": "xTorr is a BitTorrent client in Java from scratch. It juggles raw TCP sockets, concurrent peer connections, and SHA-1 integrity checks to pull files piece by piece, directly implementing the BitTorrent protocol. ",
+      "title": "XTorr",
+      "description": "BitTorrent client in Java, built from scratch. Raw TCP sockets, concurrent peer connections, SHA-1 piece verification -- full protocol implementation.",
       "technologies": ["Java", "Networking", "Concurrency"],
       "codeUrl": "https://github.com/prtmxio/xTorr",
       "videoUrl": ""
     },
     {
-      "priority": 4,
-      "title": "Traco: Java Ray Tracing Engine",
-      "description": "A photorealistic rendering engine built from scratch in pure Java. It uses a recursive ray tracing algorithm to simulate complex light transport, producing high-fidelity images with realistic shadows, multi-bounce reflections, and supersampling anti-aliasing.",
-      "technologies": [
-        "Java",
-        "Ray Tracing",
-        "Computer Graphics",
-        "Phong Shading"
-      ],
-      "codeUrl": "https://github.com/prtmxio/Traco",
-      "videoUrl": ""
-    },
-    {
       "priority": 3,
       "title": "Line Follower Robot",
-      "description": "Engineered a Line Follower bot utilizing Arduino Nano, an 8-IR sensor array and L298N motor driver for precise path detection. Implemented PID control algorithms for stable navigation and optimized performance under diverse operating conditions.",
-      "technologies": ["Arduino Nano", "PID Control", "Embedded C"],
+      "description": "Arduino Nano bot with 8-IR sensor array and L298N motor driver. PID control for stable path tracking under varied conditions.",
+      "technologies": ["Arduino", "PID Control", "Embedded C"],
       "codeUrl": "",
       "videoUrl": ""
     },
     {
-      "priority": 2,
+      "priority": 4,
+      "title": "Traco",
+      "description": "Ray tracing engine in pure Java. Recursive light transport with shadows, multi-bounce reflections, and supersampling anti-aliasing.",
+      "technologies": ["Java", "Ray Tracing", "Computer Graphics", "Phong Shading"],
+      "codeUrl": "https://github.com/prtmxio/Traco",
+      "videoUrl": ""
+    },
+    {
+      "priority": 5,
       "title": "Forge_CLI",
-      "description": "A powerful command-line interface designed to convert KiCad PCB files into high-quality, stylized SVG images. Offers extensive customization, including theme control, layer visibility, and various rendering modes for documentation.",
+      "description": "CLI tool to convert KiCad PCB files into stylized SVG images. Supports theme control, layer visibility, and multiple rendering modes.",
       "technologies": ["Python", "Typer", "Click"],
       "codeUrl": "https://github.com/prtmxio/Forge_cli",
       "videoUrl": ""
     },
     {
-      "priority": 5,
-      "title": "Dobosaurus Game",
-      "description": "Developed a Chrome Dino game clone with smooth gameplay, responsive controls, and engaging UI elements. Features dynamic background, varying obstacle sizes for visual depth, and high-score tracking system.",
-      "technologies": ["Java", "Swing", "AWT", "Game Development"],
+      "priority": 6,
+      "title": "Dobosaurus",
+      "description": "Chrome Dino clone in Java Swing. Smooth gameplay, dynamic obstacles, high-score tracking.",
+      "technologies": ["Java", "Swing", "AWT"],
       "codeUrl": "https://github.com/prtmxio/Dobosaurus",
       "videoUrl": ""
     }
