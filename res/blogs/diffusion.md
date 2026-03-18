@@ -1,4 +1,4 @@
-# Diffusion Models — DDPM, DDIM, and Score Matching
+# Diffusion Models: DDPM, DDIM, and Score Matching
 
 > Ho et al. (DDPM, 2020) · Song et al. (DDIM, 2020) · Song & Ermon (Score Matching, 2019–2021)
 
@@ -11,17 +11,17 @@ All three of these are trying to solve the same problem: **how do you generate a
 The answer diffusion models give: learn the reverse of a destruction process. If you know how to slowly destroy an image by adding noise step by step, then learning the reverse of that process means learning how to generate images. It sounds roundabout, but it works better than anything before it.
 
 The three methods covered here are:
-- **DDPM** — the original formulation, probabilistic, slow (1000 steps)
-- **DDIM** — reframes the same model as deterministic, can skip steps (~50 steps)
-- **Score Matching** — the deeper theory underlying both, connects diffusion to gradient fields of probability distributions
+- **DDPM**: the original formulation, probabilistic, slow (1000 steps)
+- **DDIM**: reframes the same model as deterministic, can skip steps (~50 steps)
+- **Score Matching**: the deeper theory underlying both, connects diffusion to gradient fields of probability distributions
 
 ---
 
-## DDPM — Denoising Diffusion Probabilistic Models
+## DDPM: Denoising Diffusion Probabilistic Models
 
 ### Intuition
 
-Imagine you have a photo of a dog. You add a tiny bit of Gaussian noise. Then a bit more. Then more. After 1000 steps of this, you have pure white noise — completely unrecognisable. The original structure is gone.
+Imagine you have a photo of a dog. You add a tiny bit of Gaussian noise. Then a bit more. Then more. After 1000 steps of this, you have pure white noise, completely unrecognisable. The original structure is gone.
 
 Now the question: can we learn to **reverse** this process? If we know what "slightly noisy dog photo" looks like at step 999, can we predict what it looked like at step 998?
 
@@ -29,13 +29,13 @@ DDPM says: train a neural network to predict the noise that was added at each st
 
 ### The Forward Process
 
-The forward process `q` defines how to add noise. It's a fixed Markov chain — no learnable parameters.
+The forward process `q` defines how to add noise. It's a fixed Markov chain, no learnable parameters.
 
 At each step t, we take the previous image and add a small amount of Gaussian noise:
 
 $$q(x_t \mid x_{t-1}) = \mathcal{N}\left(x_t;\ \sqrt{1 - \beta_t}\, x_{t-1},\ \beta_t \mathbf{I}\right)$$
 
-- `β_t` is the **variance schedule** — how much noise to add at step t
+- `β_t` is the **variance schedule** (how much noise to add at step t)
 - `√(1-β_t)` scales the signal down slightly so total variance doesn't explode
 - Typical schedule: `β_1 = 0.0001` (tiny) to `β_T = 0.02` (more) over T=1000 steps
 
@@ -49,7 +49,7 @@ Or in reparameterised form (which is how you actually compute it):
 
 $$x_t = \sqrt{\bar{\alpha}_t}\, x_0 + \sqrt{1 - \bar{\alpha}_t}\, \varepsilon, \quad \varepsilon \sim \mathcal{N}(0, \mathbf{I})$$
 
-This is the **most important equation in DDPM**. It says: a noisy image at any step t is just a weighted sum of the clean image and pure noise. When t=0, `ᾱ_0 = 1`, so `x_0 = x_0`. When t=T, `ᾱ_T ≈ 0`, so `x_T ≈ ε` — pure noise. The weights shift gradually from signal to noise.
+This is the **most important equation in DDPM**. It says: a noisy image at any step t is just a weighted sum of the clean image and pure noise. When t=0, `ᾱ_0 = 1`, so `x_0 = x_0`. When t=T, `ᾱ_T ≈ 0`, so `x_T ≈ ε`, pure noise. The weights shift gradually from signal to noise.
 
 ### The Reverse Process
 
@@ -100,13 +100,13 @@ Start from `x_T ~ N(0, I)`, then run T steps of:
 
 $$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( x_t - \frac{\beta_t}{\sqrt{1 - \bar{\alpha}_t}} \varepsilon_\theta(x_t, t) \right) + \sqrt{\beta_t}\, z, \quad z \sim \mathcal{N}(0, \mathbf{I})$$
 
-The `√βt · z` term adds stochasticity at each step — this is the source of variety in generation. With different `z` samples at each step, the same starting noise produces different outputs.
+The `√βt · z` term adds stochasticity at each step; this is where variety comes from in generation. With different `z` samples at each step, the same starting noise produces different outputs.
 
 Problem: this requires T=1000 sequential UNet forward passes. Slow.
 
 ### U-Net Architecture
 
-The noise-prediction network `ε_θ` is a **U-Net** — originally designed for image segmentation. It has:
+The noise-prediction network `ε_θ` is a **U-Net**, originally designed for image segmentation. It has:
 
 - **Encoder path**: a series of ResNet blocks that downsample the image (128→64→32→16→8)
 - **Bottleneck**: the lowest resolution, where spatial attention is applied
@@ -119,9 +119,9 @@ The timestep `t` needs to be injected into every layer. This is done via a **sin
 
 $$\text{PE}(t)_{2i} = \sin\!\left(\frac{t}{10000^{2i/d}}\right), \quad \text{PE}(t)_{2i+1} = \cos\!\left(\frac{t}{10000^{2i/d}}\right)$$
 
-This gives a unique, smooth representation for each timestep. It's then passed through a small MLP and **added to the feature maps** at each ResNet block — so every layer knows "am I denoising at step 50 or step 950?"
+This gives a unique, smooth representation for each timestep. It's then passed through a small MLP and **added to the feature maps** at each ResNet block, so every layer knows "am I denoising at step 50 or step 950?"
 
-At lower resolutions (8×8, 16×16), **multi-head self-attention** is applied — letting the model reason about global structure. At higher resolutions (64×64, 128×128), attention is too expensive, so only local convolutions are used.
+At lower resolutions (8×8, 16×16), **multi-head self-attention** is applied, letting the model reason about global structure. At higher resolutions (64×64, 128×128), attention is too expensive, so only local convolutions are used.
 
 ```
 x_t (64×64×4 in latent space) + t_emb
@@ -135,11 +135,11 @@ x_t (64×64×4 in latent space) + t_emb
     └── Conv → predicted noise ε (same shape as x_t)
 ```
 
-In Stable Diffusion, cross-attention layers are added so text embeddings can condition each denoising step — that's how "a cat wearing a hat" steers the generation.
+In Stable Diffusion, cross-attention layers are added so text embeddings can condition each denoising step; that's how "a cat wearing a hat" steers the generation.
 
 ---
 
-## DDIM — Denoising Diffusion Implicit Models
+## DDIM: Denoising Diffusion Implicit Models
 
 ### The Problem with DDPM
 
@@ -153,7 +153,7 @@ DDPM's forward process is Markovian: each step depends only on the previous one.
 
 $$q(x_t \mid x_0) = \mathcal{N}(x_t;\ \sqrt{\bar{\alpha}_t}\, x_0,\ (1 - \bar{\alpha}_t)\mathbf{I})$$
 
-This equation is unchanged — `x_t` given `x_0` has the same distribution as in DDPM. So the same U-Net still works. But the joint distribution over all timesteps is different, allowing non-Markovian step transitions.
+This equation is unchanged; `x_t` given `x_0` has the same distribution as in DDPM. So the same U-Net still works. But the joint distribution over all timesteps is different, allowing non-Markovian step transitions.
 
 ### DDIM Sampling Step
 
@@ -163,10 +163,10 @@ $$x_{t-1} = \sqrt{\bar{\alpha}_{t-1}} \underbrace{\left(\frac{x_t - \sqrt{1-\bar
 
 The three terms are:
 1. **Predicted x_0 scaled back**: the network's current best estimate of the clean image, re-noised to the right level
-2. **Direction term**: points toward `x_t` — keeps us on the right trajectory
+2. **Direction term**: points toward `x_t`, keeps us on the right trajectory
 3. **Stochastic term**: `σ_t ε_t` controls how much randomness to inject
 
-When `σ_t = 0` for all t: **purely deterministic**. The same `x_T` always produces the same `x_0`. This is the "implicit" in DDIM — the model defines an implicit probability flow.
+When `σ_t = 0` for all t: **purely deterministic**. The same `x_T` always produces the same `x_0`. This is the "implicit" in DDIM: the model defines an implicit probability flow.
 
 When `σ_t = √((1-ᾱ_{t-1})/(1-ᾱ_t)) · √(1-ᾱ_t/ᾱ_{t-1})`: recovers **DDPM exactly**.
 
@@ -176,7 +176,7 @@ Because the process is non-Markovian and deterministic, you don't need to visit 
 
 $$\{1000, 900, 800, ..., 100\} \quad \text{(S=10 steps)}$$
 
-and apply the DDIM update jumping directly between these. The U-Net still runs S times, but S can be 10–50 instead of 1000. Sample quality degrades gracefully — 50 DDIM steps is nearly indistinguishable from 1000 DDPM steps.
+and apply the DDIM update jumping directly between these. The U-Net still runs S times, but S can be 10–50 instead of 1000. Sample quality degrades gracefully; 50 DDIM steps is nearly indistinguishable from 1000 DDPM steps.
 
 **This is why SD-turbo is possible**: the jump from 50 DDIM steps → 4 steps → 1 step is a trajectory of compression, enabled by the flexibility DDIM introduced.
 
@@ -186,7 +186,7 @@ Determinism gives you a powerful property: `x_T` is a **latent code** for the im
 
 $$x_T^\lambda = \lambda\, x_T^A + (1-\lambda)\, x_T^B$$
 
-produces smooth visual interpolation between the two generated images. This only works because of determinism — in DDPM, the stochastic noise at each step breaks the correspondence.
+produces smooth visual interpolation between the two generated images. This only works because of determinism; in DDPM, the stochastic noise at each step breaks the correspondence.
 
 ---
 
@@ -198,7 +198,7 @@ The **score** of a distribution p(x) is the gradient of its log-density with res
 
 $$s(x) = \nabla_x \log p(x)$$
 
-Intuitively: at any point x in the data space, the score points in the direction that most increases the probability of x. It's a vector field that points "toward" high-density regions — toward where real data lives.
+Intuitively: at any point x in the data space, the score points in the direction that most increases the probability of x. It's a vector field that points "toward" high-density regions, toward where real data lives.
 
 If you knew the score function, you could move any point toward likely data by following it (Langevin dynamics). The problem: we only have samples from p(x), not the density itself. We can't compute the score directly.
 
@@ -212,7 +212,7 @@ But we can't evaluate `∇_x log p(x)`. The integration-by-parts trick (Hyvärin
 
 $$\mathcal{L}_\text{SM} = \mathbb{E}_{p(x)} \left[ \text{tr}(\nabla_x s_\theta(x)) + \frac{1}{2}\|s_\theta(x)\|^2 \right]$$
 
-The trace term requires computing the Jacobian of the network — expensive for high dimensions.
+The trace term requires computing the Jacobian of the network, which is expensive for high dimensions.
 
 **Denoising Score Matching** (Vincent, 2011) sidesteps this. Instead of matching the score of p(x), match the score of a noisy distribution `p_σ(x̃|x)`:
 
@@ -222,7 +222,7 @@ When `p_σ(x̃|x) = N(x̃; x, σ²I)`, the score is just:
 
 $$\nabla_{\tilde{x}} \log p_\sigma(\tilde{x} \mid x) = -\frac{\tilde{x} - x}{\sigma^2} = -\frac{\varepsilon}{\sigma}$$
 
-So training the score model to predict `(x̃ - x)/σ²` is equivalent to predicting the noise divided by σ — **this is exactly what DDPM's ε-prediction does**.
+So training the score model to predict `(x̃ - x)/σ²` is equivalent to predicting the noise divided by σ. **This is exactly what DDPM's ε-prediction does.**
 
 ### The Connection to DDPM
 
@@ -246,13 +246,13 @@ The **reverse SDE** (Anderson, 1982) is:
 
 $$dx = \left[f(x,t) - g(t)^2 \nabla_x \log p_t(x)\right] dt + g(t)\, d\bar{w}$$
 
-This is the reverse diffusion process expressed as a continuous-time differential equation. The only unknown is `∇_x log p_t(x)` — the score. Train a score network → plug it in → you can reverse any diffusion process.
+This is the reverse diffusion process expressed as a continuous-time differential equation. The only unknown is `∇_x log p_t(x)`, the score. Train a score network → plug it in → you can reverse any diffusion process.
 
 The **probability flow ODE** (deterministic):
 
 $$\frac{dx}{dt} = f(x,t) - \frac{1}{2} g(t)^2 \nabla_x \log p_t(x)$$
 
-This is the ODE whose trajectories have the same marginals as the reverse SDE — but it's deterministic. **DDIM is a discretisation of this probability flow ODE**. This is why DDIM works: it's not an approximation or a hack, it's a different (deterministic) integrator for the same underlying continuous process.
+This is the ODE whose trajectories have the same marginals as the reverse SDE, but it's deterministic. **DDIM is a discretisation of this probability flow ODE**. Not an approximation or a hack, just a different (deterministic) integrator for the same underlying continuous process.
 
 ### Langevin Dynamics Sampling
 
@@ -301,10 +301,10 @@ SD-Turbo is the `make.py` engine. Understanding what's happening inside:
 
 1. Your text prompt is encoded by CLIP's text encoder → 77 token embeddings
 2. The U-Net denoises a 64×64×4 latent (in latent space, not pixel space)
-3. At every denoising step, the U-Net cross-attends to the text embeddings — that's how the prompt steers generation
+3. At every denoising step, the U-Net cross-attends to the text embeddings; that's how the prompt steers generation
 4. After 1 step (SD-Turbo's entire denoising), the 64×64×4 latent is decoded by the VAE to a 512×512×3 image
 
-The temperature implementation in Synapse works directly in the latent space — after the denoising step, before the VAE decode. The denoised latent `z_0` is well-conditioned (~[-3, 3]) and the VAE decoder is smooth, so small Gaussian perturbations produce visually varied but coherent outputs. It's manually doing what DDPM's stochastic reverse step does — adding controlled randomness at the latent level.
+The temperature implementation in Synapse works directly in the latent space, after the denoising step and before the VAE decode. The denoised latent `z_0` is well-conditioned (~[-3, 3]) and the VAE decoder is smooth, so small Gaussian perturbations produce visually varied but coherent outputs. It's manually doing what DDPM's stochastic reverse step does: adding controlled randomness at the latent level.
 
 ```
 noise_std = temperature × 0.5

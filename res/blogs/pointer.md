@@ -1,8 +1,8 @@
-# Building MNIST From Scratch — No Frameworks, Just NumPy
+# Building MNIST From Scratch: No Frameworks, Just NumPy
 
-When you train a neural network using PyTorch or TensorFlow, it almost feels like magic. You define a model, call `.fit()`, and the loss starts to drop. But at some point, I wanted to know what’s really happening behind the scenes — what does *learning* actually mean? How does the network update its weights?  
+When you train a neural network using PyTorch or TensorFlow, it almost feels like magic. You define a model, call `.fit()`, and the loss starts to drop. But at some point, I wanted to know what’s really happening behind the scenes: what does *learning* actually mean? How does the network update its weights?
 
-So I decided to build everything from scratch — a simple neural network that classifies handwritten digits from the MNIST dataset, written entirely in **NumPy**, with no machine learning libraries, no `.backward()`, and no hidden autograd. Just pure math and matrix operations.
+So I built everything from scratch: a simple neural network that classifies handwritten digits from the MNIST dataset, written entirely in **NumPy**, with no machine learning libraries, no `.backward()`, and no hidden autograd. Just pure math and matrix operations.
 
 It was both frustrating and deeply satisfying.
 
@@ -14,7 +14,7 @@ $$
 \text{Input (784)} \rightarrow \text{Hidden (128)} \rightarrow \text{Output (10)}
 $$
 
-Each image passes through a hidden layer with a ReLU activation, then through an output layer with softmax to get a probability distribution over 10 digits. Nothing fancy — just enough to prove the concept.
+Each image passes through a hidden layer with a ReLU activation, then through an output layer with softmax to get a probability distribution over 10 digits. Nothing fancy, just enough to prove the concept.
 
 The math for the forward pass is straightforward:
 
@@ -38,7 +38,7 @@ This simple function drives the entire learning process.
 
 
 
-Backpropagation is where the real magic happens. Once the forward pass computes outputs, the backward pass figures out *how wrong* each neuron was, and adjusts its weights accordingly.  
+Backpropagation is where the math pays off. Once the forward pass computes outputs, the backward pass figures out *how wrong* each neuron was, and adjusts weights accordingly.
 
 For the output layer, the error term is:
 
@@ -70,4 +70,4 @@ and that’s literally how the network “learns”.
 
 
 
-I coded everything by hand — ReLU, its derivative, softmax, forward pass, backward pass, and the update loop. 
+I coded everything by hand: ReLU, its derivative, softmax, forward pass, backward pass, and the update loop.
