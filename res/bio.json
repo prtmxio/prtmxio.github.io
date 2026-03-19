@@ -1,11 +1,11 @@
 {
   "profile": {
     "name": "Pritam",
-    "tagline": "ECE @ DCRUST | Firmware, FPGAs, Edge ML",
-    "shortBio": "Second-year ECE student at DCRUST building at the boundary of firmware and machine learning. I write C/C++ for microcontrollers, design FPGA watchdogs for CubeSats, and run diffusion models inside 4 GB of VRAM."
+    "tagline": "Firmware, FPGAs, ROS 2, Edge ML",
+    "shortBio": "I write firmware and train models, and I care most about the overlap between the two. My work spans interrupt-driven C/C++ on microcontrollers, FPGA fault logic, ROS 2 autonomy stacks, and running ML inference on hardware that wasn't built for it."
   },
   "about": {
-    "fullBio": "I'm a second-year ECE student at DCRUST, Sonipat, studying electronics but spending most of my time writing firmware and building systems that sit at the edge of hardware and ML.\n\nMy work tends to involve tight constraints. At PCB CUPID I worked on Circuit Spell, an AI agent that turns natural language into full PCB designs — schematics, routed layouts, Gerber exports — while prototyping the EDA subsystems underneath it. Before that, I built XIO-SAT: a fault-tolerant CubeSat guardian node where an SLG47910 FPGA watchdog monitors a 4-node stack and guarantees hard reboot within 1.5s of any fault.\n\nI also built Synapse, a local multimodal pipeline chaining a VLM, CLIP-based retrieval, and a diffusion model inside 4 GB of VRAM. The constraint was the point — figuring out how to fit real ML inference on hardware that isn't supposed to do it."
+    "fullBio": "I work at the boundary of embedded systems and machine learning. On the hardware side: C/C++ firmware, ESP-IDF, FPGA design, interrupt scheduling, UART/MQTT pipelines, and multi-node system architecture. On the ML side: Transformers, Diffusers, HuggingFace, PyTorch, contrastive retrieval, and diffusion models.\n\nWhat connects both is the constraint problem. Getting a CubeSat watchdog to guarantee hard reboot in 1.5s, or fitting a VLM, a CLIP retrieval index, and a diffusion model inside 4 GB of VRAM — the interesting work is always about doing more with less.\n\nMy interests land in autonomous systems, edge AI, robotics perception, and anything that requires hardware and algorithms to meet halfway. I don't draw a hard line between firmware and ML; most of the problems worth solving sit somewhere in between."
   },
   "experience": [
     {
