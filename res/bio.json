@@ -1,22 +1,30 @@
 {
   "profile": {
     "name": "Pritam",
-    "tagline": "Embedded Systems Engineer | Building Intelligence at the Edge",
-    "shortBio": "I architect systems where robotics meets intelligence. My work spans embedded hardware, ROS-based autonomous systems, and deploying deep learning models on edge devices—bridging the gap between algorithms and the physical world through efficient, real-time engineering."
+    "tagline": "ECE @ DCRUST | Firmware, FPGAs, Edge ML",
+    "shortBio": "Second-year ECE student at DCRUST building at the boundary of firmware and machine learning. I write C/C++ for microcontrollers, design FPGA watchdogs for CubeSats, and run diffusion models inside 4 GB of VRAM."
   },
   "about": {
-    "fullBio": "I'm driven by making machines perceive, think, and act autonomously. As an embedded engineer with a focus on robotics and deep learning, I work across the entire development pipeline—from low-level firmware and PCB design to implementing ROS navigation stacks and optimizing neural networks for edge deployment. Whether I'm tuning a control loop in C++, building sensor fusion pipelines, or compressing a vision model to run on constrained hardware, I'm obsessed with creating intelligent systems that operate in the real world. My current explorations live at the intersection of robotic perception, embedded AI acceleration, and autonomous navigation. When I'm not debugging hardware or training models, I'm grinding competitive programming to sharpen my algorithmic thinking—because building smart systems requires both hardware intuition and computational mastery."
+    "fullBio": "I'm a second-year ECE student at DCRUST, Sonipat, studying electronics but spending most of my time writing firmware and building systems that sit at the edge of hardware and ML.\n\nMy work tends to involve tight constraints. At PCB CUPID I worked on Circuit Spell, an AI agent that turns natural language into full PCB designs — schematics, routed layouts, Gerber exports — while prototyping the EDA subsystems underneath it. Before that, I built XIO-SAT: a fault-tolerant CubeSat guardian node where an SLG47910 FPGA watchdog monitors a 4-node stack and guarantees hard reboot within 1.5s of any fault.\n\nI also built Synapse, a local multimodal pipeline chaining a VLM, CLIP-based retrieval, and a diffusion model inside 4 GB of VRAM. The constraint was the point — figuring out how to fit real ML inference on hardware that isn't supposed to do it."
   },
   "experience": [
     {
-      "date": "July 2025 - December 2025",
-      "title": "Embedded Application Engineer",
-      "company": "PCB CUPID",
+      "date": "Jul 2025 – Dec 2025",
+      "title": "Embedded Application Developer (Intern)",
+      "company": "PCB CUPID, Bangalore — Remote",
       "description": [
-        "Developing and debugging firmware for various microcontrollers using Embedded C for production-ready PCBs.",
-        "Designing and prototyping embedded solutions with CuPID development boards for scalable real-world applications.",
-        "Integrating hardware and software to create robust systems for IoT and automation.",
-        "Collaborating on PCB design and layout, ensuring functionality and performance optimization."
+        "Co-built Circuit Spell (spell.pcbcupid.com) from ideation: an AI agent that converts natural language into full PCB designs using 50+ proprietary Glyph modules, generating schematics, routed layouts, and 3D views exportable in Gerber/KiCad/PDF.",
+        "Prototyped core EDA subsystems: constraint-based component placement and auto-routing, de-risking the architecture before the production build.",
+        "Engineered multi-sensor IoT firmware in C/C++ on Glyph boards (C2, C6, H2) with interrupt-driven scheduling for high-precision industrial control tasks."
+      ]
+    },
+    {
+      "date": "Oct 2023 – Present",
+      "title": "Robotics Engineering Team Member & Mentor",
+      "company": "THINKBOTS Robotics Club, DCRUST",
+      "description": [
+        "Architected and built autonomous line-following robots using Arduino, achieving 95% path accuracy on complex competition tracks.",
+        "Led and mentored 15+ junior developers on embedded systems, PID control, and algorithm design."
       ]
     }
   ],
