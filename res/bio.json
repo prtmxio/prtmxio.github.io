@@ -9,13 +9,23 @@
   },
   "experience": [
     {
+      "date": "Mar 2026 – Present",
+      "title": "Embedded Firmware Developer Intern",
+      "company": "Glazia.in",
+      "description": [
+        "Building ESP32-S3 hub firmware for a home security device: BLE provisioning, Wi-Fi recovery, NVS-backed credentials, and operational/offline state handling.",
+        "Implemented encrypted ESP-NOW sensor pairing with nonce validation, retry/commit flow, persistent sensor tables, and queued event forwarding to the backend.",
+        "Integrated hub subsystems around LVGL display UI, WebSocket control/media channels, OV5640 camera streaming, R307 fingerprint enrollment, and relay-based door lock control."
+      ]
+    },
+    {
       "date": "Jul 2025 – Dec 2025",
       "title": "Embedded Application Developer (Intern)",
       "company": "PCB CUPID, Bangalore — Remote",
       "description": [
-        "Co-built Circuit Spell (spell.pcbcupid.com) from ideation: an AI agent that converts natural language into full PCB designs using 50+ proprietary Glyph modules, generating schematics, routed layouts, and 3D views exportable in Gerber/KiCad/PDF.",
-        "Prototyped core EDA subsystems: constraint-based component placement and auto-routing, de-risking the architecture before the production build.",
-        "Engineered multi-sensor IoT firmware in C/C++ on Glyph boards (C2, C6, H2) with interrupt-driven scheduling for high-precision industrial control tasks."
+        "Worked on Circuit Spell, a natural-language PCB design agent that generates schematics, routed layouts, 3D views, and Gerber/KiCad/PDF exports.",
+        "Prototyped placement and routing logic for early EDA workflows, including constraint-aware component layout experiments.",
+        "Developed C/C++ firmware for Glyph boards across multi-sensor IoT control tasks using interrupt-driven scheduling."
       ]
     },
     {
@@ -23,8 +33,8 @@
       "title": "Robotics Engineering Team Member & Mentor",
       "company": "THINKBOTS Robotics Club, DCRUST",
       "description": [
-        "Architected and built autonomous line-following robots using Arduino, achieving 95% path accuracy on complex competition tracks.",
-        "Led and mentored 15+ junior developers on embedded systems, PID control, and algorithm design."
+        "Built autonomous line-following robots with Arduino-class controllers, IR sensor arrays, motor drivers, and PID control loops.",
+        "Mentored junior members on embedded C, sensor calibration, control tuning, and competition robot debugging."
       ]
     }
   ],
