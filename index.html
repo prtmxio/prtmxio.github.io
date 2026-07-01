@@ -11,21 +11,40 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+        />
         <link rel="stylesheet" href="css/styles.css" />
 
         <script>
             window.MathJax = {
                 tex: {
-                    inlineMath: [["$", "$"], ["\\(", "\\)"]],
-                    displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                    inlineMath: [
+                        ["$", "$"],
+                        ["\\(", "\\)"],
+                    ],
+                    displayMath: [
+                        ["$$", "$$"],
+                        ["\\[", "\\]"],
+                    ],
                 },
                 options: {
-                    skipHtmlTags: ["script", "noscript", "style", "textarea", "pre"],
+                    skipHtmlTags: [
+                        "script",
+                        "noscript",
+                        "style",
+                        "textarea",
+                        "pre",
+                    ],
                 },
             };
         </script>
-        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script
+            id="MathJax-script"
+            async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+        ></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
@@ -58,38 +77,94 @@
                             id="profile-pic"
                             src="res/prof.jpeg"
                             alt="Pritam"
-                            onerror="this.src='res/profile.jpeg'"
+                            onerror="this.src = 'res/profile.jpeg'"
                         />
                         <div>
-                            <div class="prompt-row"><span>$</span><span>whoami</span></div>
+                            <div class="prompt-row">
+                                <span>$</span><span>whoami</span>
+                            </div>
                             <h1 id="name"></h1>
                         </div>
                     </div>
 
-                    <div class="prompt-row"><span>$</span><span>./focus</span></div>
-                    <p id="tagline"><span id="tagline-text"></span><span class="t-cursor"></span></p>
+                    <div class="prompt-row">
+                        <span>$</span><span>./focus</span>
+                    </div>
+                    <p id="tagline">
+                        <span id="tagline-text"></span
+                        ><span class="t-cursor"></span>
+                    </p>
 
-                    <div class="prompt-row"><span>$</span><span>cat lab-notes.txt</span></div>
+                    <div class="prompt-row">
+                        <span>$</span><span>cat lab-notes.txt</span>
+                    </div>
                     <p id="bio"></p>
 
                     <nav aria-label="Primary navigation">
-                        <div class="prompt-row"><span>$</span><span>ls pages/</span></div>
+                        <div class="prompt-row">
+                            <span>$</span><span>ls pages/</span>
+                        </div>
                         <ul class="nav-links">
-                            <li><a href="#about" data-section="about" class="nav-link active">about</a></li>
-                            <li><a href="#experience" data-section="experience" class="nav-link">experience</a></li>
-                            <li><a href="#projects" data-section="projects" class="nav-link">projects</a></li>
-                            <li><a href="#blog" data-section="blog" class="nav-link">blog</a></li>
-                            <li><a href="#contact" data-section="contact" class="nav-link">contact</a></li>
+                            <li>
+                                <a
+                                    href="#about"
+                                    data-section="about"
+                                    class="nav-link active"
+                                    >about</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="#experience"
+                                    data-section="experience"
+                                    class="nav-link"
+                                    >experience</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="#projects"
+                                    data-section="projects"
+                                    class="nav-link"
+                                    >projects</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="#blog"
+                                    data-section="blog"
+                                    class="nav-link"
+                                    >blog</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="#contact"
+                                    data-section="contact"
+                                    class="nav-link"
+                                    >contact</a
+                                >
+                            </li>
                         </ul>
                     </nav>
                 </div>
 
                 <div class="sidebar-tools">
-                    <button id="theme-toggle" class="tool-button" type="button" aria-label="Toggle theme">
+                    <button
+                        id="theme-toggle"
+                        class="tool-button"
+                        type="button"
+                        aria-label="Toggle theme"
+                    >
                         <span class="tool-icon" aria-hidden="true">◐</span>
                         <span id="theme-label">dark</span>
                     </button>
-                    <a href="res/pritam_resume.pdf" target="_blank" rel="noopener noreferrer" class="tool-button">
+                    <a
+                        href="res/prtmxio.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="tool-button"
+                    >
                         <span class="tool-icon" aria-hidden="true">↓</span>
                         <span>resume</span>
                     </a>
@@ -109,7 +184,10 @@
             <main class="content-shell">
                 <section id="about" class="content-section active">
                     <div class="section-kicker">research profile</div>
-                    <h2>Robotics firmware, edge AI, and systems that meet hardware.</h2>
+                    <h2>
+                        Robotics firmware, edge AI, and systems that meet
+                        hardware.
+                    </h2>
                     <div id="about-content" class="prose about-text"></div>
                 </section>
 
@@ -133,10 +211,16 @@
                     </div>
                     <div class="blog-layout">
                         <div id="blog-container" class="blog-list"></div>
-                        <aside class="reader-dock" aria-label="Blog reader preview">
+                        <aside
+                            class="reader-dock"
+                            aria-label="Blog reader preview"
+                        >
                             <div class="reader-empty">
                                 <span>select post</span>
-                                <p>Notes, derivations, and build logs open here with TOC, math, code, and reading progress.</p>
+                                <p>
+                                    Notes, derivations, and build logs open here
+                                    with TOC, math, code, and reading progress.
+                                </p>
                             </div>
                         </aside>
                     </div>
@@ -145,42 +229,98 @@
                 <section id="contact" class="content-section">
                     <div class="section-kicker">open channel</div>
                     <h2>Contact</h2>
-                    <p class="section-lede">Send a focused note. The form opens your mail app with everything filled in.</p>
+                    <p class="section-lede">
+                        Send a focused note. The form opens your mail app with
+                        everything filled in.
+                    </p>
                     <form id="contact-form" class="contact-form">
                         <label>
                             <span>Name</span>
-                            <input id="contact-name" name="name" type="text" autocomplete="name" placeholder="Your name" />
+                            <input
+                                id="contact-name"
+                                name="name"
+                                type="text"
+                                autocomplete="name"
+                                placeholder="Your name"
+                            />
                         </label>
                         <label>
                             <span>Email</span>
-                            <input id="contact-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" />
+                            <input
+                                id="contact-email"
+                                name="email"
+                                type="email"
+                                autocomplete="email"
+                                placeholder="you@example.com"
+                            />
                         </label>
                         <label>
                             <span>Subject</span>
-                            <input id="contact-subject" name="subject" type="text" placeholder="Project, role, question..." />
+                            <input
+                                id="contact-subject"
+                                name="subject"
+                                type="text"
+                                placeholder="Project, role, question..."
+                            />
                         </label>
                         <label>
                             <span>Message</span>
-                            <textarea id="contact-message" name="message" rows="8" placeholder="Write the message here"></textarea>
+                            <textarea
+                                id="contact-message"
+                                name="message"
+                                rows="8"
+                                placeholder="Write the message here"
+                            ></textarea>
                         </label>
-                        <button class="primary-button" type="submit">compose email</button>
+                        <button class="primary-button" type="submit">
+                            compose email
+                        </button>
                     </form>
-                    <p class="direct-email">Direct: <a id="direct-email" href="mailto:dhimanpritam1579@gmail.com">dhimanpritam1579@gmail.com</a></p>
+                    <p class="direct-email">
+                        Direct:
+                        <a
+                            id="direct-email"
+                            href="mailto:dhimanpritam1579@gmail.com"
+                            >dhimanpritam1579@gmail.com</a
+                        >
+                    </p>
                 </section>
             </main>
         </div>
 
         <aside id="blog-reader" class="blog-reader" aria-hidden="true">
             <div class="reader-backdrop" data-reader-close></div>
-            <div class="reader-panel" role="dialog" aria-modal="true" aria-labelledby="post-title">
+            <div
+                class="reader-panel"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="post-title"
+            >
                 <header class="reader-header">
-                    <button class="reader-close" type="button" data-reader-close aria-label="Close reader">×</button>
+                    <button
+                        class="reader-close"
+                        type="button"
+                        data-reader-close
+                        aria-label="Close reader"
+                    >
+                        ×
+                    </button>
                     <div class="reader-actions">
-                        <button id="reader-theme-toggle" class="tool-button compact" type="button">reader: dark</button>
+                        <button
+                            id="reader-theme-toggle"
+                            class="tool-button compact"
+                            type="button"
+                        >
+                            reader: dark
+                        </button>
                     </div>
                 </header>
                 <div class="reader-grid">
-                    <nav id="post-toc" class="post-toc" aria-label="Table of contents"></nav>
+                    <nav
+                        id="post-toc"
+                        class="post-toc"
+                        aria-label="Table of contents"
+                    ></nav>
                     <article class="blog-post-content">
                         <div id="post-meta" class="post-meta"></div>
                         <h1 id="post-title" class="post-title"></h1>
