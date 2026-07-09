@@ -4,7 +4,7 @@
       "date": "2024-10-20",
       "title": "MNIST from Scratch",
       "content": "Created a Model that predicts numbers, trained on MNIST dataset ",
-      "tags": ["embedded", "C++", "tutorial"],
+      "tags": ["neural networks", "python", "numpy"],
       "read_me": "./blogs/pointer.md"
     },
 

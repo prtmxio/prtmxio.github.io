@@ -1,7 +1,7 @@
 {
   "profile": {
     "name": "Pritam",
-    "tagline": "Firmware, FPGAs, ROS 2, Edge ML",
+    "tagline": "building robots that see, think, and (usually) don't crash",
     "shortBio": "I write firmware and train models, and I care most about the overlap between the two. My work spans interrupt-driven C/C++ on microcontrollers, FPGA fault logic, ROS 2 autonomy stacks, and running ML inference on hardware that wasn't built for it."
   },
   "about": {
@@ -10,18 +10,20 @@
   "experience": [
     {
       "date": "Mar 2026 – Present",
-      "title": "Embedded Firmware Developer Intern",
-      "company": "Glazia.in",
+      "title": "Embedded Systems Intern",
+      "company": "Glazia, Gurgaon : Remote",
       "description": [
-        "Building ESP32-S3 hub firmware for a home security device: BLE provisioning, Wi-Fi recovery, NVS-backed credentials, and operational/offline state handling.",
-        "Implemented encrypted ESP-NOW sensor pairing with nonce validation, retry/commit flow, persistent sensor tables, and queued event forwarding to the backend.",
-        "Integrated hub subsystems around LVGL display UI, WebSocket control/media channels, OV5640 camera streaming, R307 fingerprint enrollment, and relay-based door lock control."
+        "Built Glazia Home Secure, an ESP-IDF IoT home security system: hub firmware (ESP32-S3) driving an LVGL touch display, fingerprint auth, camera capture, and environmental sensors.",
+        "Fixed a camera DMA bottleneck by retuning OV5640 XCLK to 16MHz, sustaining 10+ fps MJPEG capture.",
+        "Built an encrypted ESP-NOW sensor mesh with BLE provisioning and a secure multi-party pairing protocol.",
+        "Designed dual-factor device authentication requiring MAC address and a server-issued secret to match.",
+        "Prevented spoofed hub identity across all device routes via strict credential validation."
       ]
     },
     {
       "date": "Jul 2025 – Dec 2025",
       "title": "Embedded Application Developer (Intern)",
-      "company": "PCB CUPID, Bangalore — Remote",
+      "company": "PCB CUPID, Bangalore : Remote",
       "description": [
         "Worked on Circuit Spell, a natural-language PCB design agent that generates schematics, routed layouts, 3D views, and Gerber/KiCad/PDF exports.",
         "Prototyped placement and routing logic for early EDA workflows, including constraint-aware component layout experiments.",

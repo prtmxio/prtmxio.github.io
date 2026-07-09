@@ -2,6 +2,14 @@
   "projects": [
     {
       "priority": 1,
+      "title": "meshflow",
+      "description": "CLI tool converting Onshape CAD assemblies into simulation-ready ROS 2 packages (URDF, xacro, Gazebo plugins, launch files) via the Onshape REST API. Designed KinematicDAG, a geometry-only classifier inferring robot type and sensor kind from URDF joint structure. Auto-generates Gazebo/ros2_control plugins with wheel geometry measured via trimesh.",
+      "technologies": ["Python", "ROS 2", "Gazebo", "Onshape API", "URDF/Xacro"],
+      "codeUrl": "https://github.com/prtmxio/meshflow",
+      "videoUrl": ""
+    },
+    {
+      "priority": 2,
       "title": "Synapse",
       "description": "Offline multimodal pipeline: VLM (SmolVLM-500M) + CLIP/HNSW semantic retrieval + SD-Turbo generation. Runs within 4GB VRAM via staged fp16 model loading and explicit GPU memory handoff.",
       "technologies": ["Python", "PyTorch", "Transformers", "Diffusers", "CLIP", "HNSW"],
@@ -9,7 +17,7 @@
       "videoUrl": ""
     },
     {
-      "priority": 2,
+      "priority": 3,
       "title": "XTorr",
       "description": "BitTorrent client in Java, built from scratch. Raw TCP sockets, concurrent peer connections, SHA-1 piece verification -- full protocol implementation.",
       "technologies": ["Java", "Networking", "Concurrency"],
@@ -17,7 +25,7 @@
       "videoUrl": ""
     },
     {
-      "priority": 3,
+      "priority": 4,
       "title": "Line Follower Robot",
       "description": "Arduino Nano bot with 8-IR sensor array and L298N motor driver. PID control for stable path tracking under varied conditions.",
       "technologies": ["Arduino", "PID Control", "Embedded C"],
@@ -25,7 +33,7 @@
       "videoUrl": ""
     },
     {
-      "priority": 4,
+      "priority": 5,
       "title": "Traco",
       "description": "Ray tracing engine in pure Java. Recursive light transport with shadows, multi-bounce reflections, and supersampling anti-aliasing.",
       "technologies": ["Java", "Ray Tracing", "Computer Graphics", "Phong Shading"],
@@ -33,7 +41,7 @@
       "videoUrl": ""
     },
     {
-      "priority": 5,
+      "priority": 6,
       "title": "Forge_CLI",
       "description": "CLI tool to convert KiCad PCB files into stylized SVG images. Supports theme control, layer visibility, and multiple rendering modes.",
       "technologies": ["Python", "Typer", "Click"],
@@ -41,7 +49,7 @@
       "videoUrl": ""
     },
     {
-      "priority": 6,
+      "priority": 7,
       "title": "Dobosaurus",
       "description": "Chrome Dino clone in Java Swing. Smooth gameplay, dynamic obstacles, high-score tracking.",
       "technologies": ["Java", "Swing", "AWT"],

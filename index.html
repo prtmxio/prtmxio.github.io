@@ -11,11 +11,8 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
-        />
-        <link rel="stylesheet" href="css/styles.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
+        <link rel="stylesheet" href="css/styles.css?v=6" />
 
         <script>
             window.MathJax = {
@@ -50,12 +47,20 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-        <script type="module" src="js/main.js"></script>
+        <script type="module" src="js/main.js?v=5"></script>
     </head>
     <body>
+        <canvas id="bg-canvas" aria-hidden="true"></canvas>
         <div id="boot-overlay" aria-live="polite">
-            <div id="boot-lines"></div>
+            <div id="boot-card">
+                <pre id="boot-ascii">██████╗ ██████╗ ████████╗███╗   ███╗██╗  ██╗██╗ ██████╗
+██╔══██╗██╔══██╗╚══██╔══╝████╗ ████║╚██╗██╔╝██║██╔═══██╗
+██████╔╝██████╔╝   ██║   ██╔████╔██║ ╚███╔╝ ██║██║   ██║
+██╔═══╝ ██╔══██╗   ██║   ██║╚██╔╝██║ ██╔██╗ ██║██║   ██║
+██║     ██║  ██║   ██║   ██║ ╚═╝ ██║██╔╝ ██╗██║╚██████╔╝
+╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ </pre>
+                <div id="boot-lines"></div>
+            </div>
         </div>
 
         <div id="reader-progress" aria-hidden="true"><span></span></div>
@@ -72,6 +77,14 @@
                 </div>
 
                 <div class="sidebar-body">
+                    <div class="ascii-logo-chip">
+                        <pre class="ascii-chip-pre">██████╗ ██████╗ ████████╗███╗   ███╗██╗  ██╗██╗ ██████╗
+██╔══██╗██╔══██╗╚══██╔══╝████╗ ████║╚██╗██╔╝██║██╔═══██╗
+██████╔╝██████╔╝   ██║   ██╔████╔██║ ╚███╔╝ ██║██║   ██║
+██╔═══╝ ██╔══██╗   ██║   ██║╚██╔╝██║ ██╔██╗ ██║██║   ██║
+██║     ██║  ██║   ██║   ██║ ╚═╝ ██║██╔╝ ██╗██║╚██████╔╝
+╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ </pre>
+                    </div>
                     <div class="profile-block">
                         <img
                             id="profile-pic"
@@ -81,14 +94,14 @@
                         />
                         <div>
                             <div class="prompt-row">
-                                <span>$</span><span>whoami</span>
+                                <span>$</span><span id="prompt-1"></span>
                             </div>
                             <h1 id="name"></h1>
                         </div>
                     </div>
 
                     <div class="prompt-row">
-                        <span>$</span><span>./focus</span>
+                        <span>$</span><span id="prompt-2"></span>
                     </div>
                     <p id="tagline">
                         <span id="tagline-text"></span
@@ -96,13 +109,13 @@
                     </p>
 
                     <div class="prompt-row">
-                        <span>$</span><span>cat lab-notes.txt</span>
+                        <span>$</span><span id="prompt-3"></span>
                     </div>
                     <p id="bio"></p>
 
                     <nav aria-label="Primary navigation">
                         <div class="prompt-row">
-                            <span>$</span><span>ls pages/</span>
+                            <span>$</span><span id="prompt-4"></span>
                         </div>
                         <ul class="nav-links">
                             <li>
@@ -230,8 +243,8 @@
                     <div class="section-kicker">open channel</div>
                     <h2>Contact</h2>
                     <p class="section-lede">
-                        Send a focused note. The form opens your mail app with
-                        everything filled in.
+                        robots, models, or a broken Linux config; <br>
+                        my inbox is open :)
                     </p>
                     <form id="contact-form" class="contact-form">
                         <label>
@@ -329,5 +342,18 @@
                 </div>
             </div>
         </aside>
+        <button id="term-trigger" title="open terminal">&gt;_</button>
+        <div id="term-panel" hidden>
+            <div id="term-header">
+                <span id="term-header-label"><span id="term-dot"></span>guest@prtmxio: ~</span>
+                <button id="term-close">×</button>
+            </div>
+            <div id="term-log"></div>
+            <div id="term-input-row">
+                <span id="term-prompt">guest@prtmxio:~$</span>
+                <input id="term-input" placeholder="try `help`" autocomplete="off" />
+            </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+        <script src="js/bg.js?v=3" defer></script>
     </body>
 </html>

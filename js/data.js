@@ -1,8 +1,9 @@
 export async function loadData() {
+    const cb = `?v=${Date.now()}`;
     const [bioRes, projRes, blogRes] = await Promise.all([
-        fetch("./res/bio.json"),
-        fetch("./res/projects.json"),
-        fetch("./res/blog.json"),
+        fetch(`./res/bio.json${cb}`),
+        fetch(`./res/projects.json${cb}`),
+        fetch(`./res/blog.json${cb}`),
     ]);
     if (!bioRes.ok)  throw new Error(`bio.json: ${bioRes.statusText}`);
     if (!projRes.ok) throw new Error(`projects.json: ${projRes.statusText}`);

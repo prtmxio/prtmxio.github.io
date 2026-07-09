@@ -1,11 +1,12 @@
-import { boot } from "./boot.js";
-import { loadData } from "./data.js";
-import { setupNavigation } from "./nav.js";
-import { populateSocials } from "./socials.js";
-import { renderAboutAndExperience, renderProjects, renderBlog } from "./render.js";
-import { initBlog } from "./blog.js";
-import { initReaderTheme, initTheme } from "./theme.js";
-import { typeWriter } from "./utils.js";
+import { boot } from "./boot.js?v=2";
+import { loadData } from "./data.js?v=2";
+import { setupNavigation } from "./nav.js?v=2";
+import { populateSocials } from "./socials.js?v=2";
+import { renderAboutAndExperience, renderProjects, renderBlog } from "./render.js?v=2";
+import { initBlog } from "./blog.js?v=2";
+import { initReaderTheme, initTheme } from "./theme.js?v=2";
+import { typeWriter } from "./utils.js?v=2";
+import { initTerminal } from "./terminal.js?v=2";
 
 document.addEventListener("DOMContentLoaded", async () => {
     initTheme();
@@ -17,11 +18,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         [, data] = await Promise.all([boot(), loadData()]);
     } catch (err) {
         console.error("Error loading data:", err);
-        document.getElementById("main-container").innerHTML = `
-            <div class="fatal-error">
-                <p>// error</p>
-                <pre>${err.message}</pre>
-            </div>`;
+        const main = document.getElementById("main-container");
+        if (main) {
+            main.style.opacity = "1";
+            main.innerHTML = `<div class="fatal-error"><p>// error</p><pre>${err.message}</pre></div>`;
+        }
         return;
     }
 
@@ -39,9 +40,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderProjects(projects);
     renderBlog(blogPosts);
     initBlog(blogPosts);
+    initTerminal(bio, projects, blogPosts);
     initContactForm(email);
 
     setTimeout(() => typeWriter("tagline-text", bio.profile?.tagline || "", 34), 80);
+
+    setTimeout(() => typeWriter("prompt-1", "whoami", 40), 600);
+    setTimeout(() => typeWriter("prompt-2", "./focus", 40), 1000);
+    setTimeout(() => typeWriter("prompt-3", "cat lab-notes.txt", 40), 1400);
+    setTimeout(() => typeWriter("prompt-4", "ls pages/", 40), 1800);
 });
 
 function initContactForm(email) {
