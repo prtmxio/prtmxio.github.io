@@ -1,6 +1,6 @@
 # prtmxio.github.io
 
-Personal portfolio site hosted on GitHub Pages. Buildless by design — no bundler, no framework. GitHub Pages serves the static files directly; all rendering happens in the browser.
+Personal portfolio site hosted on GitHub Pages. Buildless by design, utilizing no bundler and no framework. GitHub Pages serves the static files directly, and all rendering happens in the browser.
 
 ## Structure
 
@@ -9,12 +9,14 @@ Personal portfolio site hosted on GitHub Pages. Buildless by design — no bundl
 ├── index.html              # page shell, CDN script tags
 ├── css/styles.css          # layout, themes, responsive styles
 ├── js/
+│   ├── bg.js               # Three.js 3D particle background
 │   ├── main.js             # bootstraps data, rendering, theme, contact form
 │   ├── data.js             # fetches JSON content
 │   ├── render.js           # renders about, experience, projects, blog cards
 │   ├── nav.js              # hash-based navigation
 │   ├── blog.js             # markdown reader, TOC, read time, scroll progress
 │   ├── theme.js            # theme persistence via localStorage
+│   ├── terminal.js         # interactive command-line simulation
 │   └── boot.js             # startup overlay
 └── res/
     ├── bio.json            # profile, bio, experience, social links
@@ -26,7 +28,7 @@ Personal portfolio site hosted on GitHub Pages. Buildless by design — no bundl
 
 ## Local Development
 
-Serve from the repository root over HTTP — the site fetches JSON and Markdown at runtime, so opening `index.html` directly from the filesystem will not work.
+Serve from the repository root over HTTP. The site fetches JSON and Markdown at runtime, so opening `index.html` directly from the filesystem will not work.
 
 ```sh
 python3 -m http.server 4173
@@ -36,11 +38,11 @@ Then open `http://localhost:4173/`.
 
 ## Content Editing
 
-**Profile and experience** — edit `res/bio.json`. The experience array renders in order; put the current role first.
+**Profile and experience**: edit `res/bio.json`. The experience array renders in order. Put the current role first.
 
-**Projects** — edit `res/projects.json`. Cards are sorted by `priority`.
+**Projects**: edit `res/projects.json`. Cards are sorted by `priority`.
 
-**Blog posts** — add a Markdown file under `res/blogs/`, then register it in `res/blog.json` with the following fields:
+**Blog posts**: add a Markdown file under `res/blogs/`, then register it in `res/blog.json` with the following fields:
 
 ```json
 {
@@ -73,6 +75,8 @@ node --check js/blog.js
 node --check js/nav.js
 node --check js/render.js
 node --check js/theme.js
+node --check js/bg.js
+node --check js/terminal.js
 git diff --check
 ```
 
