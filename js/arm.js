@@ -342,9 +342,6 @@ export function rasterize(q, jaw, g) {
 
 const LEVELS = ["#3A3935", "#55524E", "#78746E", "#9C9890", "#B9B5AD", "#D4D1C9", "#F0EDE7"];
 const GLYPHS = [".", ":", "-", "=", "+", "*", "#", "@", "!", "%", "", "+", "*", "."];
-const OUTLINE = "#252522", ORANGE = "#FF7A1A", ORANGE_DEEP = "#C4520F";
-const GLYPH_BG = "#1a1917";
-const GLYPH_FONT = '"JetBrains Mono", ui-monospace, Menlo, monospace';
 const TILES = 14; // 7 levels, outline, orange, dark orange, ghost, 3 marker steps
 
 function parseHex(h) {
@@ -376,6 +373,8 @@ function boot() {
     const occ = [new Uint8Array(N), new Uint8Array(N), new Uint8Array(N), new Uint8Array(N)]; // ring: k, k-1, k-2, k-3
     let frameNo = 0;
     let rect = { left: 0, top: 0, width: 1, height: 1 };
+    let themeLight = false;
+    let atlasKey = "";
 
     // state
     let mode = "on"; // on | off | still | animate
@@ -449,15 +448,32 @@ function boot() {
     }
 
     // ---- atlas ----
+    function readTheme() {
+        themeLight = root.dataset.theme === "light";
+        const cs0 = getComputedStyle(root);
+        const th = {
+            line: cs0.getPropertyValue("--line").trim() || "#D9D5CC",
+            bg: cs0.getPropertyValue("--bg").trim() || "#1a1917",
+            font: cs0.getPropertyValue("--font-mono").trim() || "monospace",
+        };
+        crumbCol0 = cs0.getPropertyValue("--accent").trim() || "#FF7A1A";
+        crumbCol1 = cs0.getPropertyValue("--accent-deep").trim() || "#C4520F";
+        return th;
+    }
     function buildAtlas() {
+        const th = readTheme();
+        const key = `${D}|${themeLight}|${th.line}`;
+        if (key === atlasKey && atlas) return;
+        atlasKey = key;
         if (!atlas) { atlas = document.createElement("canvas"); atlasCtx = atlas.getContext("2d"); }
         atlas.width = D * TILES;
         atlas.height = D;
         const a = atlasCtx;
         a.clearRect(0, 0, atlas.width, atlas.height);
-        const fills = [...LEVELS, OUTLINE, ORANGE, ORANGE_DEEP, LEVELS[1], ORANGE, ORANGE, ORANGE];
+        const ramp = themeLight ? LEVELS.slice().reverse() : LEVELS;
+        const fills = [...ramp, themeLight && /^#[0-9a-f]{6}$/i.test(th.line) ? th.line : themeLight ? "#D9D5CC" : "#252522", "#FF7A1A", "#C4520F", ramp[1], "#FF7A1A", "#FF7A1A", "#FF7A1A"];
         const gap = D >= 5 ? 1 : 0;
-        a.font = `500 ${Math.max(4, Math.round(D * 0.8))}px ${GLYPH_FONT}`;
+        a.font = `500 ${Math.max(4, Math.round(D * 0.8))}px ${th.font}`;
         a.textAlign = "center";
         a.textBaseline = "middle";
         for (let t = 0; t < TILES; t++) {
@@ -468,7 +484,7 @@ function boot() {
             const g = GLYPHS[t];
             if (!g) continue;
             const bright = t >= 11 ? false : lum(f) > 0.42;
-            a.fillStyle = t >= 11 ? GLYPH_BG : mixHex(f, bright ? 0 : 255, 0.28);
+            a.fillStyle = t >= 11 ? th.bg : mixHex(f, bright ? 0 : 255, 0.28);
             a.fillText(g, x + (D - gap) / 2, (D - gap) / 2 + 0.5);
         }
     }
@@ -486,6 +502,7 @@ function boot() {
         layer.style.height = `${(ROWS * D) / dpr}px`;
         layer.style.setProperty("--arm-cs", `${cs}px`);
         ctx.imageSmoothingEnabled = false;
+        atlasKey = "";
         buildAtlas();
         if (crumbCv) { crumbCv.width = innerWidth; crumbCv.height = innerHeight; crumbDirty = true; }
         const r = canvas.getBoundingClientRect();
@@ -500,7 +517,7 @@ function boot() {
     const VANISH = 0.25, FADE = 1.5, POP = 0.08;
     const CRUMB_A = [1, 0.66, 0.33, 0];
     let crumbCv = null, crumbCtx = null, crumbDirty = false, crumbDrawn = false;
-    const crumbCol0 = ORANGE, crumbCol1 = ORANGE_DEEP;
+    let crumbCol0 = "#FF7A1A", crumbCol1 = "#C4520F";
     // GSt: 0 free, 1 waiting at click, 2 vanishing (gripped), 3 stepped fade (stale)
     const GX = new Float64Array(NG), GY = new Float64Array(NG), GT = new Float64Array(NG);
     const GSt = new Int8Array(NG), GN = new Uint8Array(NG), GSz = new Uint8Array(NG);
@@ -891,6 +908,8 @@ function boot() {
             cancelAnimationFrame(pending);
             pending = requestAnimationFrame(() => { layout(); });
         });
+        new MutationObserver(() => { buildAtlas(); if (runState !== "running") render(); })
+            .observe(root, { attributes: true, attributeFilter: ["data-theme"] });
         requestAnimationFrame(() => layer.classList.add("on"));
     }
 
