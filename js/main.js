@@ -1,6 +1,7 @@
 import { boot } from "./boot.js?v=2";
 import { loadData } from "./data.js?v=2";
-import { setupNavigation, jumpToHash } from "./nav.js?v=4";
+import { setupNavigation, jumpToHash } from "./nav.js?v=5";
+import { initSidenav } from "./sidenav.js?v=1";
 import { initRail } from "./rail.js?v=1";
 import { populateHeroLinks } from "./socials.js?v=3";
 import { renderAboutAndExperience, renderHeroSpec, renderProjects, renderBlog } from "./render.js?v=3";
@@ -12,6 +13,7 @@ import { initTerminal } from "./terminal.js?v=2";
 document.addEventListener("DOMContentLoaded", async () => {
     initTheme();
     initReaderTheme();
+    initSidenav();
     setupNavigation();
     initRail();
 

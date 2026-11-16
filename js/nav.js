@@ -7,16 +7,18 @@ let observer = null;
 export function setupNavigation() {
     currentHash = window.location.hash;
 
-    document.querySelectorAll(".nav-link[data-section]").forEach((link) => {
-        link.addEventListener("click", (event) => {
-            const section = link.dataset.section;
-            if (!SECTION_IDS.includes(section)) return;
-            event.preventDefault();
-            const hash = `#${section}`;
-            if (window.location.hash !== hash) history.pushState(null, "", hash);
-            currentHash = hash;
-            scrollToSection(section, false);
-        });
+    // Delegated so the top rail and the sidenav (and anything added later) share one handler.
+    document.addEventListener("click", (event) => {
+        const link = event.target.closest("a[data-section]");
+        if (!link || event.defaultPrevented || event.button !== 0
+            || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        const section = link.dataset.section;
+        if (!SECTION_IDS.includes(section)) return;
+        event.preventDefault();
+        const hash = `#${section}`;
+        if (window.location.hash !== hash) history.pushState(null, "", hash);
+        currentHash = hash;
+        scrollToSection(section, false);
     });
 
     window.addEventListener("hashchange", onHashNavigation);
@@ -70,7 +72,7 @@ function observeSections() {
 }
 
 function setActive(sectionId) {
-    document.querySelectorAll(".nav-link[data-section]").forEach((link) => {
+    document.querySelectorAll("a[data-section]").forEach((link) => {
         const on = link.dataset.section === sectionId;
         link.classList.toggle("active", on);
         if (on) link.setAttribute("aria-current", "location");

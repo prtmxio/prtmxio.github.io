@@ -48,6 +48,7 @@
     --page-margin: clamp(16px, 4vw, 64px);
     --rail-h: 48px;
     --status-h: 28px;
+    --sidenav-w: 40px;
 
     --z-field: 0;
     --z-grid: 1;
@@ -383,6 +384,91 @@ button { cursor: pointer; }
 
 @media (max-width: 767px) {
     #main-container { padding-top: calc(var(--rail-h) + 44px); }
+}
+
+/* --- section rail (left-edge sidenav, >= 1024px) --- */
+.sidenav { display: none; }
+
+@media (min-width: 1024px) {
+    .sidenav {
+        position: fixed;
+        left: 0;
+        top: var(--rail-h);
+        bottom: var(--status-h);
+        z-index: var(--z-chrome);
+        width: var(--sidenav-w);
+        display: flex;
+        align-items: center;
+        border-right: 1px solid var(--line);
+    }
+
+    .sidenav ol { margin: 0; padding: 0; list-style: none; }
+
+    .sidenav a {
+        position: relative;
+        display: block;
+        width: var(--sidenav-w);
+        height: 40px;
+        font-size: var(--t-ui);
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .sidenav a::before {
+        content: "";
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        width: 12px;
+        height: 1px;
+        background: var(--muted);
+    }
+
+    .sidenav a:hover::before { background: var(--fg); }
+    .sidenav a.active::before { width: 24px; background: var(--accent); }
+
+    .sidenav a:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
+    }
+
+    .sidenav-label {
+        position: absolute;
+        left: var(--sidenav-w);
+        top: 0;
+        height: 100%;
+        min-width: 11em;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        padding: 0 var(--s-4);
+        background: var(--bg-panel);
+        border-right: 1px solid var(--line);
+        clip-path: inset(0 100% 0 0);
+        transition: clip-path var(--d-fast) steps(4, end) 200ms;
+    }
+
+    .sidenav:hover .sidenav-label,
+    .sidenav:focus-within .sidenav-label {
+        clip-path: inset(0);
+        transition-delay: 0s;
+    }
+
+    .sidenav-idx { color: var(--muted); }
+    .sidenav-word { color: var(--sub); }
+    .sidenav a.active .sidenav-idx { color: var(--accent); }
+    .sidenav a.active .sidenav-word { color: var(--fg); }
+
+    .rail-nav { display: none; }
+    .rail-tools { margin-left: auto; }
+
+    #main-container {
+        padding-left: max(var(--page-margin), calc(var(--sidenav-w) + var(--s-4)));
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sidenav-label { transition: none; }
 }
 
 /* --- hero (stage B) --- */
