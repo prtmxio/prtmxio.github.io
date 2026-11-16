@@ -1,4 +1,4 @@
-import { boot } from "./boot.js?v=2";
+import { runIntro } from "./intro.js?v=3";
 import { loadData } from "./data.js?v=2";
 import { setupNavigation, jumpToHash } from "./nav.js?v=5";
 import { initSidenav } from "./sidenav.js?v=1";
@@ -19,14 +19,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let data;
     try {
-        [, data] = await Promise.all([boot(), loadData()]);
+        data = await loadData();
     } catch (err) {
         console.error("Error loading data:", err);
         const main = document.getElementById("main-container");
         if (main) {
-            main.style.opacity = "1";
             main.innerHTML = `<div class="fatal-error"><p>// error</p><pre>${err.message}</pre></div>`;
         }
+        runIntro();
         return;
     }
 
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initTerminal(bio, projects, blogPosts);
     initContactForm(email);
     jumpToHash();
+    runIntro();
 
     setTimeout(() => typeWriter("tagline-text", bio.profile?.tagline || "", 34), 80);
 });

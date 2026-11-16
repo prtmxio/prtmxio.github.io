@@ -145,59 +145,6 @@ a { color: inherit; }
 button, input, textarea { font: inherit; }
 button { cursor: pointer; }
 
-#boot-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    display: grid;
-    place-items: center;
-    background: var(--bg);
-    transition: opacity 0.42s ease;
-}
-
-#boot-overlay.fading { opacity: 0; pointer-events: none; }
-
-#boot-card {
-    width: min(600px, calc(100vw - 40px));
-    text-align: center;
-}
-
-@keyframes boot-glitch {
-    0%, 100% { text-shadow: none; transform: none; opacity: 1; }
-    20% { text-shadow: 2px 0 0 #ff003c, -2px 0 0 #00ffff; transform: translate(1px, 1px); opacity: 0.9; }
-    40% { text-shadow: -2px 0 0 #ff003c, 2px 0 0 #00ffff; transform: translate(-1px, -1px); opacity: 0.95; }
-    60% { text-shadow: 2px 0 0 #ff003c, -2px 0 0 #00ffff; transform: translate(-1px, 1px); opacity: 0.85; }
-    80% { text-shadow: none; transform: none; opacity: 1; }
-}
-
-#boot-ascii {
-    display: inline-block;
-    margin: 0 auto 16px;
-    white-space: pre;
-    font-family: var(--mono);
-    font-size: clamp(6px, 1.55vw, 13px);
-    line-height: 1.15;
-    color: var(--accent);
-    text-align: left;
-    animation: boot-glitch 0.4s infinite;
-}
-
-#boot-lines {
-    border: 1px solid var(--border);
-    background: var(--bg-elev);
-    padding: 16px 18px;
-    font-family: var(--mono);
-    font-size: 12px;
-    line-height: 1.9;
-    color: var(--muted);
-    box-shadow: 0 24px 70px var(--shadow);
-    text-align: left;
-}
-
-#boot-lines .b-line { opacity: 0; animation: bLineIn 0.25s ease forwards; }
-#boot-lines .b-last { color: var(--signal); }
-@keyframes bLineIn { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
-
 #reader-progress {
     position: fixed;
     top: 0;
@@ -223,8 +170,6 @@ button { cursor: pointer; }
     max-width: 1440px;
     margin: 0 auto;
     padding: calc(var(--rail-h) + var(--s-7)) var(--page-margin) var(--s-7);
-    opacity: 0;
-    transition: opacity 0.55s ease;
 }
 
 /* --- top rail --- */
@@ -1497,3 +1442,61 @@ button { cursor: pointer; }
     #term-trigger { bottom: calc(var(--status-h) + var(--s-4)); }
     #term-panel { bottom: calc(var(--status-h) + 76px); }
 }
+
+/* --- intro (DESIGN.md section 9); everything gated by html.intro --- */
+html.intro { overflow: hidden; scrollbar-gutter: stable; }
+
+html.intro .rail,
+html.intro #profile-pic,
+html.intro .hero-headline,
+html.intro #hero-spec,
+html.intro #about-content,
+html.intro .content-section:not(#about),
+html.intro .statusbar,
+html.intro #term-trigger,
+html.intro #bg-canvas { opacity: 0; }
+
+html.intro.g1 .rail,
+html.intro.g2 #profile-pic,
+html.intro.g2 .hero-headline,
+html.intro.g2 #hero-spec,
+html.intro.g3 #about-content,
+html.intro.g4 .content-section:not(#about),
+html.intro.g4 #bg-canvas,
+html.intro.g5 .statusbar,
+html.intro.g5 #term-trigger {
+    opacity: 1;
+    transition: opacity var(--d-base) steps(4, end);
+}
+
+html.intro .sidenav { opacity: 0; }
+html.intro.scan .sidenav { opacity: 1; }
+html.intro .sidenav a::before { background: var(--line-strong); }
+html.intro .sidenav a.lit::before { background: var(--fg); transition: none; }
+
+.intro-scan,
+.intro-counter {
+    position: fixed;
+    z-index: var(--z-boot);
+    pointer-events: none;
+}
+
+.intro-scan {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--accent);
+}
+
+.intro-counter {
+    left: var(--page-margin);
+    bottom: var(--s-4);
+    font-family: var(--font-mono);
+    font-size: var(--t-ui);
+    color: var(--sub);
+    font-variant-numeric: tabular-nums;
+    white-space: pre;
+}
+
+@media (min-width: 1024px) { .intro-cells { display: none; } }

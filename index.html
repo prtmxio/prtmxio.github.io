@@ -6,6 +6,15 @@
         <meta name="theme-color" content="#1a1917" />
         <title>Pritam | Portfolio</title>
 
+        <script>
+            (function () {
+                var d = document.documentElement;
+                if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                    d.classList.add("intro");
+                    setTimeout(function () { d.classList.remove("intro"); }, 4000);
+                }
+            })();
+        </script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -13,7 +22,7 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
-        <link rel="stylesheet" href="css/styles.css?v=13" />
+        <link rel="stylesheet" href="css/styles.css?v=16" />
 
         <script>
             window.MathJax = {
@@ -48,22 +57,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-        <script type="module" src="js/main.js?v=9"></script>
+        <script type="module" src="js/main.js?v=12"></script>
     </head>
     <body>
         <canvas id="bg-canvas" aria-hidden="true"></canvas>
-        <div id="boot-overlay" aria-live="polite">
-            <div id="boot-card">
-                <pre id="boot-ascii">██████╗ ██████╗ ████████╗███╗   ███╗██╗  ██╗██╗ ██████╗
-██╔══██╗██╔══██╗╚══██╔══╝████╗ ████║╚██╗██╔╝██║██╔═══██╗
-██████╔╝██████╔╝   ██║   ██╔████╔██║ ╚███╔╝ ██║██║   ██║
-██╔═══╝ ██╔══██╗   ██║   ██║╚██╔╝██║ ██╔██╗ ██║██║   ██║
-██║     ██║  ██║   ██║   ██║ ╚═╝ ██║██╔╝ ██╗██║╚██████╔╝
-╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ </pre>
-                <div id="boot-lines"></div>
-            </div>
-        </div>
-
         <div id="reader-progress" aria-hidden="true"><span></span></div>
 
         <header class="rail" id="rail">
