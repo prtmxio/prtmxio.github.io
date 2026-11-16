@@ -1511,15 +1511,13 @@ html.intro .sidenav a.lit::before { background: var(--fg); transition: none; }
     user-select: none;
     -webkit-user-select: none;
     opacity: 0;
-    transition: filter 300ms linear, opacity 300ms linear;
+    transition: opacity 300ms linear;
 }
 
 .arm-layer[hidden] { display: none; }
 
-/* Opacities are set by the text-contrast check in DESIGN.md section 16. */
-.arm-layer.on { opacity: 0.9; }
-.arm-layer.on[data-level="dim"] { opacity: 0.2; filter: blur(2px); }
-.arm-layer.on[data-level="calm"] { opacity: 0.1; filter: blur(3px); }
+/* Full opacity at every level; data-level only drives the frame rate in arm.js. */
+.arm-layer.on { opacity: 1; }
 
 .arm-layer canvas {
     display: block;
@@ -1527,6 +1525,26 @@ html.intro .sidenav a.lit::before { background: var(--fg); transition: none; }
     height: 100%;
     image-rendering: pixelated;
 }
+
+/* click markers: 2x2 cells, positioned by arm.js, may sit outside the canvas box */
+.arm-mark {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--arm-cs, 8px) * 2);
+    height: calc(var(--arm-cs, 8px) * 2);
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--font-mono);
+    font-size: calc(var(--arm-cs, 8px) * 1.6);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.arm-mark[hidden] { display: none; }
 
 .statusbar-right {
     display: flex;

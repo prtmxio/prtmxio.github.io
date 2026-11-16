@@ -489,19 +489,42 @@ function boot() {
     function layout() {
         if (!layer) return;
         const vw = innerWidth, vh = innerHeight;
-        cs = Math.max(4, Math.min(8, Math.round(Math.min(0.4 * vw, 0.6 * vh) / 80)));
+        cs = Math.max(6, Math.min(12, Math.round(Math.min(0.4 * vw, 0.6 * vh) / 54)));
         dpr = Math.min(window.devicePixelRatio || 1, 2);
         D = Math.max(3, Math.round(cs * dpr));
         canvas.width = COLS * D;
         canvas.height = ROWS * D;
         layer.style.width = `${(COLS * D) / dpr}px`;
         layer.style.height = `${(ROWS * D) / dpr}px`;
+        layer.style.setProperty("--arm-cs", `${cs}px`);
         ctx.imageSmoothingEnabled = false;
         atlasKey = "";
         buildAtlas();
         const r = canvas.getBoundingClientRect();
         rect = { left: r.left, top: r.top, width: r.width || 1, height: r.height || 1 };
         if (runState !== "running") render();
+    }
+
+    // ---- markers ----
+    // DOM spans inside the layer, so clicks anywhere on the page can show. Layer has overflow visible.
+    const MARK_GLYPH = ["+", "*", "."];
+    const markEls = [];
+    function paintMarks() {
+        for (let m = 0; m < markEls.length; m++) {
+            const el = markEls[m];
+            if (m >= nMark) { el.hidden = true; continue; }
+            el.hidden = false;
+            const c = Math.floor(grid.bx + MX[m]), r = Math.floor(grid.by - MY[m]);
+            el.style.transform = `translate(${(c - 0.5) * cs}px,${(r - 0.5) * cs}px)`;
+            let stage = 0, a = 1;
+            if (MS[m] === 1) {
+                const t = MT[m];
+                stage = t < 0.4 ? 0 : t < 0.8 ? 1 : 2;
+                a = t < 0.8 ? 1 : Math.max(0, 1 - (t - 0.8) / 0.4);
+            }
+            if (el.dataset.stage !== String(stage)) { el.dataset.stage = stage; el.textContent = MARK_GLYPH[stage]; }
+            el.style.opacity = a;
+        }
     }
 
     // ---- render ----
@@ -541,20 +564,7 @@ function boot() {
             }
         }
         ctx.globalAlpha = 1;
-        // markers
-        for (let m = 0; m < nMark; m++) {
-            const c = Math.floor(grid.bx + MX[m]), r = Math.floor(grid.by - MY[m]);
-            if (c < 0 || r < 0 || c >= COLS || r >= ROWS) continue;
-            let stage = 0, a = 1;
-            if (MS[m] === 1) {
-                const t = MT[m];
-                stage = t < 0.4 ? 0 : t < 0.8 ? 1 : 2;
-                a = t < 0.8 ? 1 : Math.max(0, 1 - (t - 0.8) / 0.4);
-            }
-            ctx.globalAlpha = a;
-            ctx.drawImage(atlas, (11 + stage) * D, 0, D, D, c * D, r * D, D, D);
-        }
-        ctx.globalAlpha = 1;
+        paintMarks();
         // occupancy history: write current into the slot the next frame will read as k-1
         for (let i = 0; i < z.length; i++) cur[i] = z[i] ? 1 : 0;
         frameNo++;
@@ -798,6 +808,14 @@ function boot() {
         layer.dataset.level = level;
         canvas = document.createElement("canvas");
         layer.appendChild(canvas);
+        for (let m = 0; m < 3; m++) {
+            const el = document.createElement("span");
+            el.className = "arm-mark";
+            el.hidden = true;
+            el.setAttribute("aria-hidden", "true");
+            layer.appendChild(el);
+            markEls.push(el);
+        }
         document.body.appendChild(layer);
         ctx = canvas.getContext("2d");
         applyLevel();
