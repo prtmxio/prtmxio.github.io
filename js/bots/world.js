@@ -1,6 +1,6 @@
 // Page bots: world geometry. Pure functions plus one DOM measurement (measure).
 // Units: css px for positions, cells for sprite dimensions and lift. Draw code converts to device px.
-import { BOTS } from "./sprites.js?v=2";
+import { BOTS } from "./sprites.js?v=3";
 
 export const CLIMB = true; // false: edge-wrap swap (walk off the left edge, re-enter on the other surface)
 export const WIDE = "(min-width: 768px)";

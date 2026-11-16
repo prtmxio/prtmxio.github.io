@@ -1,10 +1,11 @@
 // Page bots: Floatie, Rover and Waddle live on the floor and ceiling of the viewport.
 // One fixed canvas behind the content (pointer-events none). Decorative only. See DESIGN.md "Bots".
-import { measure, layoutBots, WIDE } from "./bots/world.js?v=2";
-import { createRenderer } from "./bots/render.js?v=2";
-import { createLoop } from "./bots/loop.js?v=2";
-import { createSim, step, onPointer, rescene } from "./bots/brain.js?v=2";
-import { LIGHT_LINE } from "./bots/sprites.js?v=2";
+import { measure, layoutBots, WIDE } from "./bots/world.js?v=3";
+import { createRenderer } from "./bots/render.js?v=3";
+import { createLoop } from "./bots/loop.js?v=3";
+import { createSim, step, onPointer, rescene } from "./bots/brain.js?v=3";
+import { installEvents } from "./bots/events.js?v=3";
+import { LIGHT_LINE } from "./bots/sprites.js?v=3";
 
 function boot() {
     const root = document.documentElement;
@@ -63,7 +64,7 @@ function boot() {
         sc = next;
         themeKey = themeSig(t);
         renderer.setScene(sc, t);
-        if (sim && roster) sim = createSim(sc, { debug });
+        if (sim && roster) { sim = createSim(sc, { debug }); installEvents(sim); }
         else if (sim) rescene(sim, sc);
     }
 
@@ -89,6 +90,7 @@ function boot() {
             return;
         }
         sim = createSim(sc, { debug });
+        installEvents(sim);
         loop.clock.t = 0;
         nextPoll = 0.5;
         renderer.draw(sim.bots, null, debug);
