@@ -280,7 +280,7 @@ button { cursor: pointer; }
 
 .rail .rail-menu { display: none; margin-left: auto; }
 
-@media (max-width: 767px) {
+@media (max-width: 999px) {
     .rail-bar { gap: var(--s-3); }
     .rail .rail-menu { display: inline-flex; }
     .rail a, .rail button { min-height: 44px; }
@@ -291,7 +291,9 @@ button { cursor: pointer; }
         height: auto;
         max-height: 100vh;
         overflow-y: auto;
+        overscroll-behavior: contain;
     }
+    html.rail-locked { overflow: hidden; }
     .rail.open .rail-bar { flex-wrap: wrap; align-items: flex-start; }
     .rail.open .rail-handle,
     .rail.open .rail-menu { height: calc(var(--rail-h) - 1px); }

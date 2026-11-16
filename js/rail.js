@@ -5,6 +5,7 @@ export function initRail() {
 
     const setOpen = (open) => {
         rail.classList.toggle("open", open);
+        document.documentElement.classList.toggle("rail-locked", open);
         toggle.setAttribute("aria-expanded", String(open));
         toggle.textContent = open ? "[close]" : "[menu]";
     };
@@ -22,7 +23,7 @@ export function initRail() {
         }
     });
 
-    window.matchMedia("(min-width: 768px)").addEventListener("change", (e) => {
+    window.matchMedia("(min-width: 1000px)").addEventListener("change", (e) => {
         if (e.matches) setOpen(false);
     });
 }
