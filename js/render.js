@@ -27,6 +27,22 @@ export function renderAboutAndExperience(aboutText, experience) {
         .join("");
 }
 
+export function renderHeroSpec(profile, experience) {
+    const el = document.getElementById("hero-spec");
+    if (!el) return;
+    const job = experience?.[0] || {};
+    const rows = [
+        ["role", job.title],
+        ["org", (job.company || "").split(",")[0].trim()],
+        ["since", (job.date || "").split(/\s[–-]\s/)[0].trim()],
+        ["status", profile?.status],
+    ];
+    el.innerHTML = rows
+        .filter(([, v]) => v && String(v).trim())
+        .map(([k, v]) => `<div class="spec-row"><dt>[${k}]</dt><dd>${escapeHtml(v)}</dd></div>`)
+        .join("");
+}
+
 export function renderProjects(projects) {
     document.getElementById("projects-container").innerHTML = (projects || [])
         .sort((a, b) => (a.priority || 99) - (b.priority || 99))

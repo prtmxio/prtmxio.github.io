@@ -1,9 +1,9 @@
 import { boot } from "./boot.js?v=2";
 import { loadData } from "./data.js?v=2";
-import { setupNavigation } from "./nav.js?v=3";
+import { setupNavigation, jumpToHash } from "./nav.js?v=4";
 import { initRail } from "./rail.js?v=1";
-import { populateSocials } from "./socials.js?v=2";
-import { renderAboutAndExperience, renderProjects, renderBlog } from "./render.js?v=2";
+import { populateHeroLinks } from "./socials.js?v=3";
+import { renderAboutAndExperience, renderHeroSpec, renderProjects, renderBlog } from "./render.js?v=3";
 import { initBlog } from "./blog.js?v=2";
 import { initReaderTheme, initTheme } from "./theme.js?v=2";
 import { typeWriter } from "./utils.js?v=2";
@@ -33,17 +33,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.title = `${bio.profile?.name || "Portfolio"} | Robotics · AI · Linux`;
     document.getElementById("name").textContent = bio.profile?.name || "";
-    document.getElementById("bio").textContent = bio.profile?.shortBio || "";
     document.getElementById("direct-email").textContent = email;
     document.getElementById("direct-email").href = `mailto:${email}`;
 
-    populateSocials(bio.social);
+    populateHeroLinks(bio.social);
+    renderHeroSpec(bio.profile, bio.experience || []);
     renderAboutAndExperience(bio.about?.fullBio || "", bio.experience || []);
     renderProjects(projects);
     renderBlog(blogPosts);
     initBlog(blogPosts);
     initTerminal(bio, projects, blogPosts);
     initContactForm(email);
+    jumpToHash();
 
     setTimeout(() => typeWriter("tagline-text", bio.profile?.tagline || "", 34), 80);
 });
