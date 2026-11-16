@@ -1,68 +1,116 @@
 import { pad } from "./utils.js";
 import { slugify } from "./blog.js";
 
-export function renderAboutAndExperience(aboutText, experience) {
+// "Glazia, Gurgaon : Remote" -> { name: "Glazia", loc: "Gurgaon : Remote" } (split on the last comma).
+function splitCompany(company = "") {
+    const i = String(company).lastIndexOf(",");
+    if (i < 0) return { name: String(company).trim(), loc: "" };
+    return { name: company.slice(0, i).trim(), loc: company.slice(i + 1).trim() };
+}
+
+export function renderAbout(bio, projects, posts) {
+    const profile = bio.profile || {};
+    const experience = bio.experience || [];
+
+    const lead = document.getElementById("about-lead");
+    if (lead) {
+        lead.textContent = profile.shortBio || "";
+        lead.hidden = !profile.shortBio;
+    }
+
     const aboutEl = document.getElementById("about-content");
     aboutEl.textContent = "";
-    (aboutText || "").split("\n").forEach((para) => {
+    (bio.about?.fullBio || "").split("\n").forEach((para) => {
         if (!para.trim()) return;
         const p = document.createElement("p");
         p.textContent = para;
         aboutEl.appendChild(p);
     });
 
-    document.getElementById("experience-container").innerHTML = (experience || [])
-        .map((exp, i) => `
-            <article class="item-card timeline-item" style="animation-delay:${i * 0.06}s">
-                <div class="card-top">
-                    <span class="card-idx">[${pad(i + 1)}]</span>
-                    <span class="card-date">${escapeHtml(exp.date || "")}</span>
-                </div>
-                <h3 class="item-title">${escapeHtml(exp.title || "")}</h3>
-                <p class="item-subtitle">${escapeHtml(exp.company || "")}</p>
-                <ul class="item-description">
-                    ${(exp.description || []).map((d) => `<li>${escapeHtml(d)}</li>`).join("")}
-                </ul>
-            </article>`)
-        .join("");
+    renderSpec(profile, experience);
+    renderStats(profile, experience, projects, posts);
 }
 
-export function renderHeroSpec(profile, experience) {
+// Rows with no source value are hidden.
+function renderSpec(profile, experience) {
     const el = document.getElementById("hero-spec");
     if (!el) return;
-    const job = experience?.[0] || {};
+    const job = experience[0];
+    const current = job && job.title
+        ? `${job.title}${job.company ? ` @ ${splitCompany(job.company).name}` : ""}`
+        : "";
     const rows = [
-        ["role", job.title],
-        ["org", (job.company || "").split(",")[0].trim()],
-        ["since", (job.date || "").split(/\s[–-]\s/)[0].trim()],
-        ["status", profile?.status],
+        ["Based", profile.based],
+        ["Currently", current],
+        ["Open to", profile.openTo],
     ];
     el.innerHTML = rows
         .filter(([, v]) => v && String(v).trim())
-        .map(([k, v]) => `<div class="spec-row"><dt>[${k}]</dt><dd>${escapeHtml(v)}</dd></div>`)
+        .map(([k, v]) => `<div class="spec-row"><dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd></div>`)
+        .join("");
+}
+
+// profile.stats[] when present, otherwise counts derived from the JSON.
+function renderStats(profile, experience, projects, posts) {
+    const el = document.getElementById("about-stats");
+    if (!el) return;
+    let stats = Array.isArray(profile.stats)
+        ? profile.stats.filter((s) => s && s.value != null && String(s.value).trim() && s.label)
+        : [];
+    if (!stats.length) {
+        const tech = new Set();
+        (projects || []).forEach((p) => (p.technologies || []).forEach((t) => tech.add(String(t).trim().toLowerCase())));
+        stats = [
+            { value: (projects || []).length, label: "projects" },
+            { value: (posts || []).length, label: "posts" },
+            { value: experience.length, label: "roles" },
+            { value: tech.size, label: "technologies" },
+        ];
+    }
+    el.innerHTML = stats
+        .slice(0, 4)
+        .map((s) => `<div class="stat"><span class="stat-value">${escapeHtml(s.value)}</span><span class="stat-label">${escapeHtml(s.label)}</span></div>`)
+        .join("");
+}
+
+export function renderExperience(experience) {
+    document.getElementById("experience-container").innerHTML = (experience || [])
+        .map((exp) => {
+            const co = splitCompany(exp.company);
+            return `
+            <article class="role" data-field-empty>
+                <div class="role-side" data-field-empty>
+                    <p class="role-co">${escapeHtml(co.name)}</p>
+                    ${co.loc ? `<p class="role-loc">${escapeHtml(co.loc)}</p>` : ""}
+                </div>
+                <div class="role-main">
+                    <span class="role-date">${escapeHtml(exp.date || "")}</span>
+                    <h3 class="role-title">${escapeHtml(exp.title || "")}</h3>
+                    <p class="role-company">${escapeHtml(exp.company || "")}</p>
+                    <ul class="role-list">
+                        ${(exp.description || []).map((d) => `<li>${escapeHtml(d)}</li>`).join("")}
+                    </ul>
+                </div>
+            </article>`;
+        })
         .join("");
 }
 
 export function renderProjects(projects) {
     document.getElementById("projects-container").innerHTML = (projects || [])
         .sort((a, b) => (a.priority || 99) - (b.priority || 99))
-        .map((proj, i) => {
-            const title = proj.codeUrl
-                ? `<a href="${escapeAttr(proj.codeUrl)}" target="_blank" rel="noopener noreferrer" class="item-title-link">${escapeHtml(proj.title || "")}</a>`
-                : `<h3 class="item-title">${escapeHtml(proj.title || "")}</h3>`;
-            return `
-                <article class="item-card project-card" style="animation-delay:${i * 0.06}s">
-                    <div class="card-top">
-                        <span class="card-idx">[${pad(i + 1)}]</span>
-                        <span class="card-date">project</span>
-                    </div>
-                    ${title}
-                    <p class="item-summary">${escapeHtml(proj.description || "")}</p>
-                    <div class="tech-tags">
-                        ${(proj.technologies || []).map((t) => `<span class="tech-tag">${escapeHtml(t)}</span>`).join("")}
-                    </div>
-                </article>`;
-        })
+        .map((proj, i) => `
+            <article class="index-row" data-field-empty>
+                <span class="index-idx">[${pad(i + 1)}]</span>
+                <div class="index-main">
+                    <h3 class="index-name">${escapeHtml(proj.title || "")}</h3>
+                    <p class="index-desc">${escapeHtml(proj.description || "")}</p>
+                    <ul class="tokens">
+                        ${(proj.technologies || []).map((t) => `<li class="token">${escapeHtml(t)}</li>`).join("")}
+                    </ul>
+                    ${proj.codeUrl ? `<a class="row-link" href="${escapeAttr(proj.codeUrl)}" target="_blank" rel="noopener noreferrer">[code -&gt;]</a>` : ""}
+                </div>
+            </article>`)
         .join("");
 }
 
@@ -72,20 +120,19 @@ export function renderBlog(posts) {
     if (count) count.textContent = `${sortedPosts.length} posts`;
 
     document.getElementById("blog-container").innerHTML = sortedPosts
-        .map((post, i) => {
-            const slug = post.slug || slugify(post.title);
+        .map((post) => {
+            const slug = escapeAttr(post.slug || slugify(post.title));
             return `
-                <article class="item-card blog-card" style="animation-delay:${i * 0.06}s">
-                    <div class="card-top">
-                        <span class="card-idx">[${pad(i + 1)}]</span>
-                        <span class="card-date">${escapeHtml(post.date || "")}</span>
-                    </div>
-                    <a class="item-title-link" href="#blog/${slug}" data-post-slug="${slug}">${escapeHtml(post.title || "")}</a>
-                    <p class="item-summary">${escapeHtml(post.content || "")}</p>
-                    <div class="tech-tags">
-                        ${(post.tags || []).map((t) => `<span class="tech-tag blog-tag">${escapeHtml(t)}</span>`).join("")}
-                    </div>
-                </article>`;
+            <article class="item-card log-row" data-field-empty>
+                <span class="log-date">${escapeHtml(post.date || "")}</span>
+                <div class="log-main">
+                    <a class="log-title" href="#blog/${slug}" data-post-slug="${slug}">${escapeHtml(post.title || "")}</a>
+                    <p class="log-summary">${escapeHtml(post.content || "")}</p>
+                    <ul class="tokens">
+                        ${(post.tags || []).map((t) => `<li class="token">${escapeHtml(t)}</li>`).join("")}
+                    </ul>
+                </div>
+            </article>`;
         })
         .join("");
 }

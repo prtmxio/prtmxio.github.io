@@ -1,10 +1,10 @@
 import { runIntro } from "./intro.js?v=3";
 import { loadData } from "./data.js?v=2";
-import { setupNavigation, jumpToHash } from "./nav.js?v=5";
-import { initSidenav } from "./sidenav.js?v=1";
+import { setupNavigation, jumpToHash } from "./nav.js?v=7";
+import { initSidenav } from "./sidenav.js?v=2";
 import { initRail } from "./rail.js?v=1";
 import { populateHeroLinks } from "./socials.js?v=3";
-import { renderAboutAndExperience, renderHeroSpec, renderProjects, renderBlog } from "./render.js?v=3";
+import { renderAbout, renderExperience, renderProjects, renderBlog } from "./render.js?v=4";
 import { initBlog } from "./blog.js?v=2";
 import { initReaderTheme, initTheme } from "./theme.js?v=2";
 import { typeWriter } from "./utils.js?v=2";
@@ -39,8 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("direct-email").href = `mailto:${email}`;
 
     populateHeroLinks(bio.social);
-    renderHeroSpec(bio.profile, bio.experience || []);
-    renderAboutAndExperience(bio.about?.fullBio || "", bio.experience || []);
+    renderAbout(bio, projects, blogPosts);
+    renderExperience(bio.experience || []);
     renderProjects(projects);
     renderBlog(blogPosts);
     initBlog(blogPosts);

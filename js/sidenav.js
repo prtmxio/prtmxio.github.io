@@ -1,6 +1,6 @@
 const SECTIONS = ["about", "experience", "projects", "blog", "contact"];
 
-// Builds the left-edge section index. Click handling and active state live in
+// Builds the left-edge section rail. Click handling and active state live in
 // nav.js and key off [data-section], so these links need no listeners here.
 export function initSidenav() {
     if (document.querySelector(".sidenav")) return;
@@ -13,7 +13,8 @@ export function initSidenav() {
         const a = document.createElement("a");
         a.href = `#${id}`;
         a.dataset.section = id;
-        a.innerHTML = `<span class="sidenav-label"><span class="sidenav-idx">[0${i + 1}]</span> <span class="sidenav-word">${id}</span></span>`;
+        a.innerHTML = `<span class="sidenav-idx" aria-hidden="true">0${i + 1}</span><span class="sidenav-word">${id}</span>`;
+        a.style.setProperty("--i", i);
         li.appendChild(a);
         ol.appendChild(li);
     });
@@ -21,4 +22,14 @@ export function initSidenav() {
     const main = document.getElementById("main-container");
     if (main) main.parentNode.insertBefore(nav, main);
     else document.body.appendChild(nav);
+
+    // Words step in once. rail-pending (set in <head>) exists only when the intro runs, so the
+    // rail is never hidden on hash or reduced-motion loads.
+    const root = document.documentElement;
+    const reveal = () => {
+        root.classList.remove("rail-pending");
+        root.classList.add("rail-in");
+    };
+    if (root.classList.contains("rail-pending")) window.addEventListener("introdone", reveal, { once: true });
+    else reveal();
 }

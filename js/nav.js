@@ -21,11 +21,50 @@ export function setupNavigation() {
         scrollToSection(section, false);
     });
 
+    document.addEventListener("keydown", onJumpKey);
     window.addEventListener("hashchange", onHashNavigation);
     window.addEventListener("popstate", onHashNavigation);
 
     observeSections();
     setActive("about");
+    trackProgress();
+}
+
+// Keys 1-5 jump to a section. Ignored while typing, in the terminal, in the reader or with a modifier.
+function onJumpKey(event) {
+    if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey || event.shiftKey) return;
+    const section = SECTION_IDS[Number(event.key) - 1];
+    if (!section || event.key.length !== 1) return;
+    const t = event.target;
+    if (t && (t.closest?.("input, textarea, select, [contenteditable]:not([contenteditable='false'])"))) return;
+    const term = document.getElementById("term-panel");
+    if (term && !term.hidden) return;
+    if (document.body.classList.contains("reader-open") || document.documentElement.classList.contains("intro")) return;
+    const hash = `#${section}`;
+    if (window.location.hash !== hash) history.pushState(null, "", hash);
+    currentHash = hash;
+    scrollToSection(section, false);
+}
+
+// Page scroll progress (0..1) for the section rail's accent hairline.
+function trackProgress() {
+    const rail = document.querySelector(".sidenav");
+    if (!rail) return;
+    let queued = false;
+    const update = () => {
+        queued = false;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        rail.style.setProperty("--progress", p.toFixed(4));
+    };
+    const schedule = () => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    update();
 }
 
 // Back/forward, terminal commands and manual hash edits land here.
@@ -50,6 +89,7 @@ export function jumpToHash() {
     currentHash = window.location.hash;
     const section = getSectionFromHash();
     if (window.location.hash && SECTION_IDS.includes(section)) scrollToSection(section, true);
+    syncActive();
 }
 
 function scrollToSection(sectionId, instant) {
@@ -60,15 +100,22 @@ function scrollToSection(sectionId, instant) {
 
 function observeSections() {
     if (!("IntersectionObserver" in window)) return;
-    observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) setActive(entry.target.id);
-        });
-    }, { rootMargin: "-40% 0px -55% 0px" });
+    // Any change re-reads which section covers the band, so content growing under it
+    // (data render, font swap) cannot leave a stale section active.
+    observer = new IntersectionObserver(syncActive, { rootMargin: "-40% 0px -55% 0px" });
     SECTION_IDS.forEach((id) => {
         const el = document.getElementById(id);
         if (el) observer.observe(el);
     });
+}
+
+function syncActive() {
+    const y = window.innerHeight * 0.425;
+    const hit = SECTION_IDS.find((id) => {
+        const r = document.getElementById(id)?.getBoundingClientRect();
+        return r && r.top <= y && r.bottom > y;
+    });
+    if (hit) setActive(hit);
 }
 
 function setActive(sectionId) {
