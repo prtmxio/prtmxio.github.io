@@ -1,6 +1,6 @@
 // Page bots: canvas renderer. Integer device-pixel positions, dirty-rect clearing, stepped alpha.
-import { buildAtlas } from "./sprites.js?v=4";
-import { spriteBox, orientOf } from "./world.js?v=4";
+import { buildAtlas } from "./sprites.js?v=5";
+import { spriteBox, orientOf } from "./world.js?v=5";
 
 const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
 

@@ -1,12 +1,13 @@
 // Page bots: Floatie, Rover and Waddle live on the floor and ceiling of the viewport.
 // One fixed canvas behind the content (pointer-events none). Decorative only. See DESIGN.md "Bots".
-import { measure, layoutBots, WIDE } from "./bots/world.js?v=4";
-import { createRenderer } from "./bots/render.js?v=4";
-import { createLoop } from "./bots/loop.js?v=4";
-import { createSim, step, onPointer, rescene } from "./bots/brain.js?v=4";
-import { guardTick, guardStatic } from "./bots/guard.js?v=4";
-import { installEvents } from "./bots/events.js?v=4";
-import { LIGHT_LINE } from "./bots/sprites.js?v=4";
+import { measure, layoutBots, WIDE } from "./bots/world.js?v=5";
+import { createRenderer } from "./bots/render.js?v=5";
+import { createLoop } from "./bots/loop.js?v=5";
+import { createSim, step, onPointer, rescene } from "./bots/brain.js?v=5";
+import { guardTick, guardStatic } from "./bots/guard.js?v=5";
+import { installTransit } from "./bots/transit.js?v=5";
+import { installEvents } from "./bots/events.js?v=5";
+import { LIGHT_LINE } from "./bots/sprites.js?v=5";
 
 function boot() {
     const root = document.documentElement;
@@ -49,6 +50,13 @@ function boot() {
         window.removeEventListener("pointermove", onMove);
     }
 
+    function newSim() {
+        const s = createSim(sc, { debug });
+        installEvents(s);
+        installTransit(s);
+        return s;
+    }
+
     // ---- frame ----
     function update(T, dt) {
         step(sim, T, dt);
@@ -70,7 +78,7 @@ function boot() {
         sc = next;
         themeKey = themeSig(t);
         renderer.setScene(sc, t);
-        if (sim && roster) { sim = createSim(sc, { debug }); installEvents(sim); }
+        if (sim && roster) sim = newSim();
         else if (sim) rescene(sim, sc);
     }
 
@@ -96,8 +104,7 @@ function boot() {
             renderer.draw(staticBots, null, false);
             return;
         }
-        sim = createSim(sc, { debug });
-        installEvents(sim);
+        sim = newSim();
         loop.clock.t = 0;
         loop.setFps(30);
         wasCalm = false;

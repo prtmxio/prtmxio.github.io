@@ -1,6 +1,6 @@
 // Page bots: behaviour. No DOM. Personality = base weights per bot, mood = temporary multipliers.
 // All timers are deadlines on the sim clock (sim.T, seconds of active time), never setTimeout.
-import { layoutBots, laneBounds } from "./world.js?v=4";
+import { layoutBots, laneBounds } from "./world.js?v=5";
 
 export const rnd = (a, b) => a + Math.random() * (b - a);
 const chance = (p) => Math.random() < p;
