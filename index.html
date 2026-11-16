@@ -10,19 +10,19 @@
             (function () {
                 var d = document.documentElement;
                 if (!location.hash && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                    d.classList.add("intro");
-                    setTimeout(function () { d.classList.remove("intro"); }, 4000);
+                    d.classList.add("intro", "rail-pending");
+                    setTimeout(function () { d.classList.remove("intro", "rail-pending"); }, 4000);
                 }
             })();
         </script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@800&family=Instrument+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&family=Doto:wght@700;900&display=swap"
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
-        <link rel="stylesheet" href="css/styles.css?v=22" />
+        <link rel="stylesheet" href="css/styles.css?v=24" />
 
         <script>
             window.MathJax = {
@@ -57,7 +57,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-        <script type="module" src="js/main.js?v=12"></script>
+        <script type="module" src="js/main.js?v=14"></script>
         <script type="module" src="js/arm.js?v=4"></script>
         <script type="module" src="js/bots.js?v=6"></script>
     </head>
@@ -98,7 +98,15 @@
         <div id="main-container">
             <main class="content-shell">
                 <section id="about" class="content-section">
-                    <div class="hero">
+                    <div class="sec-head" data-field-empty>
+                        <p class="sec-label"><span class="idx">[01]</span> about</p>
+                        <h1 id="name" class="display"></h1>
+                        <ul class="hero-links" id="hero-links">
+                            <li><a id="link-github" href="#" target="_blank" rel="noopener noreferrer" hidden>[github]</a></li>
+                            <li><a id="link-linkedin" href="#" target="_blank" rel="noopener noreferrer" hidden>[linkedin]</a></li>
+                            <li><a id="link-x" href="#" target="_blank" rel="noopener noreferrer" hidden>[x]</a></li>
+                            <li><a href="res/prtmxio.pdf" target="_blank" rel="noopener noreferrer">[resume (pdf)]</a></li>
+                        </ul>
                         <img
                             id="profile-pic"
                             src="res/prof.jpeg"
@@ -107,112 +115,109 @@
                             height="96"
                             onerror="this.src = 'res/profile.jpeg'"
                         />
-                        <h1 id="name" class="hero-name"></h1>
-                        <ul class="hero-links" id="hero-links">
-                            <li><a id="link-github" href="#" target="_blank" rel="noopener noreferrer" hidden>[github]</a></li>
-                            <li><a id="link-linkedin" href="#" target="_blank" rel="noopener noreferrer" hidden>[linkedin]</a></li>
-                            <li><a id="link-x" href="#" target="_blank" rel="noopener noreferrer" hidden>[x]</a></li>
-                            <li><a href="res/prtmxio.pdf" target="_blank" rel="noopener noreferrer">[resume (pdf)]</a></li>
-                        </ul>
                         <p id="tagline" class="hero-headline"><span id="tagline-text"></span><span class="hero-cursor" aria-hidden="true">_</span></p>
-                        <dl id="hero-spec" class="spec"></dl>
                     </div>
-                    <div id="about-content" class="prose about-text"></div>
+                    <div class="sec-body" data-field-empty>
+                        <p id="about-lead" class="lead"></p>
+                        <dl id="hero-spec" class="spec"></dl>
+                        <div id="about-stats" class="stats" data-field-empty></div>
+                        <div id="about-content" class="prose about-text"></div>
+                    </div>
                 </section>
 
-                <section id="experience" class="content-section">
-                    <div class="section-kicker">field log</div>
-                    <h2>Work history</h2>
-                    <div id="experience-container" class="timeline"></div>
+                <section id="experience" class="content-section is-wide">
+                    <div class="sec-head" data-field-empty>
+                        <p class="sec-label"><span class="idx">[02]</span> experience</p>
+                        <h2 class="display">Experience</h2>
+                    </div>
+                    <div class="sec-body" data-field-empty>
+                        <div id="experience-container" class="timeline" data-field-empty></div>
+                    </div>
                 </section>
 
                 <section id="projects" class="content-section">
-                    <div class="section-kicker">systems index</div>
-                    <h2>Projects</h2>
-                    <div id="projects-container" class="card-grid"></div>
+                    <div class="sec-head" data-field-empty>
+                        <p class="sec-label"><span class="idx">[03]</span> projects</p>
+                        <h2 class="display">Projects</h2>
+                    </div>
+                    <div class="sec-body" data-field-empty>
+                        <div id="projects-container" class="index" data-field-empty></div>
+                    </div>
                 </section>
 
                 <section id="blog" class="content-section blog-section">
-                    <div class="section-kicker">lab notes</div>
-                    <div class="section-heading-row">
-                        <h2>Blog</h2>
-                        <span id="blog-count" class="meta-pill"></span>
+                    <div class="sec-head" data-field-empty>
+                        <p class="sec-label"><span class="idx">[04]</span> blog</p>
+                        <h2 class="display">Blog</h2>
+                        <p id="blog-count" class="sec-note"></p>
                     </div>
-                    <div class="blog-layout">
-                        <div id="blog-container" class="blog-list"></div>
-                        <aside
-                            class="reader-dock"
-                            aria-label="Blog reader preview"
-                        >
-                            <div class="reader-empty">
-                                <span>select post</span>
-                                <p>
-                                    Notes, derivations, and build logs open here
-                                    with TOC, math, code, and reading progress.
-                                </p>
-                            </div>
-                        </aside>
+                    <div class="sec-body" data-field-empty>
+                        <div id="blog-container" class="log" data-field-empty></div>
                     </div>
                 </section>
 
                 <section id="contact" class="content-section">
-                    <div class="section-kicker">open channel</div>
-                    <h2>Contact</h2>
-                    <p class="section-lede">
-                        robots, models, or a broken Linux config; <br>
-                        my inbox is open :)
-                    </p>
-                    <form id="contact-form" class="contact-form">
-                        <label>
-                            <span>Name</span>
-                            <input
-                                id="contact-name"
-                                name="name"
-                                type="text"
-                                autocomplete="name"
-                                placeholder="Your name"
-                            />
-                        </label>
-                        <label>
-                            <span>Email</span>
-                            <input
-                                id="contact-email"
-                                name="email"
-                                type="email"
-                                autocomplete="email"
-                                placeholder="you@example.com"
-                            />
-                        </label>
-                        <label>
-                            <span>Subject</span>
-                            <input
-                                id="contact-subject"
-                                name="subject"
-                                type="text"
-                                placeholder="Project, role, question..."
-                            />
-                        </label>
-                        <label>
-                            <span>Message</span>
-                            <textarea
-                                id="contact-message"
-                                name="message"
-                                rows="8"
-                                placeholder="Write the message here"
-                            ></textarea>
-                        </label>
-                        <button class="primary-button" type="submit">
-                            compose email
-                        </button>
-                    </form>
-                    <p class="direct-email">
-                        Direct:
-                        <a
-                            id="direct-email"
-                            href="mailto:dhimanpritam1579@gmail.com"
-                            >dhimanpritam1579@gmail.com</a
-                        >
-                    </p>
+                    <div class="sec-head" data-field-empty>
+                        <p class="sec-label"><span class="idx">[05]</span> contact</p>
+                        <h2 class="display">Contact</h2>
+                        <p class="sec-lede">
+                            robots, models, or a broken Linux config;
+                            my inbox is open :)
+                        </p>
+                    </div>
+                    <div class="sec-body" data-field-empty>
+                        <form id="contact-form" class="contact-form">
+                            <label>
+                                <span>Name</span>
+                                <input
+                                    id="contact-name"
+                                    name="name"
+                                    type="text"
+                                    autocomplete="name"
+                                    placeholder="Your name"
+                                />
+                            </label>
+                            <label>
+                                <span>Email</span>
+                                <input
+                                    id="contact-email"
+                                    name="email"
+                                    type="email"
+                                    autocomplete="email"
+                                    placeholder="you@example.com"
+                                />
+                            </label>
+                            <label>
+                                <span>Subject</span>
+                                <input
+                                    id="contact-subject"
+                                    name="subject"
+                                    type="text"
+                                    placeholder="Project, role, question..."
+                                />
+                            </label>
+                            <label>
+                                <span>Message</span>
+                                <textarea
+                                    id="contact-message"
+                                    name="message"
+                                    rows="8"
+                                    placeholder="Write the message here"
+                                ></textarea>
+                            </label>
+                            <button class="primary-button" type="submit">
+                                compose email
+                            </button>
+                        </form>
+                        <p class="direct-email">
+                            Direct:
+                            <a
+                                id="direct-email"
+                                href="mailto:dhimanpritam1579@gmail.com"
+                                >dhimanpritam1579@gmail.com</a
+                            >
+                        </p>
+                    </div>
                 </section>
             </main>
         </div>
