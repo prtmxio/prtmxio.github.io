@@ -8,11 +8,11 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Doto:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap"
             rel="stylesheet"
         />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" />
-        <link rel="stylesheet" href="css/styles.css?v=6" />
+        <link rel="stylesheet" href="css/styles.css?v=7" />
 
         <script>
             window.MathJax = {
@@ -47,7 +47,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js"></script>
-        <script type="module" src="js/main.js?v=5"></script>
+        <script type="module" src="js/main.js?v=6"></script>
     </head>
     <body>
         <canvas id="bg-canvas" aria-hidden="true"></canvas>
@@ -65,137 +65,55 @@
 
         <div id="reader-progress" aria-hidden="true"><span></span></div>
 
-        <div id="main-container">
-            <header class="sidebar">
-                <div class="terminal-titlebar">
-                    <div class="t-dots" aria-hidden="true">
-                        <span class="t-dot t-dot-r"></span>
-                        <span class="t-dot t-dot-y"></span>
-                        <span class="t-dot t-dot-g"></span>
+        <header class="rail" id="rail">
+            <div class="rail-bar">
+                <a class="rail-handle" href="#about">prtmxio</a>
+                <button
+                    id="rail-menu"
+                    class="rail-menu"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="rail-panel"
+                >
+                    [menu]
+                </button>
+                <div id="rail-panel" class="rail-panel">
+                    <nav class="rail-nav" aria-label="Primary navigation">
+                        <ul class="rail-links">
+                            <li><a href="#about" data-section="about" class="nav-link active"><span class="nav-idx">[01]</span> about</a></li>
+                            <li><a href="#experience" data-section="experience" class="nav-link"><span class="nav-idx">[02]</span> experience</a></li>
+                            <li><a href="#projects" data-section="projects" class="nav-link"><span class="nav-idx">[03]</span> projects</a></li>
+                            <li><a href="#blog" data-section="blog" class="nav-link"><span class="nav-idx">[04]</span> blog</a></li>
+                            <li><a href="#contact" data-section="contact" class="nav-link"><span class="nav-idx">[05]</span> contact</a></li>
+                        </ul>
+                    </nav>
+                    <div class="rail-tools">
+                        <a href="res/prtmxio.pdf" target="_blank" rel="noopener noreferrer">[resume (pdf)]</a>
+                        <button id="theme-toggle" type="button" aria-label="Toggle theme">[theme: <span id="theme-label">dark</span>]</button>
                     </div>
-                    <span class="t-hostname">pritam@portfolio:~</span>
                 </div>
+            </div>
+        </header>
 
-                <div class="sidebar-body">
-                    <div class="ascii-logo-chip">
-                        <pre class="ascii-chip-pre">██████╗ ██████╗ ████████╗███╗   ███╗██╗  ██╗██╗ ██████╗
-██╔══██╗██╔══██╗╚══██╔══╝████╗ ████║╚██╗██╔╝██║██╔═══██╗
-██████╔╝██████╔╝   ██║   ██╔████╔██║ ╚███╔╝ ██║██║   ██║
-██╔═══╝ ██╔══██╗   ██║   ██║╚██╔╝██║ ██╔██╗ ██║██║   ██║
-██║     ██║  ██║   ██║   ██║ ╚═╝ ██║██╔╝ ██╗██║╚██████╔╝
-╚═╝     ╚═╝  ╚═╝   ╚═╝   ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝ ╚═════╝ </pre>
-                    </div>
-                    <div class="profile-block">
+        <div id="main-container">
+            <main class="content-shell">
+                <section id="about" class="content-section active">
+                    <div class="identity">
                         <img
                             id="profile-pic"
                             src="res/prof.jpeg"
                             alt="Pritam"
+                            width="96"
+                            height="96"
                             onerror="this.src = 'res/profile.jpeg'"
                         />
                         <div>
-                            <div class="prompt-row">
-                                <span>$</span><span id="prompt-1"></span>
-                            </div>
                             <h1 id="name"></h1>
+                            <p id="tagline"><span id="tagline-text"></span></p>
                         </div>
+                        <p id="bio"></p>
+                        <ul class="social-links" id="social-links"></ul>
                     </div>
-
-                    <div class="prompt-row">
-                        <span>$</span><span id="prompt-2"></span>
-                    </div>
-                    <p id="tagline">
-                        <span id="tagline-text"></span
-                        ><span class="t-cursor"></span>
-                    </p>
-
-                    <div class="prompt-row">
-                        <span>$</span><span id="prompt-3"></span>
-                    </div>
-                    <p id="bio"></p>
-
-                    <nav aria-label="Primary navigation">
-                        <div class="prompt-row">
-                            <span>$</span><span id="prompt-4"></span>
-                        </div>
-                        <ul class="nav-links">
-                            <li>
-                                <a
-                                    href="#about"
-                                    data-section="about"
-                                    class="nav-link active"
-                                    >about</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="#experience"
-                                    data-section="experience"
-                                    class="nav-link"
-                                    >experience</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="#projects"
-                                    data-section="projects"
-                                    class="nav-link"
-                                    >projects</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="#blog"
-                                    data-section="blog"
-                                    class="nav-link"
-                                    >blog</a
-                                >
-                            </li>
-                            <li>
-                                <a
-                                    href="#contact"
-                                    data-section="contact"
-                                    class="nav-link"
-                                    >contact</a
-                                >
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-
-                <div class="sidebar-tools">
-                    <button
-                        id="theme-toggle"
-                        class="tool-button"
-                        type="button"
-                        aria-label="Toggle theme"
-                    >
-                        <span class="tool-icon" aria-hidden="true">◐</span>
-                        <span id="theme-label">dark</span>
-                    </button>
-                    <a
-                        href="res/prtmxio.pdf"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="tool-button"
-                    >
-                        <span class="tool-icon" aria-hidden="true">↓</span>
-                        <span>resume</span>
-                    </a>
-                </div>
-
-                <div class="sidebar-socials">
-                    <p class="socials-label">// connect</p>
-                    <ul class="social-links" id="social-links"></ul>
-                </div>
-
-                <div class="terminal-statusbar">
-                    <span class="t-status-dot"></span>
-                    <span>systems nominal</span>
-                </div>
-            </header>
-
-            <main class="content-shell">
-                <section id="about" class="content-section active">
                     <div class="section-kicker">research profile</div>
                     <h2>
                         Robotics firmware, edge AI, and systems that meet
@@ -342,6 +260,12 @@
                 </div>
             </div>
         </aside>
+        <footer class="statusbar" aria-label="Status bar">
+            <div class="statusbar-inner">
+                <span id="status-section" aria-live="off">[about]</span>
+                <button type="button" disabled aria-disabled="true">[field: off]</button>
+            </div>
+        </footer>
         <button id="term-trigger" title="open terminal">&gt;_</button>
         <div id="term-panel" hidden>
             <div id="term-header">

@@ -20,6 +20,7 @@ export function setupNavigation() {
 }
 
 export function activateSection(sectionId = "about") {
+    if (!sectionIds.length) sectionIds = Array.from(document.querySelectorAll(".content-section")).map((section) => section.id);
     if (!sectionIds.includes(sectionId)) sectionId = "about";
 
     document.querySelectorAll(".nav-link").forEach((link) => {
@@ -29,6 +30,9 @@ export function activateSection(sectionId = "about") {
     document.querySelectorAll(".content-section").forEach((section) => {
         section.classList.toggle("active", section.id === sectionId);
     });
+
+    const status = document.getElementById("status-section");
+    if (status) status.textContent = `[${sectionId}]`;
 
     const target = document.getElementById(sectionId);
     if (target) {

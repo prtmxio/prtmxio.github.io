@@ -1,6 +1,7 @@
 import { boot } from "./boot.js?v=2";
 import { loadData } from "./data.js?v=2";
-import { setupNavigation } from "./nav.js?v=2";
+import { setupNavigation } from "./nav.js?v=3";
+import { initRail } from "./rail.js?v=1";
 import { populateSocials } from "./socials.js?v=2";
 import { renderAboutAndExperience, renderProjects, renderBlog } from "./render.js?v=2";
 import { initBlog } from "./blog.js?v=2";
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initTheme();
     initReaderTheme();
     setupNavigation();
+    initRail();
 
     let data;
     try {
@@ -44,11 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     initContactForm(email);
 
     setTimeout(() => typeWriter("tagline-text", bio.profile?.tagline || "", 34), 80);
-
-    setTimeout(() => typeWriter("prompt-1", "whoami", 40), 600);
-    setTimeout(() => typeWriter("prompt-2", "./focus", 40), 1000);
-    setTimeout(() => typeWriter("prompt-3", "cat lab-notes.txt", 40), 1400);
-    setTimeout(() => typeWriter("prompt-4", "ls pages/", 40), 1800);
 });
 
 function initContactForm(email) {
