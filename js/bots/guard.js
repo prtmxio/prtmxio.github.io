@@ -1,6 +1,6 @@
 // Page bots: legibility guard and calm signal. Runs from the sim clock about every 500ms, no timers, no observers.
-import { spriteBox, cellsOf } from "./world.js?v=5";
-import { setCalm, CALM_ALPHA, BLOCKED_ALPHA } from "./brain.js?v=5";
+import { spriteBox, cellsOf } from "./world.js?v=6";
+import { setCalm, CALM_ALPHA, BLOCKED_ALPHA } from "./brain.js?v=6";
 
 const INTERACTIVE = "a,button,input,textarea,select,label,summary,[role='button'],[contenteditable]:not([contenteditable='false'])";
 const BACKGROUND = new Set(["HTML", "BODY", "MAIN", "SECTION", "CANVAS", "SVG"]);

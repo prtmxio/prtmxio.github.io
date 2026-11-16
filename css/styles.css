@@ -52,7 +52,7 @@
 
     --z-field: 0;
     --z-grid: 1;
-    --z-bots: 6;
+    --z-bots: 11;
     --z-content: 10;
     --z-chrome: 50;
     --z-reader: 200;
@@ -1593,7 +1593,7 @@ html.intro .sidenav a.lit::before { background: var(--fg); transition: none; }
     pointer-events: none;
 }
 
-/* bots: fixed decorative layer between the arm (5) and the content (10); see DESIGN.md "Bots" */
+/* bots: fixed decorative layer above the arm (5) and the content (10), below chrome (50); see DESIGN.md "Bots" */
 .bots-layer {
     position: fixed;
     inset: 0;

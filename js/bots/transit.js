@@ -7,8 +7,8 @@
 // Floatie flies: straight up to hover under the ceiling, or straight down to a free spot on the floor.
 // The right wall is the arm's, so the left edge is the only free one. CLIMB = false in world.js switches to
 // edge-wrap (walk off the left edge, re-enter on the other surface) with the same state machine.
-import { startAct, isTransit, rnd, gapTo } from "./brain.js?v=5";
-import { CLIMB, laneBounds } from "./world.js?v=5";
+import { startAct, isTransit, rnd, gapTo } from "./brain.js?v=6";
+import { CLIMB, laneBounds } from "./world.js?v=6";
 
 const RUN = 75; // scurry speed to and from the wall, cells per second
 const FIRST_MIN = 60; // seconds

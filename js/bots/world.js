@@ -1,6 +1,6 @@
 // Page bots: world geometry. Pure functions plus one DOM measurement (measure).
 // Units: css px for positions, cells for sprite dimensions and lift. Draw code converts to device px.
-import { BOTS } from "./sprites.js?v=5";
+import { BOTS } from "./sprites.js?v=6";
 
 export const CLIMB = true; // false: edge-wrap swap (walk off the left edge, re-enter on the other surface)
 export const WIDE = "(min-width: 768px)";
@@ -30,8 +30,8 @@ export function measure() {
             if (r.width > 1 && r.height > 1) armLeft = Math.round(r.left);
         }
     }
-    // 3px cells, or 4px when the widest bot (14 cells) is no wider than the arm gripper on screen.
-    const cell = !narrow && armCs && GRIPPER_CELLS * armCs >= WIDEST * 4 ? 4 : 3;
+    // 5px cells, or 4px when the widest bot (14 cells) is wider than the arm gripper on screen, and always 4px when narrow.
+    const cell = !narrow && armCs && GRIPPER_CELLS * armCs >= WIDEST * 4 ? 5 : 4;
     const cellPx = Math.max(1, Math.round(cell * dpr));
     const c = cellPx / dpr; // effective css size of one sprite cell
     const laneL = 0;
