@@ -394,6 +394,7 @@ function boot() {
     const KF = [HERO, [128 * DEG, 12 * DEG, -28 * DEG], [165 * DEG, 10 * DEG, 40 * DEG], REST];
     // markers: x, y, state (0 waiting, 1 gripped/decaying), t
     const MX = new Float64Array(3), MY = new Float64Array(3), MS = new Int8Array(3), MT = new Float64Array(3);
+    const MG = new Int8Array(3); // crumb group per marker
     let nMark = 0;
     let holdT = -1;
     let gripLabel = "open";
@@ -450,11 +451,14 @@ function boot() {
     function readTheme() {
         themeLight = root.dataset.theme === "light";
         const cs0 = getComputedStyle(root);
-        return {
+        const th = {
             line: cs0.getPropertyValue("--line").trim() || "#D9D5CC",
             bg: cs0.getPropertyValue("--bg").trim() || "#1a1917",
             font: cs0.getPropertyValue("--font-mono").trim() || "monospace",
         };
+        crumbCol0 = cs0.getPropertyValue("--accent").trim() || "#FF7A1A";
+        crumbCol1 = cs0.getPropertyValue("--accent-deep").trim() || "#C4520F";
+        return th;
     }
     function buildAtlas() {
         const th = readTheme();
@@ -500,31 +504,107 @@ function boot() {
         ctx.imageSmoothingEnabled = false;
         atlasKey = "";
         buildAtlas();
+        if (crumbCv) { crumbCv.width = innerWidth; crumbCv.height = innerHeight; crumbDirty = true; }
         const r = canvas.getBoundingClientRect();
         rect = { left: r.left, top: r.top, width: r.width || 1, height: r.height || 1 };
         if (runState !== "running") render();
     }
 
-    // ---- markers ----
-    // DOM spans inside the layer, so clicks anywhere on the page can show. Layer has overflow visible.
-    const MARK_GLYPH = ["+", "*", "."];
-    const markEls = [];
-    function paintMarks() {
-        for (let m = 0; m < markEls.length; m++) {
-            const el = markEls[m];
-            if (m >= nMark) { el.hidden = true; continue; }
-            el.hidden = false;
-            const c = Math.floor(grid.bx + MX[m]), r = Math.floor(grid.by - MY[m]);
-            el.style.transform = `translate(${(c - 0.5) * cs}px,${(r - 0.5) * cs}px)`;
-            let stage = 0, a = 1;
-            if (MS[m] === 1) {
-                const t = MT[m];
-                stage = t < 0.4 ? 0 : t < 0.8 ? 1 : 2;
-                a = t < 0.8 ? 1 : Math.max(0, 1 - (t - 0.8) / 0.4);
-            }
-            if (el.dataset.stage !== String(stage)) { el.dataset.stage = stage; el.textContent = MARK_GLYPH[stage]; }
-            el.style.opacity = a;
+    // ---- markers: crumb sprinkle ----
+    // One viewport canvas (dpr 1, integer fillRect, no AA). Up to 6 crumb groups: 3 tied to live
+    // markers plus detached ones that are vanishing or fading. Typed arrays only, nothing per frame.
+    const NG = 6, NC = 9;
+    const VANISH = 0.25, FADE = 1.5, POP = 0.08;
+    const CRUMB_A = [1, 0.66, 0.33, 0];
+    let crumbCv = null, crumbCtx = null, crumbDirty = false, crumbDrawn = false;
+    let crumbCol0 = "#FF7A1A", crumbCol1 = "#C4520F";
+    // GSt: 0 free, 1 waiting at click, 2 vanishing (gripped), 3 stepped fade (stale)
+    const GX = new Float64Array(NG), GY = new Float64Array(NG), GT = new Float64Array(NG);
+    const GSt = new Int8Array(NG), GN = new Uint8Array(NG), GSz = new Uint8Array(NG);
+    const GOx = new Int16Array(NG * NC), GOy = new Int16Array(NG * NC), GCol = new Uint8Array(NG * NC);
+    function crumbAlloc() {
+        let best = -1, bt = -1;
+        for (let g = 0; g < NG; g++) {
+            if (GSt[g] === 0) return g;
+            if (GSt[g] !== 1 && GT[g] > bt) { bt = GT[g]; best = g; }
         }
+        return best;
+    }
+    function crumbSpawn(x, y) {
+        const g = crumbAlloc();
+        if (g < 0) return -1;
+        const s = Math.max(2, Math.round(cs / 3)), R = 4 * cs, minD = 2 * s + 1, b = g * NC;
+        const want = 6 + ((Math.random() * 4) | 0);
+        let n = 0;
+        for (let k = 0; k < want; k++) {
+            for (let t = 0; t < 30; t++) {
+                const ang = Math.random() * 6.2832, rr = R * Math.sqrt(Math.random());
+                const ox = Math.round(Math.cos(ang) * rr), oy = Math.round(Math.sin(ang) * rr);
+                let ok = true;
+                for (let j = 0; j < n; j++) {
+                    const dx = GOx[b + j] - ox, dy = GOy[b + j] - oy;
+                    if (dx * dx + dy * dy < minD * minD) { ok = false; break; }
+                }
+                if (!ok) continue;
+                // insertion by distance from click: index order is vanish order
+                const d2 = ox * ox + oy * oy;
+                let i = n;
+                while (i > 0 && GOx[b + i - 1] * GOx[b + i - 1] + GOy[b + i - 1] * GOy[b + i - 1] > d2) {
+                    GOx[b + i] = GOx[b + i - 1]; GOy[b + i] = GOy[b + i - 1]; GCol[b + i] = GCol[b + i - 1]; i--;
+                }
+                GOx[b + i] = ox; GOy[b + i] = oy; GCol[b + i] = Math.random() < 0.25 ? 1 : 0;
+                n++;
+                break;
+            }
+        }
+        GX[g] = x; GY[g] = y; GT[g] = 0; GSt[g] = 1; GN[g] = n; GSz[g] = s;
+        crumbDirty = true;
+        return g;
+    }
+    function crumbTo(g, st) {
+        if (g < 0 || GSt[g] !== 1) return;
+        GSt[g] = st; GT[g] = 0; crumbDirty = true;
+    }
+    function crumbAge(dt) {
+        for (let g = 0; g < NG; g++) {
+            const st = GSt[g];
+            if (st === 0) continue;
+            GT[g] += dt;
+            if ((st === 2 && GT[g] >= VANISH) || (st === 3 && GT[g] >= FADE)) { GSt[g] = 0; crumbDirty = true; }
+        }
+    }
+    function paintCrumbs() {
+        if (!crumbCtx) return;
+        let any = false;
+        for (let g = 0; g < NG; g++) if (GSt[g]) { any = true; break; }
+        if (!any && !crumbDrawn && !crumbDirty) return;
+        crumbDirty = false;
+        const c = crumbCtx;
+        c.clearRect(0, 0, crumbCv.width, crumbCv.height);
+        crumbDrawn = any;
+        if (!any) return;
+        const kx = rect.width / COLS, ky = rect.height / ROWS;
+        let alpha = 1, col = -1;
+        c.globalAlpha = 1;
+        for (let g = 0; g < NG; g++) {
+            const st = GSt[g];
+            if (!st) continue;
+            const n = GN[g], s = GSz[g], t = GT[g], b = g * NC;
+            const cx = Math.round(rect.left + (grid.bx + GX[g]) * kx), cy = Math.round(rect.top + (grid.by - GY[g]) * ky);
+            let a = 1, first = 0, step = 1;
+            if (st === 1) { if (t < POP) step = 2; } // 2-step pop: half, then all
+            else if (st === 2) first = Math.floor(t / VANISH * n); // nearest-first vanish
+            else a = CRUMB_A[Math.min(3, Math.floor(t / (FADE / 4)))];
+            if (a !== alpha) { c.globalAlpha = a; alpha = a; }
+            if (a === 0) continue;
+            const h = s >> 1;
+            for (let i = first; i < n; i += step) {
+                const cc = GCol[b + i];
+                if (cc !== col) { c.fillStyle = cc ? crumbCol1 : crumbCol0; col = cc; }
+                c.fillRect(cx + GOx[b + i] - h, cy + GOy[b + i] - h, s, s);
+            }
+        }
+        c.globalAlpha = 1;
     }
 
     // ---- render ----
@@ -564,7 +644,7 @@ function boot() {
             }
         }
         ctx.globalAlpha = 1;
-        paintMarks();
+        paintCrumbs();
         // occupancy history: write current into the slot the next frame will read as k-1
         for (let i = 0; i < z.length; i++) cur[i] = z[i] ? 1 : 0;
         frameNo++;
@@ -583,24 +663,26 @@ function boot() {
 
     function markerAdd(x, y) {
         if (nMark === 3) {
-            for (let i = 1; i < 3; i++) { MX[i - 1] = MX[i]; MY[i - 1] = MY[i]; MS[i - 1] = MS[i]; MT[i - 1] = MT[i]; }
+            if (MS[0] === 0) crumbTo(MG[0], 3);
+            for (let i = 1; i < 3; i++) { MX[i - 1] = MX[i]; MY[i - 1] = MY[i]; MS[i - 1] = MS[i]; MT[i - 1] = MT[i]; MG[i - 1] = MG[i]; }
             nMark = 2;
         }
-        MX[nMark] = x; MY[nMark] = y; MS[nMark] = 0; MT[nMark] = 0; nMark++;
+        MX[nMark] = x; MY[nMark] = y; MS[nMark] = 0; MT[nMark] = 0; MG[nMark] = crumbSpawn(x, y); nMark++;
     }
     function markerDrop(i) {
-        for (let k = i + 1; k < nMark; k++) { MX[k - 1] = MX[k]; MY[k - 1] = MY[k]; MS[k - 1] = MS[k]; MT[k - 1] = MT[k]; }
+        for (let k = i + 1; k < nMark; k++) { MX[k - 1] = MX[k]; MY[k - 1] = MY[k]; MS[k - 1] = MS[k]; MT[k - 1] = MT[k]; MG[k - 1] = MG[k]; }
         nMark--;
     }
 
     function tick(dt) {
         simT += dt;
+        crumbAge(dt);
         // markers age
         let goal = -1;
         for (let m = nMark - 1; m >= 0; m--) {
             MT[m] += dt;
-            if (MS[m] === 1 && MT[m] > 1.2) markerDrop(m);
-            else if (MS[m] === 0 && MT[m] > 5) { MS[m] = 1; MT[m] = 0; }
+            if (MS[m] === 1 && MT[m] > VANISH) markerDrop(m);
+            else if (MS[m] === 0 && MT[m] > 5) { MS[m] = 1; MT[m] = 0; crumbTo(MG[m], 3); }
         }
         for (let m = 0; m < nMark; m++) if (MS[m] === 0) { goal = m; break; }
         const idle = simT - lastMove;
@@ -624,7 +706,7 @@ function boot() {
             if (holdT >= 0) {
                 jawGoal = JAW_CLOSED;
                 holdT -= dt;
-                if (holdT <= 0) { MS[goal] = 1; MT[goal] = 0; holdT = -1; }
+                if (holdT <= 0) { MS[goal] = 1; MT[goal] = 0; holdT = -1; crumbTo(MG[goal], 2); }
             }
             gripLabel = holdT >= 0 ? "closed" : "reach";
         } else {
@@ -725,6 +807,7 @@ function boot() {
         if (e.button !== 0 || !isEmpty(e.target) || level === "calm") return;
         toWorld(e.clientX, e.clientY);
         markerAdd(ptrX, ptrY);
+        if (runState !== "running") render();
     }
     function attachInput() {
         if (inputOn) return;
@@ -808,15 +891,13 @@ function boot() {
         layer.dataset.level = level;
         canvas = document.createElement("canvas");
         layer.appendChild(canvas);
-        for (let m = 0; m < 3; m++) {
-            const el = document.createElement("span");
-            el.className = "arm-mark";
-            el.hidden = true;
-            el.setAttribute("aria-hidden", "true");
-            layer.appendChild(el);
-            markEls.push(el);
-        }
         document.body.appendChild(layer);
+        crumbCv = document.createElement("canvas");
+        crumbCv.setAttribute("aria-hidden", "true");
+        crumbCv.style.cssText = "position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:5;image-rendering:pixelated";
+        crumbCv.width = innerWidth; crumbCv.height = innerHeight;
+        document.body.appendChild(crumbCv);
+        crumbCtx = crumbCv.getContext("2d");
         ctx = canvas.getContext("2d");
         applyLevel();
         if (effectiveMode() === "on" || effectiveMode() === "animate") { q.set(REST); wPause = 3; }

@@ -696,11 +696,13 @@ button { cursor: pointer; }
 
 .lead {
     margin: 0 0 var(--s-7);
-    max-width: 34ch;
-    color: var(--fg);
-    font-size: var(--t-lead);
+    font-family: var(--font-mono);
+    font-size: clamp(13px, 1vw, 15px);
     font-weight: 400;
-    line-height: 1.3;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    max-width: 60ch;
+    color: var(--sub);
 }
 
 .spec {
