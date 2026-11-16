@@ -1,7 +1,7 @@
 // Page bots: interactions. Proximity checks on a 250ms tick, a per-pair cooldown and a global rate limit.
 // Reactions are tagged (cause) and never emit events themselves, so nothing cascades. Never physical:
 // bots only look, emote or hover at a distance.
-import { startAct, setMood, say, lookAnim, isTransit, rnd } from "./brain.js?v=3";
+import { startAct, setMood, say, lookAnim, isTransit, rnd } from "./brain.js?v=4";
 
 const PAIR_CD = 8; // seconds, per pair
 const GLOBAL_GAP = 1.5; // seconds between any two events

@@ -1,11 +1,12 @@
 // Page bots: Floatie, Rover and Waddle live on the floor and ceiling of the viewport.
 // One fixed canvas behind the content (pointer-events none). Decorative only. See DESIGN.md "Bots".
-import { measure, layoutBots, WIDE } from "./bots/world.js?v=3";
-import { createRenderer } from "./bots/render.js?v=3";
-import { createLoop } from "./bots/loop.js?v=3";
-import { createSim, step, onPointer, rescene } from "./bots/brain.js?v=3";
-import { installEvents } from "./bots/events.js?v=3";
-import { LIGHT_LINE } from "./bots/sprites.js?v=3";
+import { measure, layoutBots, WIDE } from "./bots/world.js?v=4";
+import { createRenderer } from "./bots/render.js?v=4";
+import { createLoop } from "./bots/loop.js?v=4";
+import { createSim, step, onPointer, rescene } from "./bots/brain.js?v=4";
+import { guardTick, guardStatic } from "./bots/guard.js?v=4";
+import { installEvents } from "./bots/events.js?v=4";
+import { LIGHT_LINE } from "./bots/sprites.js?v=4";
 
 function boot() {
     const root = document.documentElement;
@@ -16,7 +17,7 @@ function boot() {
     const toggle = document.getElementById("bots-toggle");
 
     let layer = null, renderer = null, sc = null, sim = null, staticBots = [], started = false, on = true, loop = null;
-    let themeKey = "", nextPoll = 0, ptrOn = false;
+    let themeKey = "", nextPoll = 0, ptrOn = false, wasCalm = false;
 
     const readStored = () => { try { return localStorage.getItem(KEY); } catch (_) { return null; } };
     const writeStored = (v) => { try { localStorage.setItem(KEY, v); } catch (_) { /* storage blocked */ } };
@@ -52,7 +53,12 @@ function boot() {
     function update(T, dt) {
         step(sim, T, dt);
         renderer.draw(sim.bots, sim.bubble, debug);
-        if (T >= nextPoll) { nextPoll = T + 0.5; poll(); }
+        if (T >= nextPoll) {
+            nextPoll = T + 0.5;
+            poll();
+            const calm = guardTick(sim);
+            if (calm !== wasCalm) { wasCalm = calm; loop.setFps(calm ? 10 : 30); } // asleep bots need few frames
+        }
     }
 
     // Re-measure the page and the theme; rebuild only what changed.
@@ -86,12 +92,15 @@ function boot() {
             // Reduced motion: one static draw in an idle pose, no timers, no pointer listener.
             sim = null;
             staticBots = layoutBots(sc);
+            guardStatic(staticBots, sc);
             renderer.draw(staticBots, null, false);
             return;
         }
         sim = createSim(sc, { debug });
         installEvents(sim);
         loop.clock.t = 0;
+        loop.setFps(30);
+        wasCalm = false;
         nextPoll = 0.5;
         renderer.draw(sim.bots, null, debug);
         attachPointer();
