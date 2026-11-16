@@ -53,6 +53,7 @@ const F_VISOR = {
     happy: ["77..77", "7....7"],
     confusedA: [".7....", ".7..7."],
     confusedB: ["....7.", ".7..7."],
+    lookUp: [".7..7.", "......"],
 };
 function floatie({ visor, rotor, dy = 0, flame = 2 }) {
     let body = F_BODY.slice();
@@ -92,6 +93,7 @@ const R_VISOR = {
     happy: [".77..77.", ".7....7."],
     confusedA: [".77.....", ".77..77."],
     confusedB: ["....77..", ".77..77."],
+    lookUp: [".77..77.", "........"],
 };
 function tracks(k) {
     let mid = "13oo";
@@ -129,6 +131,7 @@ const W_VISOR = {
     happy: ["........", ".77..77.", ".7....7."],
     confusedA: ["........", "..7.....", "..7..77."],
     confusedB: ["........", ".....7..", ".77..7.."],
+    lookUp: ["..7..7..", "..7..7..", "........"],
 };
 // shift: body drop in rows. Foot: 2 planted (rows 10-11), 1 stubby planted (row 11), -1 lifted (row 10).
 function waddle({ visor, shift = 0, footL = 2, footR = 2 }) {
@@ -166,6 +169,7 @@ export const BOTS = {
             sleeping: [floatie({ visor: "sleep", rotor: F_ROTOR_STOP, dy: 1, flame: 0 }), floatie({ visor: "sleep", rotor: F_ROTOR_STOP, dy: 1, flame: 1 })],
             happy: [floatie({ visor: "happy", rotor: F_ROTOR[0] }), floatie({ visor: "happy", rotor: F_ROTOR[1], dy: 1, flame: 1 }), floatie({ visor: "happy", rotor: F_ROTOR[2] })],
             confused: [floatie({ visor: "confusedA", rotor: F_ROTOR[0] }), floatie({ visor: "confusedB", rotor: F_ROTOR[3], dy: 1, flame: 1 })],
+            lookUp: [floatie({ visor: "lookUp", rotor: F_ROTOR[0] })],
         },
     },
     rover: {
@@ -180,6 +184,7 @@ export const BOTS = {
             sleeping: [rover({ visor: "sleepA", lamp: "O" }), rover({ visor: "sleepB", lamp: "O" })],
             happy: [rover({ visor: "happy" }), rover({ visor: "happy", lamp: "O", tread: 2 }), rover({ visor: "happy", tread: 1 })],
             confused: [rover({ visor: "confusedA" }), rover({ visor: "confusedB", lamp: "O" })],
+            lookUp: [rover({ visor: "lookUp" })],
         },
     },
     waddle: {
@@ -194,6 +199,7 @@ export const BOTS = {
             sleeping: [waddle({ visor: "sleep", ...SQ }), waddle({ visor: "sleep", ...SQ, footL: -1 })],
             happy: [waddle({ visor: "happy" }), waddle({ visor: "happy", ...SQ }), waddle({ visor: "happy", footL: -1, footR: -1 })],
             confused: [waddle({ visor: "confusedA" }), waddle({ visor: "confusedB", ...SQ })],
+            lookUp: [waddle({ visor: "lookUp" })],
         },
     },
 };
