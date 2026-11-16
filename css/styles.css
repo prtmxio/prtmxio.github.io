@@ -1505,25 +1505,74 @@ html.intro .sidenav a.lit::before { background: var(--fg); transition: none; }
 .arm-layer {
     position: fixed;
     right: 0;
-    bottom: 0;
+    bottom: var(--status-h);
     z-index: 5;
     pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
     opacity: 0;
-    transition: opacity 320ms steps(4, end);
+    transition: filter 300ms linear, opacity 300ms linear;
 }
 
-.arm-layer.on { opacity: 1; }
+.arm-layer[hidden] { display: none; }
+
+/* Opacities are set by the text-contrast check in DESIGN.md section 16. */
+.arm-layer.on { opacity: 0.9; }
+.arm-layer.on[data-level="dim"] { opacity: 0.2; filter: blur(2px); }
+.arm-layer.on[data-level="calm"] { opacity: 0.1; filter: blur(3px); }
 
 .arm-layer canvas {
     display: block;
     width: 100%;
     height: 100%;
+    image-rendering: pixelated;
+}
+
+.statusbar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+}
+
+#arm-readout {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    white-space: pre;
+}
+
+#arm-readout:empty { display: none; }
+
+.statusbar #arm-toggle {
+    height: var(--status-h);
+    cursor: pointer;
+}
+
+.statusbar #arm-toggle:hover { color: var(--fg); }
+
+.statusbar #arm-toggle:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+}
+
+#arm-debug {
+    position: fixed;
+    top: calc(var(--rail-h) + var(--s-2));
+    left: var(--s-2);
+    z-index: 950;
+    margin: 0;
+    padding: var(--s-2) var(--s-3);
+    background: var(--bg-elev);
+    border: 1px solid var(--line-strong);
+    color: var(--sub);
+    font-family: var(--font-mono);
+    font-size: var(--t-label);
+    line-height: 1.4;
+    white-space: pre;
+    pointer-events: none;
 }
 
 @media (max-width: 767px) {
-    .arm-layer { display: none; }
+    .arm-layer, #arm-debug { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
