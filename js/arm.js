@@ -1,459 +1,274 @@
-// Hero ASCII robot arm: 3-link FABRIK arm on a canvas in the hero's open field.
-// Decorative only: aria-hidden, pointer-events none, listeners on window.
-const FPS_STEP = 1000 / 30;
-const DT = 1 / 30;
-const LINKS = [0.36, 0.3, 0.22];
-const SPEED = 0.6; // fraction of field height per second
-const IDLE_MS = 2500;
-const HOLD_MS = 1500;
-const MARK_MS = 1200;
-const MAX_MARKS = 3;
-const READOUT_H = 40;
-const MIN_SPACE = 240;
-const IGNORE =
-    "a,button,input,textarea,select,label,summary,[contenteditable],.hero,p,li,h1,h2,h3,h4,pre,code,dd,dt,nav,header,.sidenav";
+// Fixed ASCII robot arm behind the page. Decorative only: aria-hidden, pointer-events none.
+// Rendering: bodies are rasterised by coverage onto a character grid; every lit cell is a
+// toned tile (1px gap) with an optional glyph on top. Sim runs in continuous px space.
+
+const LINK_FRAC = [0.4, 0.34, 0.26]; // link length as a fraction of layer height
+const RADII = [18, 14, 11, 8]; // body radius (px) at base, joint 1, joint 2, wrist
+const HUB = [20, 15, 12]; // joint hub radius (px)
+const TONE_ALPHA = [0.1, 0.22, 0.4, 0.62];
+const SOFT = 1.1; // edge softness in cell widths
+const LIGHT = [-0.5, -0.6, 0.62];
 
 const root = document.documentElement;
-const reducedMQ = matchMedia("(prefers-reduced-motion: reduce)");
 const wideMQ = matchMedia("(min-width: 768px)");
-const reduced = reducedMQ.matches;
 
+let layer, canvas, ctx;
+let W = 0, H = 0, dpr = 1;
+let cw = 7, ch = 14, cols = 0, rows = 0;
+let tone = new Uint8Array(0); // 0 empty, 1..4 = tone + 1
+let glyph = new Uint8Array(0); // char code, 0 none
+let accent = new Uint8Array(0);
+let col = { sub: "#b5b2ab", bg: "#1a1917", accent: "#ff7a1a" };
+let baseX = 0, baseY = 0;
+const lens = [0, 0, 0];
+const ang = [1.83, 2.79, 3.49]; // absolute link angles (rad, ccw from +x, y up)
+const jx = [0, 0, 0, 0], jy = [0, 0, 0, 0];
 let started = false;
-let field, canvas, ctx, readoutEl, about, hero;
-let w = 0, h = 0, dpr = 1;
-let cw = 8, chh = 18, cols = 0, rows = 0, fontStr = "";
-let gch = [], gcol = new Uint8Array(0);
-let colors = ["#b5b2ab", "#959189", "#ff7a1a"]; // sub, muted, accent
-let baseX = 0, baseY = 0, lens = [0, 0, 0], reach = 0;
-let joints = [{ x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }, { x: 0, y: 0 }];
-let eff = { x: 0, y: 0 }; // smoothed target
-let goal = { x: 0, y: 0 };
-let ptr = null; // last pointer client coords
-let rect = null;
-let lastMove = 0, holdUntil = 0, mode = "idle";
-let marks = [];
-let shown = false, heroVisible = true, rafId = 0, last = 0, acc = 0, dirty = true;
-let lastReadout = "";
-let dprMQ = null;
 
-function pad(n, width) {
-    return Math.abs(n).toFixed(1).padStart(width, "0");
-}
-function sgn(n) {
-    return n < 0 ? "-" : "+";
-}
-function norm(a) {
-    while (a > 180) a -= 360;
-    while (a <= -180) a += 360;
-    return a;
-}
+const LL = Math.hypot(LIGHT[0], LIGHT[1], LIGHT[2]);
+const LX = LIGHT[0] / LL, LY = LIGHT[1] / LL, LZ = LIGHT[2] / LL;
 
 function readColors() {
     const cs = getComputedStyle(root);
-    const g = (n, f) => cs.getPropertyValue(n).trim() || f;
-    colors = [g("--sub", colors[0]), g("--muted", colors[1]), g("--accent", colors[2])];
-    dirty = true;
+    const g = (n, d) => cs.getPropertyValue(n).trim() || d;
+    col = { sub: g("--sub", col.sub), bg: g("--bg", col.bg), accent: g("--accent", col.accent) };
 }
 
-function measure() {
-    const cs = getComputedStyle(root);
-    const fs = parseFloat(cs.getPropertyValue("--t-ui")) || 13;
-    const fam = cs.getPropertyValue("--font-mono").trim() || "monospace";
-    fontStr = `400 ${fs}px ${fam}`;
-    ctx.font = fontStr;
-    cw = ctx.measureText("M").width || fs * 0.6;
-    chh = Math.round(fs * 1.4);
+function orient(dx, dy) {
+    let a = (Math.atan2(-dy, dx) * 180) / Math.PI;
+    if (a < 0) a += 180;
+    if (a >= 157.5 || a < 22.5) return 45; // -
+    if (a < 67.5) return 47; // /
+    if (a < 112.5) return 124; // |
+    return 92; // \
 }
 
-function placeField() {
-    // Returns true when the field is shown.
-    if (!wideMQ.matches || !about || !hero) return false;
-    const ar = about.getBoundingClientRect();
-    const hr = hero.getBoundingClientRect();
-    let right = hr.right;
-    for (const el of hero.children) {
-        const r = el.getBoundingClientRect();
-        right = Math.max(right, r.left + Math.max(r.width, el.scrollWidth || 0));
-    }
-    const space = ar.right - right;
-    if (space < MIN_SPACE || hr.height < 200) return false;
-    const width = Math.min(ar.width * 0.34, 420, space);
-    field.style.top = `${hr.top - ar.top}px`;
-    field.style.width = `${width}px`;
-    field.style.height = `${hr.height}px`;
-    return true;
-}
-
-function build() {
-    // Size canvas, grid and geometry from current field box.
-    const cr = canvas.getBoundingClientRect();
-    w = cr.width;
-    h = cr.height;
-    if (w < 40 || h < 80) return;
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = Math.round(w * dpr);
-    canvas.height = Math.round(h * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    measure();
-    cols = Math.max(8, Math.floor(w / cw));
-    rows = Math.max(8, Math.floor(h / chh));
-    gch = new Array(cols * rows).fill("");
-    gcol = new Uint8Array(cols * rows);
-    baseX = (Math.floor(cols / 2) + 0.5) * cw;
-    baseY = (rows - 3) * chh + chh / 2;
-    lens = LINKS.map((f) => f * baseY);
-    reach = lens[0] + lens[1] + lens[2];
-    rect = null;
-    const first = joints[3].x === 0 && joints[3].y === 0;
-    if (first || reduced) {
-        const a = reduced ? 1.15 : Math.PI / 2;
-        joints[0] = { x: baseX, y: baseY };
-        if (reduced) {
-            goal = { x: baseX + Math.cos(a) * reach * 0.62, y: baseY - Math.sin(a) * reach * 0.8 };
-        } else {
-            goal = { x: baseX, y: baseY - reach * 0.7 };
-        }
-        // Slightly bent seed pose so FABRIK does not start collinear.
-        let px = baseX, py = baseY;
-        const seed = [1.45, 1.7, 1.35];
-        for (let i = 0; i < 3; i++) {
-            px += Math.cos(seed[i]) * lens[i] * (i === 1 ? -1 : 1) * 0.4;
-            py -= Math.sin(seed[i]) * lens[i];
-            joints[i + 1] = { x: px, y: py };
-        }
-        eff = { x: goal.x, y: goal.y };
-        for (let i = 0; i < 20; i++) solve(eff);
-    } else {
-        eff.x = Math.min(Math.max(eff.x, 0), w);
-        eff.y = Math.min(eff.y, baseY);
-        solve(eff);
-    }
-    dirty = true;
-}
-
-function clampGoal(t) {
-    let x = Math.min(Math.max(t.x, 0), w);
-    let y = Math.min(t.y, baseY);
-    const dx = x - baseX, dy = y - baseY;
-    const d = Math.hypot(dx, dy);
-    if (d > reach) {
-        x = baseX + (dx / d) * reach;
-        y = baseY + (dy / d) * reach;
-    }
-    return { x, y };
-}
-
-function constrain(prev, p, L) {
-    // Keep a joint above the base line and inside the field, preserving link length.
-    if (p.y > baseY) {
-        const dy = baseY - prev.y;
-        const dx = Math.sqrt(Math.max(0, L * L - dy * dy));
-        p.y = baseY;
-        p.x = prev.x + (p.x >= prev.x ? dx : -dx);
-    }
-    if (p.x < 0 || p.x > w) {
-        const cx = Math.min(Math.max(p.x, 0), w);
-        const dx = cx - prev.x;
-        const dy = Math.sqrt(Math.max(0, L * L - dx * dx));
-        p.x = cx;
-        p.y = prev.y + (p.y >= prev.y ? dy : -dy);
-        if (p.y > baseY) p.y = baseY;
+function put(c, r, t, g, acc) {
+    if (c < 0 || r < 0 || c >= cols || r >= rows) return;
+    const i = r * cols + c;
+    if (t + 1 >= tone[i]) {
+        tone[i] = t + 1;
+        glyph[i] = g;
+        accent[i] = acc ? 1 : 0;
     }
 }
 
-function solve(t) {
-    const p = joints;
-    const target = clampGoal(t);
-    for (let it = 0; it < 10; it++) {
-        // backward: end effector to target
-        p[3].x = target.x;
-        p[3].y = target.y;
-        for (let i = 2; i >= 0; i--) {
-            const dx = p[i].x - p[i + 1].x, dy = p[i].y - p[i + 1].y;
-            const d = Math.hypot(dx, dy) || 1;
-            p[i].x = p[i + 1].x + (dx / d) * lens[i];
-            p[i].y = p[i + 1].y + (dy / d) * lens[i];
-        }
-        // forward: base fixed, constrained
-        p[0].x = baseX;
-        p[0].y = baseY;
-        for (let i = 0; i < 3; i++) {
-            const dx = p[i + 1].x - p[i].x, dy = p[i + 1].y - p[i].y;
-            const d = Math.hypot(dx, dy) || 1;
-            p[i + 1].x = p[i].x + (dx / d) * lens[i];
-            p[i + 1].y = p[i].y + (dy / d) * lens[i];
-            constrain(p[i], p[i + 1], lens[i]);
-        }
-        if (Math.hypot(p[3].x - target.x, p[3].y - target.y) < 0.5) break;
-    }
+// Lambert term to 0..1 so the lit side reaches the top tone and the far side the bottom.
+function remap(raw) {
+    const v = (raw - 0.1) * 1.25;
+    return v < 0 ? 0 : v > 1 ? 1 : v;
 }
 
-function setGoalFromPointer() {
-    if (!ptr) return;
-    if (!rect) rect = canvas.getBoundingClientRect();
-    goal = { x: ptr.x - rect.left, y: ptr.y - rect.top };
+function toneOf(shade) {
+    return shade > 0.8 ? 3 : shade > 0.55 ? 2 : shade > 0.3 ? 1 : 0;
 }
 
-function update(now) {
-    if (mode === "follow" && now - lastMove > IDLE_MS && now > holdUntil) mode = "idle";
-    if (now > holdUntil) {
-        if (mode === "idle") {
-            const t = now / 1000;
-            const th = Math.PI / 2 + (Math.PI / 3) * Math.sin(Math.PI * 2 * 0.08 * t);
-            goal = { x: baseX + Math.cos(th) * reach * 0.75, y: baseY - Math.sin(th) * reach * 0.75 };
-        } else if (mode === "follow") {
-            setGoalFromPointer();
-        }
-    }
-    const g = clampGoal(goal);
-    const dx = g.x - eff.x, dy = g.y - eff.y;
-    const dist = Math.hypot(dx, dy);
-    if (dist > 0.05) {
-        const v = Math.min(SPEED * baseY, dist * 8); // capped, eases out near the goal
-        const step = Math.min(dist, v * DT);
-        eff.x += (dx / dist) * step;
-        eff.y += (dy / dist) * step;
-        solve(eff);
-        dirty = true;
-    }
-    if (marks.length) {
-        marks = marks.filter((m) => now - m.t < MARK_MS);
-        dirty = true;
-    }
-}
-
-function put(cx, cy, ch, col) {
-    if (cx < 0 || cy < 0 || cx >= cols || cy >= rows) return;
-    const i = cy * cols + cx;
-    gch[i] = ch;
-    gcol[i] = col;
-}
-
-function line(x0, y0, x1, y1, ch, col) {
-    const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0);
-    const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
-    let err = dx + dy;
-    for (let n = 0; n < 400; n++) {
-        put(x0, y0, ch, col);
-        if (x0 === x1 && y0 === y1) break;
-        const e2 = 2 * err;
-        if (e2 >= dy) { err += dy; x0 += sx; }
-        if (e2 <= dx) { err += dx; y0 += sy; }
-    }
-}
-
-function glyph(ax, ay, bx, by) {
+// Tapered capsule from (ax,ay) radius ra to (bx,by) radius rb.
+function capsule(ax, ay, bx, by, ra, rb) {
     const dx = bx - ax, dy = by - ay;
-    const a = Math.abs((Math.atan2(dy, dx) * 180) / Math.PI);
-    if (a < 22.5 || a > 157.5) return "-";
-    if (a > 67.5 && a < 112.5) return "|";
-    return dx * dy < 0 ? "/" : "\\";
+    const len2 = dx * dx + dy * dy || 1;
+    const len = Math.sqrt(len2);
+    const nx = -dy / len, ny = dx / len;
+    const soft = cw * SOFT;
+    const rm = Math.max(ra, rb) + soft;
+    const c0 = Math.max(0, Math.floor((Math.min(ax, bx) - rm) / cw));
+    const c1 = Math.min(cols - 1, Math.ceil((Math.max(ax, bx) + rm) / cw));
+    const r0 = Math.max(0, Math.floor((Math.min(ay, by) - rm) / ch));
+    const r1 = Math.min(rows - 1, Math.ceil((Math.max(ay, by) + rm) / ch));
+    const edgeGlyph = orient(dx, dy);
+    for (let r = r0; r <= r1; r++) {
+        const py = (r + 0.5) * ch;
+        for (let c = c0; c <= c1; c++) {
+            const px = (c + 0.5) * cw;
+            let t = ((px - ax) * dx + (py - ay) * dy) / len2;
+            t = t < 0 ? 0 : t > 1 ? 1 : t;
+            const qx = px - (ax + dx * t), qy = py - (ay + dy * t);
+            const rad = ra + (rb - ra) * t;
+            const d = Math.hypot(qx, qy) - rad;
+            if (d > soft * 0.5) continue;
+            const cov = Math.min(1, Math.max(0, 0.5 - d / soft));
+            if (cov < 0.08) continue;
+            let u = (qx * nx + qy * ny) / rad;
+            u = u < -1 ? -1 : u > 1 ? 1 : u;
+            const nz = Math.sqrt(1 - u * u);
+            const shade = remap(u * nx * LX + u * ny * LY + nz * LZ);
+            let tn = toneOf(shade);
+            let g = 0;
+            if (cov < 0.35) { tn = 0; g = edgeGlyph; }
+            else if (cov < 0.65) { tn = Math.min(tn, 1); g = edgeGlyph; }
+            else if (Math.abs(u) < 0.16) g = (c + r) % 4 === 0 ? 111 : edgeGlyph; // axis line, rivets
+            put(c, r, tn, g, false);
+        }
+    }
 }
 
-function cellX(x) { return Math.min(cols - 1, Math.max(0, Math.floor(x / cw))); }
-function cellY(y) { return Math.min(rows - 1, Math.max(0, Math.floor(y / chh))); }
+// Shaded disc (hubs, turret dome).
+function disc(cx, cy, rad, glyphCode, ring) {
+    const soft = cw * SOFT;
+    const rm = rad + soft;
+    const c0 = Math.max(0, Math.floor((cx - rm) / cw));
+    const c1 = Math.min(cols - 1, Math.ceil((cx + rm) / cw));
+    const r0 = Math.max(0, Math.floor((cy - rm) / ch));
+    const r1 = Math.min(rows - 1, Math.ceil((cy + rm) / ch));
+    for (let r = r0; r <= r1; r++) {
+        const py = (r + 0.5) * ch;
+        for (let c = c0; c <= c1; c++) {
+            const px = (c + 0.5) * cw;
+            const dxx = px - cx, dyy = py - cy;
+            const dist = Math.hypot(dxx, dyy);
+            const d = dist - rad;
+            if (d > soft * 0.5) continue;
+            const cov = Math.min(1, Math.max(0, 0.5 - d / soft));
+            if (cov < 0.08) continue;
+            const u = Math.min(1, dist / rad);
+            const nz = Math.sqrt(1 - u * u);
+            const shade = remap((dxx / rad) * LX + (dyy / rad) * LY + nz * LZ);
+            let tn = toneOf(shade);
+            let g = 0;
+            if (cov < 0.5) { tn = 0; }
+            else if (dist < cw * 0.9 && Math.abs(dyy) < ch * 0.6) g = glyphCode; // bolt at centre
+            else if (ring && dist > rad - cw * 0.9) g = 111;
+            put(c, r, tn, g, false);
+        }
+    }
+}
 
-function draw(now) {
-    gch.fill("");
-    const p = joints;
+// Turret: stepped plinth with a domed top, cropped by the layer's right and bottom edges.
+function base() {
+    const hw = cw * 7;
+    const top = baseY - ch * 3;
+    const c0 = Math.floor((baseX - hw) / cw), c1 = Math.ceil((baseX + hw) / cw);
+    const r0 = Math.floor(top / ch), r1 = Math.ceil(baseY / ch) + 2;
+    for (let r = r0; r <= r1; r++) {
+        for (let c = c0; c <= c1; c++) {
+            const rr = r - r0;
+            const cx = (c + 0.5) * cw - baseX;
+            // bottom steps wider, top narrower
+            const lim = hw - Math.max(0, 2 - rr) * cw * 1.5;
+            if (Math.abs(cx) > lim) continue;
+            const g = rr === 0 ? 95 : rr === 1 ? 61 : (c + r) % 3 === 0 ? 35 : 61; // _ = # =
+            put(c, r, rr === 0 ? 1 : 2, g, false);
+        }
+    }
+    disc(baseX, baseY - ch * 2.2, 40, 64, false);
+}
+
+function fk() {
+    jx[0] = baseX; jy[0] = baseY - ch * 2.2;
     for (let i = 0; i < 3; i++) {
-        line(cellX(p[i].x), cellY(p[i].y), cellX(p[i + 1].x), cellY(p[i + 1].y),
-            glyph(p[i].x, p[i].y, p[i + 1].x, p[i + 1].y), 0);
+        jx[i + 1] = jx[i] + Math.cos(ang[i]) * lens[i];
+        jy[i + 1] = jy[i] - Math.sin(ang[i]) * lens[i];
     }
-    put(cellX(p[1].x), cellY(p[1].y), "o", 0);
-    put(cellX(p[2].x), cellY(p[2].y), "o", 0);
-    // base
-    const bc = Math.floor(cols / 2), br = rows - 3;
-    const rowsTxt = ["_[#]_", "[###]", "====="];
-    for (let r = 0; r < 3; r++) {
-        for (let c = 0; c < 5; c++) put(bc - 2 + c, br + r, rowsTxt[r][c], 1);
-    }
-    for (const m of marks) put(cellX(m.x), cellY(m.y), "+", 2);
-    put(cellX(p[3].x), cellY(p[3].y), "*", 2);
+}
 
-    ctx.clearRect(0, 0, w, h);
-    ctx.font = fontStr;
+function finger(x, y, a, len) {
+    const ex = x + Math.cos(a) * len, ey = y - Math.sin(a) * len;
+    capsule(x, y, ex, ey, 5, 3);
+    return [ex, ey];
+}
+
+function draw() {
+    tone.fill(0);
+    glyph.fill(0);
+    accent.fill(0);
+    fk();
+    base();
+    for (let i = 0; i < 3; i++) capsule(jx[i], jy[i], jx[i + 1], jy[i + 1], RADII[i], RADII[i + 1]);
+    for (let i = 0; i < 3; i++) disc(jx[i], jy[i], HUB[i], 64, i > 0);
+    disc(jx[3], jy[3], 10, 64, false);
+    // two-finger gripper (static open pose in step 1)
+    const a3 = ang[2];
+    const open = 0.4;
+    const f1 = finger(jx[3], jy[3], a3 + open, 44);
+    const f2 = finger(jx[3], jy[3], a3 - open, 44);
+    const tx = (f1[0] + f2[0]) / 2, ty = (f1[1] + f2[1]) / 2;
+    put(Math.floor(tx / cw), Math.floor(ty / ch), 3, 42, true); // end-effector
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = col.sub;
+    for (let t = 0; t < 4; t++) {
+        ctx.globalAlpha = TONE_ALPHA[t];
+        for (let i = 0; i < tone.length; i++) {
+            if (tone[i] !== t + 1 || accent[i]) continue;
+            ctx.fillRect((i % cols) * cw + 1, ((i / cols) | 0) * ch + 1, cw - 1, ch - 1);
+        }
+    }
+    ctx.fillStyle = col.accent;
+    ctx.globalAlpha = 0.95;
+    for (let i = 0; i < tone.length; i++) {
+        if (accent[i]) ctx.fillRect((i % cols) * cw + 1, ((i / cols) | 0) * ch + 1, cw - 1, ch - 1);
+    }
+    // glyphs: dark on bright tiles, light on dim tiles
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    let cur = -1;
-    for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-            const i = r * cols + c;
-            const ch = gch[i];
-            if (!ch) continue;
-            const col = gcol[i];
-            if (col !== cur) { ctx.fillStyle = colors[col]; cur = col; }
-            let a = 1;
-            if (col === 2 && ch === "+") {
-                for (const m of marks) {
-                    if (cellX(m.x) === c && cellY(m.y) === r) {
-                        a = 1 - Math.floor(((now - m.t) / MARK_MS) * 4) / 4;
-                        break;
-                    }
-                }
-            }
-            if (a !== 1) ctx.globalAlpha = Math.max(a, 0.25);
-            ctx.fillText(ch, (c + 0.5) * cw, (r + 0.5) * chh);
-            if (a !== 1) ctx.globalAlpha = 1;
+    for (let pass = 0; pass < 2; pass++) {
+        ctx.fillStyle = pass ? col.bg : col.sub;
+        ctx.globalAlpha = pass ? 0.75 : 0.7;
+        for (let i = 0; i < glyph.length; i++) {
+            if (!glyph[i]) continue;
+            const bright = tone[i] >= 3 || accent[i];
+            if (bright !== (pass === 1)) continue;
+            ctx.fillText(String.fromCharCode(glyph[i]), ((i % cols) + 0.5) * cw, (((i / cols) | 0) + 0.5) * ch + 1);
         }
     }
-    dirty = false;
-    updateReadout();
+    ctx.globalAlpha = 1;
 }
 
-function updateReadout() {
-    const p = joints;
-    const a1 = (Math.atan2(baseY - p[1].y, p[1].x - p[0].x) * 180) / Math.PI;
-    const a2 = (Math.atan2(p[1].y - p[2].y, p[2].x - p[1].x) * 180) / Math.PI;
-    const a3 = (Math.atan2(p[2].y - p[3].y, p[3].x - p[2].x) * 180) / Math.PI;
-    const q2 = norm(a2 - a1), q3 = norm(a3 - a2);
-    const ex = Math.round(p[3].x - p[0].x), ey = Math.round(baseY - p[3].y);
-    const s =
-        `q1 ${sgn(a1)}${pad(a1, 5)}°  q2 ${sgn(q2)}${pad(q2, 5)}°  q3 ${sgn(q3)}${pad(q3, 5)}°\n` +
-        `ee x ${sgn(ex)}${String(Math.abs(ex)).padStart(3, "0")} y ${sgn(ey)}${String(Math.abs(ey)).padStart(3, "0")}`;
-    if (s !== lastReadout) {
-        lastReadout = s;
-        readoutEl.textContent = s;
-    }
-}
-
-function frame(t) {
-    rafId = requestAnimationFrame(frame);
-    if (!last) last = t;
-    acc += t - last;
-    last = t;
-    if (acc < FPS_STEP - 1) return;
-    acc = acc % FPS_STEP;
-    update(t);
-    if (dirty) draw(t);
-}
-
-function sync() {
-    const want = started && !reduced && shown && heroVisible && !document.hidden;
-    if (want && !rafId) {
-        last = 0;
-        acc = 0;
-        lastMove = Math.max(lastMove, performance.now());
-        rafId = requestAnimationFrame(frame);
-    } else if (!want && rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = 0;
-    }
-}
-
-function relayout() {
-    if (!started) return;
-    const ok = placeField();
-    shown = ok;
-    field.hidden = !ok;
-    if (ok) build();
-    if (ok && reduced) draw(0);
-    sync();
-}
-
-function onMove(e) {
-    ptr = { x: e.clientX, y: e.clientY };
-    lastMove = performance.now();
-    if (lastMove > holdUntil) mode = "follow";
-}
-
-function onDown(e) {
-    if (e.button !== 0 || !shown) return;
-    const tg = e.target;
-    if (tg && tg.closest && tg.closest(IGNORE)) return;
-    const sel = window.getSelection && window.getSelection();
-    if (sel && !sel.isCollapsed && sel.toString()) return;
-    if (!rect) rect = canvas.getBoundingClientRect();
-    const now = performance.now();
-    const g = clampGoal({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    goal = g;
-    mode = "follow";
-    lastMove = now;
-    holdUntil = now + HOLD_MS;
-    marks.push({ x: g.x, y: g.y, t: now });
-    if (marks.length > MAX_MARKS) marks.shift();
-    dirty = true;
-}
-
-function watchDpr() {
-    if (dprMQ) dprMQ.removeEventListener("change", onDpr);
-    dprMQ = matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
-    dprMQ.addEventListener("change", onDpr);
-}
-function onDpr() {
-    watchDpr();
-    relayout();
+function layout() {
+    W = Math.round(Math.min(innerWidth * 0.55, 720));
+    H = Math.round(Math.min(innerHeight * 0.75, 680));
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    layer.style.width = `${W}px`;
+    layer.style.height = `${H}px`;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.font = `12px ${getComputedStyle(root).getPropertyValue("--font-mono") || "monospace"}`;
+    cw = Math.max(5, Math.round(ctx.measureText("M").width));
+    ch = Math.round(cw * 1.95);
+    cols = Math.floor(W / cw);
+    rows = Math.floor(H / ch);
+    tone = new Uint8Array(cols * rows);
+    glyph = new Uint8Array(cols * rows);
+    accent = new Uint8Array(cols * rows);
+    ctx.font = `12px ${getComputedStyle(root).getPropertyValue("--font-mono") || "monospace"}`;
+    baseX = W - cw * 5; // turret is cropped by the right edge
+    baseY = H + ch * 0.5; // and by the bottom edge
+    for (let i = 0; i < 3; i++) lens[i] = LINK_FRAC[i] * H;
+    readColors();
+    draw();
 }
 
 function start() {
     if (started) return;
     started = true;
-    about = document.getElementById("about");
-    hero = about && about.querySelector(".hero");
-    if (!about || !hero) return;
-
-    field = document.createElement("div");
-    field.className = "arm-field";
-    field.setAttribute("aria-hidden", "true");
-    field.hidden = true;
+    layer = document.createElement("div");
+    layer.className = "arm-layer";
+    layer.setAttribute("aria-hidden", "true");
     canvas = document.createElement("canvas");
-    readoutEl = document.createElement("pre");
-    readoutEl.className = "arm-readout";
-    field.append(canvas, readoutEl);
-    about.appendChild(field);
+    layer.appendChild(canvas);
+    document.body.appendChild(layer);
     ctx = canvas.getContext("2d");
-    readColors();
-
-    const go = () => {
-        relayout();
-        // Fade in after layout so the stepped transition runs from opacity 0.
-        requestAnimationFrame(() => field.classList.add("on"));
-    };
-    const fontP = document.fonts && document.fonts.load
-        ? Promise.race([
-              document.fonts.load("400 13px 'IBM Plex Mono'").catch(() => {}),
-              new Promise((r) => setTimeout(r, 1500)),
-          ])
-        : Promise.resolve();
-    fontP.then(go);
-
-    new MutationObserver(() => { readColors(); if (reduced && shown) draw(0); })
-        .observe(root, { attributes: true, attributeFilter: ["data-theme"] });
-    new ResizeObserver(() => relayout()).observe(hero);
-    new ResizeObserver(() => relayout()).observe(about);
-    wideMQ.addEventListener("change", relayout);
-    watchDpr();
-    document.fonts && document.fonts.ready.then(() => relayout());
-
-    if (!reduced) {
-        window.addEventListener("pointermove", onMove, { passive: true });
-        window.addEventListener("pointerdown", onDown, { passive: true });
-        window.addEventListener("scroll", () => { rect = null; }, { passive: true });
-        document.addEventListener("visibilitychange", sync);
-        new IntersectionObserver((es) => {
-            heroVisible = es[es.length - 1].isIntersecting;
-            sync();
-        }).observe(hero);
-    }
+    layout();
+    let pending = 0;
+    window.addEventListener("resize", () => {
+        cancelAnimationFrame(pending);
+        pending = requestAnimationFrame(layout);
+    });
+    new MutationObserver(() => { readColors(); draw(); }).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    requestAnimationFrame(() => layer.classList.add("on"));
 }
 
-function gate() {
-    if (!root.classList.contains("intro")) {
-        start();
-        return;
-    }
+async function boot() {
+    try { await document.fonts.ready; } catch (_) { /* fonts API missing: measure with fallback */ }
+    if (!root.classList.contains("intro")) { start(); return; }
     window.addEventListener("introdone", start, { once: true });
+    // The head failsafe removes the intro class without firing the event.
     const mo = new MutationObserver(() => {
-        if (!root.classList.contains("intro")) {
-            mo.disconnect();
-            start();
-        }
+        if (!root.classList.contains("intro")) { mo.disconnect(); start(); }
     });
     mo.observe(root, { attributes: true, attributeFilter: ["class"] });
 }
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", gate, { once: true });
-} else {
-    gate();
-}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot, { once: true });
+else boot();

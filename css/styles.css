@@ -1501,48 +1501,31 @@ html.intro .sidenav a.lit::before { background: var(--fg); transition: none; }
 
 @media (min-width: 1024px) { .intro-cells { display: none; } }
 
-/* arm */
-#about { position: relative; }
-
-.arm-field {
-    position: absolute;
+/* arm: fixed decorative layer behind the page (DESIGN.md section 16) */
+.arm-layer {
+    position: fixed;
     right: 0;
+    bottom: 0;
+    z-index: 5;
     pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
-    z-index: calc(var(--z-content) - 1);
     opacity: 0;
-    transition: opacity var(--d-base) steps(4, end);
+    transition: opacity 320ms steps(4, end);
 }
 
-.arm-field.on { opacity: 1; }
+.arm-layer.on { opacity: 1; }
 
-.arm-field canvas {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: calc(100% - 40px);
+.arm-layer canvas {
     display: block;
-}
-
-.arm-readout {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0;
-    font: 400 var(--t-label) / 1.4 var(--font-mono);
-    color: var(--muted);
-    text-align: right;
-    white-space: pre;
-    font-variant-numeric: tabular-nums;
+    width: 100%;
+    height: 100%;
 }
 
 @media (max-width: 767px) {
-    .arm-field { display: none; }
+    .arm-layer { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .arm-field { transition: none; }
+    .arm-layer { transition: none; }
 }
